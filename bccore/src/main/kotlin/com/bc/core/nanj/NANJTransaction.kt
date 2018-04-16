@@ -10,7 +10,7 @@ package com.bc.core.nanj
  */
 
 
-class NanjTransaction {
+class NANJTransaction {
 	private var _timestamp: Long = 0
 	private var _fromWallet: String = ""
 	private var _toWallet: String = ""

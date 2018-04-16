@@ -9,7 +9,7 @@ package com.bc.core.nanj
  * ____________________________________
  */
 
-class NanjWallet constructor(private val nanjTransactionListener : NanjTransactionListener? = null) {
+class NANJWallet constructor(private val nanjTransactionListener : NANJTransactionListener? = null) {
 	private var _address : String = ""
 	private var _name : String = ""
 	private var _amoutEth : Double = 0.0
@@ -23,9 +23,9 @@ class NanjWallet constructor(private val nanjTransactionListener : NanjTransacti
 
 	fun getAmountNanj() = _amountNanj
 
-	fun getTransactions() : List<NanjTransaction> = emptyList()
+	fun getTransactions() : List<NANJTransaction> = emptyList()
 
-	fun sendNanjCoin(toWallet : NanjWallet, amount : Double) {
+	fun sendNanjCoin(toWallet : NANJWallet, amount : Double) {
 
 	}
 

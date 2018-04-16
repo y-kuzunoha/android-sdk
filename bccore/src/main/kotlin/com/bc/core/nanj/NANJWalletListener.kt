@@ -8,5 +8,5 @@ package com.bc.core.nanj
  * CreatedAt: 4/16/18
  * ____________________________________
  */
-interface NanjWalletListener {
+interface NANJWalletListener {
 }

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.bc.core.R
-import com.bc.core.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_nfc.*
 
 /**
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_nfc.*
  * ____________________________________
  */
 
-class NfcActivity : BaseActivity() {
+class NANJNfcActivity : AppCompatActivity() {
 
 	companion object {
 		const val REQUEST_CODE = 0

@@ -30,10 +30,10 @@
         android:largeHeap="true">
 
         <!-- Barcode reader activity -->
-        <activity android:name="com.bc.core.ui.barcodereader.BarcodeActivity" />
+        <activity android:name="com.bc.core.ui.barcodereader.NANJQrCodeActivity" />
 
         <!--Nfc Activity-->
-        <activity android:name="com.bc.core.ui.nfc.NfcActivity" />
+        <activity android:name="com.bc.core.ui.nfc.NANJNfcActivity" />
 
         <!--meta vision barcode detection-->
         <meta-data

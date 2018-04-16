@@ -12,15 +12,15 @@ import java.security.KeyStore
  * ____________________________________
  */
 
-class NanjWalletManager {
-	private lateinit var _wallet: NanjWallet
-	private  var _wallets: MutableList<NanjWallet> = mutableListOf()
+class NANJWalletManager {
+	private lateinit var _wallet: NANJWallet
+	private  var _wallets: MutableList<NANJWallet> = mutableListOf()
 
-	fun getWallet(): NanjWallet = _wallet
+	fun getWallet(): NANJWallet = _wallet
 
-	fun getWallets(): MutableList<NanjWallet> = _wallets
+	fun getWallets(): MutableList<NANJWallet> = _wallets
 
-	fun addWallet(wallet : NanjWallet) {
+	fun addWallet(wallet : NANJWallet) {
 		_wallets.add(wallet)
 	}
 
@@ -46,7 +46,7 @@ class NanjWalletManager {
 		println(addressWallet)
 	}
 
-	fun enableWallet(wallet : NanjWallet) {
+	fun enableWallet(wallet : NANJWallet) {
 		this._wallet = wallet
 	}
 

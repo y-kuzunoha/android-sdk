@@ -5,9 +5,9 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import com.bc.core.R
-import com.bc.core.base.BaseActivity
 import com.bc.core.util.PermissionUtil
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_barcode_reader.*
  * ____________________________________
  */
 
-class BarcodeActivity : BaseActivity() {
+class NANJQrCodeActivity : AppCompatActivity() {
 
 	private lateinit var mBarcodeDetector : BarcodeDetector
 
@@ -81,7 +81,7 @@ class BarcodeActivity : BaseActivity() {
 
 	@SuppressLint("MissingPermission")
 	private fun startCamera() {
-		mCameraSource = CameraSource.Builder(this@BarcodeActivity, mBarcodeDetector)
+		mCameraSource = CameraSource.Builder(this@NANJQrCodeActivity, mBarcodeDetector)
 			.setAutoFocusEnabled(true)
 			.build()
 		mCameraSource.start(surfaceView.holder)
@@ -102,7 +102,7 @@ class BarcodeActivity : BaseActivity() {
 	private fun barcodeReader(info : String) {
 		runOnUiThread {
 			isDetector = true
-			AlertDialog.Builder(this@BarcodeActivity)
+			AlertDialog.Builder(this@NANJQrCodeActivity)
 				.setTitle("wtf")
 				.setMessage(info)
 				.apply {

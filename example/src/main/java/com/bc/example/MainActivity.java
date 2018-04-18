@@ -34,6 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
 	private void createWallet() {
 		NANJWalletManager nanjWalletManager = new NANJWalletManager();
-		nanjWalletManager.createWallet("your password", getFilesDir().getAbsoluteFile());
+		nanjWalletManager.createWallet("vanhieupr0", getFilesDir().getAbsoluteFile());
 	}
 }

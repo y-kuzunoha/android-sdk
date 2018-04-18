@@ -1,8 +1,13 @@
 package com.bc.core.nanj
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.Wallet
+import org.web3j.crypto.WalletFile
 import org.web3j.crypto.WalletUtils
 import java.io.File
-import java.security.KeyStore
 
 /**
  * ____________________________________
@@ -13,6 +18,14 @@ import java.security.KeyStore
  */
 
 class NANJWalletManager {
+
+	companion object {
+		private val objectMapper = ObjectMapper().apply {
+			configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+			configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+		}
+	}
+
 	private lateinit var _wallet: NANJWallet
 	private  var _wallets: MutableList<NANJWallet> = mutableListOf()
 
@@ -24,12 +37,17 @@ class NANJWalletManager {
 		_wallets.add(wallet)
 	}
 
-	fun addWallet(jsonWallet : String) {
-		TODO()
+	fun importWallet(password : String, source: File) {
+		val credential = WalletUtils.loadCredentials(password, source)
 	}
 
-	fun addWallet(walletKeystore : KeyStore) {
-		TODO()
+	fun importWallet(password : String, jsonWallet : String) {
+		val walletFile = objectMapper.readValue(jsonWallet, WalletFile::class.java)
+		val credential = Credentials.create(Wallet.decrypt(password, walletFile))
+	}
+
+	fun importWallet(privateKey : String) {
+		val credential = Credentials.create(privateKey)
 	}
 
 	fun removeWallet(position: Int) {
@@ -37,13 +55,26 @@ class NANJWalletManager {
 	}
 
 	fun createWallet(password: String, destinationDirectory : File) {
-		//val file = Environment.getExternalStorageDirectory().absoluteFile
 		val addressWallet = WalletUtils.generateNewWalletFile(
 			password,
 			destinationDirectory,
 			false
 		)
-		println(addressWallet)
+
+		val pathWallet = "${destinationDirectory.path}/$addressWallet"
+
+		println("------------------------------------")
+
+		println(pathWallet)
+
+		val credential = WalletUtils.loadCredentials(password, pathWallet)
+
+		println(credential.address)
+
+		println(credential.ecKeyPair.privateKey.toString(16))
+		println(credential.ecKeyPair.publicKey.toString(16))
+
+		println("------------------------------------")
 	}
 
 	fun enableWallet(wallet : NANJWallet) {

@@ -1,52 +1,34 @@
 package com.bc.example;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Looper;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
+
+import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.ui.barcodereader.NANJQrCodeActivity;
-import com.bc.core.ui.nfc.NANJNfcActivity;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.Emitter;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+public class MainActivity extends AppCompatActivity implements NANJWalletListener {
 
-public class MainActivity extends AppCompatActivity {
-	
 	//Views define 
 	private Loading _progressDialog;
-	private RecyclerView walletList;
-	
+
 	//Variables define
 	private String _password = Const.DEFAULT;
-	private NANJWalletManager nanjWalletManager = new NANJWalletManager();
+	private NANJWalletManager nanjWalletManager = new NANJWalletManager(this);
 	private WalletAdapter walletAdapter = new WalletAdapter();
 
-	@SuppressLint("CheckResult")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		walletList = findViewById(R.id.walletList);
+		RecyclerView walletList = findViewById(R.id.walletList);
 		walletList.addItemDecoration(
 			new DividerItemDecoration(
 				this,
@@ -54,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
 			)
 		);
 		walletList.setAdapter(walletAdapter);
-		
+
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
 			_password = bundle.getString(Const.BUNDLE_KEY_PASSWORD, Const.DEFAULT);
 		}
 
 		_progressDialog = new Loading(this);
-		
+
 	}
 
 	@Override
@@ -77,11 +59,12 @@ public class MainActivity extends AppCompatActivity {
 			case R.id.menuNewWallet:
 				createWallet();
 				break;
-				
+
 			case R.id.menuJsonImport:
 				break;
-				
+
 			case R.id.menuPrivateKeyImport:
+				importWalletFromPrivateKey();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -89,16 +72,42 @@ public class MainActivity extends AppCompatActivity {
 
 	private void createWallet() {
 		_progressDialog.show();
-		AsyncTask.execute(() -> {
-			nanjWalletManager.createWallet(_password, getFilesDir().getAbsoluteFile());
-			runOnUiThread(() -> {
-				updateWalletView();
-				_progressDialog.dismiss();
-			});
-		});
+		nanjWalletManager.createWallet(_password, getFilesDir().getAbsoluteFile());
 	}
-	
+
+	private void importWalletFromPrivateKey() {
+		_progressDialog.show();
+		// import private key is correct
+		nanjWalletManager.importWallet("19051355975941725161733792530046853610926205457968420220901640107349227711776");
+		// import private key is not correct
+//		nanjWalletManager.importWallet("123qwefghfkj");
+	}
+
 	private void updateWalletView() {
 		walletAdapter.setData(nanjWalletManager.getWallets());
+	}
+
+	@Override
+	public void onCreateWalletSuccess() {
+		updateWalletView();
+		_progressDialog.dismiss();
+	}
+
+	@Override
+	public void onCreateWalletFailure() {
+		_progressDialog.dismiss();
+		Toast.makeText(this, "create wallet is failure", Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onImportWalletSuccess() {
+		updateWalletView();
+		_progressDialog.dismiss();
+	}
+
+	@Override
+	public void onImportWalletFailure() {
+		_progressDialog.dismiss();
+		Toast.makeText(this, "import wallet is failure", Toast.LENGTH_LONG).show();
 	}
 }

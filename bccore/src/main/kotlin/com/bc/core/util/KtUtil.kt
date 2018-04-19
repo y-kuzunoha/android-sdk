@@ -7,12 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.annotation.DimenRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import java.lang.ref.WeakReference
 import java.util.concurrent.Executors
 
 
@@ -26,6 +29,8 @@ import java.util.concurrent.Executors
 
 private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
 private val POOL_EXECUTOR = Executors.newCachedThreadPool()
+private val handler = Handler(Looper.getMainLooper())
+private val mainThread: Thread = Looper.getMainLooper().thread
 
 /**
  * Utility method to run blocks on a dedicated background thread, used for io/database work.
@@ -36,6 +41,17 @@ fun ioThread(function : () -> Unit) {
 
 fun poolThread(function : () -> Unit) {
 	POOL_EXECUTOR.execute(function)
+}
+
+class AnkoAsyncContext<T>(val weakRef: WeakReference<T>)
+
+fun uiThread(f : () -> Unit):Boolean {
+	if (mainThread == Thread.currentThread()) {
+		f()
+	} else {
+		handler.post { f() }
+	}
+	return true
 }
 
 inline fun AppCompatActivity.showToast(string : String) = Toast.makeText(this, string, Toast.LENGTH_LONG).show()

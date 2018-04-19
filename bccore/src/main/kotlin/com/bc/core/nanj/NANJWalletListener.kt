@@ -9,4 +9,8 @@ package com.bc.core.nanj
  * ____________________________________
  */
 interface NANJWalletListener {
+	fun onCreateWalletSuccess()
+	fun onCreateWalletFailure()
+	fun onImportWalletSuccess()
+	fun onImportWalletFailure()
 }

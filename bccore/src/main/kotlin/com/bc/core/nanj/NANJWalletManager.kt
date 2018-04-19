@@ -18,23 +18,16 @@ import java.io.File
  */
 
 class NANJWalletManager {
-
-	companion object {
-		private val objectMapper = ObjectMapper().apply {
-			configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
-			configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-		}
-	}
-
+	
 	private lateinit var _wallet: NANJWallet
-	private  var _wallets: MutableList<NANJWallet> = mutableListOf()
+	private  var _wallets: MutableMap<String, NANJWallet> = mutableMapOf()
 
 	fun getWallet(): NANJWallet = _wallet
 
-	fun getWallets(): MutableList<NANJWallet> = _wallets
+	fun getWallets(): MutableList<NANJWallet> = _wallets.values.toMutableList()
 
 	fun addWallet(wallet : NANJWallet) {
-		_wallets.add(wallet)
+		_wallets.put(wallet.getAddress(), wallet)
 	}
 
 	fun importWallet(password : String, source: File) {
@@ -42,6 +35,10 @@ class NANJWalletManager {
 	}
 
 	fun importWallet(password : String, jsonWallet : String) {
+		val objectMapper = ObjectMapper().apply {
+			this.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+			this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+		} 
 		val walletFile = objectMapper.readValue(jsonWallet, WalletFile::class.java)
 		val credential = Credentials.create(Wallet.decrypt(password, walletFile))
 	}
@@ -51,7 +48,8 @@ class NANJWalletManager {
 	}
 
 	fun removeWallet(position: Int) {
-		_wallets.removeAt(position)
+		val key = _wallets.keys.toMutableList()[position]
+		_wallets.remove(key)
 	}
 
 	fun createWallet(password: String, destinationDirectory : File) {
@@ -73,6 +71,12 @@ class NANJWalletManager {
 
 		println(credential.ecKeyPair.privateKey.toString(16))
 		println(credential.ecKeyPair.publicKey.toString(16))
+		
+		val nanjWallet = NANJWallet().apply {
+			setAddress(credential.address)
+		}
+		
+		_wallets[nanjWallet.getAddress()] = nanjWallet
 
 		println("------------------------------------")
 	}
@@ -82,7 +86,6 @@ class NANJWalletManager {
 	}
 
 	fun enableWallet(position : Int) {
-		this._wallet = this._wallets[position]
 	}
 
 	fun getNanjRate(): Double = 0.0

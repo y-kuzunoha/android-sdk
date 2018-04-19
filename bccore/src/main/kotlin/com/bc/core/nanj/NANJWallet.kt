@@ -11,13 +11,20 @@ package com.bc.core.nanj
 
 class NANJWallet constructor(private val nanjTransactionListener : NANJTransactionListener? = null) {
 	private var _address : String = ""
-	private var _name : String = ""
+	private var _name : String = "Noname"
 	private var _amoutEth : Double = 0.0
 	private var _amountNanj : Double = 0.0
 
 	fun editName(newName : String) {
 		this._name = newName
 	}
+	
+	fun getName() = _name
+	
+	fun setAddress(address : String) {
+		this._address = address
+	}
+	fun getAddress() = _address
 
 	fun getAmountEth() = _amoutEth
 

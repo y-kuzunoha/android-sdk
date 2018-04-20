@@ -38,7 +38,7 @@ class NANJWalletManager constructor(context: Context, private val nanjWalletList
 	fun getWallets() : MutableList<NANJWallet> = _wallets.values.toMutableList()
 
 	fun addWallet(wallet : NANJWallet) {
-		_wallets.put(wallet.getAddress(), wallet)
+		_wallets[wallet.getAddress()] = wallet
 	}
 
 	fun importWallet(password : String, source : File) {
@@ -105,9 +105,6 @@ class NANJWalletManager constructor(context: Context, private val nanjWalletList
 				)
 				val pathWallet = "${destinationDirectory.path}/$addressWallet"
 				val credentials = WalletUtils.loadCredentials(password, pathWallet)
-				println("address    ----------->  ${credentials.address}")
-				println("privateKey ----------->  ${credentials.ecKeyPair.privateKey}")
-				println("publicKey  ----------->  ${credentials.ecKeyPair.publicKey}")
 				importWalletFromCredentials(credentials)
 				uiThread { nanjWalletListener.onCreateWalletSuccess(credentials.ecKeyPair.privateKey.toString()) }
 			}

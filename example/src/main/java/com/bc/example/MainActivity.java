@@ -1,15 +1,20 @@
 package com.bc.example;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 				break;
 
 			case R.id.menuJsonImport:
+				importWalletFromJson();
 				break;
 
 			case R.id.menuPrivateKeyImport:
@@ -80,11 +86,33 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	}
 
 	private void importWalletFromPrivateKey() {
-		_progressDialog.show();
-		// import private key is correct
-		nanjWalletManager.importWallet("19051355975941725161733792530046853610926205457968420220901640107349227711776");
-		// import private key is not correct
-//		nanjWalletManager.importWallet("123qwefghfkj");
+		View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_import_private_key, null, false);
+		AppCompatEditText edPrivateKey = contentView.findViewById(R.id.edPrivateKey);
+		new AlertDialog.Builder(this)
+			.setTitle("Input private key")
+			.setView(contentView)
+			.setNegativeButton("Cancel", null)
+			.setPositiveButton("Ok", (dialog, which) -> {
+				String privateKey = edPrivateKey.getText().toString();
+				if (!TextUtils.isEmpty(privateKey)) {
+					_progressDialog.show();
+					nanjWalletManager.importWallet(privateKey/*"19051355975941725161733792530046853610926205457968420220901640107349227711776"*/);
+				}}).show();
+	}
+	
+	private void importWalletFromJson() {
+		View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_import_json, null, false);
+		AppCompatEditText jsonEd = contentView.findViewById(R.id.edPrivateKey);
+		new AlertDialog.Builder(this)
+			.setTitle("Input Json")
+			.setView(contentView)
+			.setNegativeButton("Cancel", null)
+			.setPositiveButton("Ok", (dialog, which) -> {
+				String json = jsonEd.getText().toString();
+				if (!TextUtils.isEmpty(json)) {
+					_progressDialog.show();
+					nanjWalletManager.importWallet(_password, json);
+				}}).show();
 	}
 
 	private void updateWalletView() {

@@ -99,7 +99,7 @@ class NANJWalletManager constructor(private val nanjWalletListener : NANJWalletL
 				println("privateKey ----------->  ${credentials.ecKeyPair.privateKey}")
 				println("publicKey  ----------->  ${credentials.ecKeyPair.publicKey}")
 				importWalletFromCredentials(credentials)
-				uiThread { nanjWalletListener.onCreateWalletSuccess() }
+				uiThread { nanjWalletListener.onCreateWalletSuccess(credentials.ecKeyPair.privateKey.toString()) }
 			}
 		)
 	}

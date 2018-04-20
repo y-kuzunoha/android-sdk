@@ -9,7 +9,7 @@ package com.bc.core.nanj
  * ____________________________________
  */
 interface NANJWalletListener {
-	fun onCreateWalletSuccess()
+	fun onCreateWalletSuccess(privateKey: String)
 	fun onCreateWalletFailure()
 	fun onImportWalletSuccess()
 	fun onImportWalletFailure()

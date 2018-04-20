@@ -1,6 +1,8 @@
 package com.bc.example;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
@@ -88,9 +89,10 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	}
 
 	@Override
-	public void onCreateWalletSuccess() {
+	public void onCreateWalletSuccess(@NonNull String privateKey) {
 		updateWalletView();
 		_progressDialog.dismiss();
+		backupPrivateKey(privateKey);
 	}
 
 	@Override
@@ -109,5 +111,13 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	public void onImportWalletFailure() {
 		_progressDialog.dismiss();
 		Toast.makeText(this, "import wallet is failure", Toast.LENGTH_LONG).show();
+	}
+	
+	private void backupPrivateKey(String privateKey) {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, privateKey);
+		sendIntent.setType("text/plain");
+		startActivity(Intent.createChooser(sendIntent, "Backup private key"));
 	}
 }

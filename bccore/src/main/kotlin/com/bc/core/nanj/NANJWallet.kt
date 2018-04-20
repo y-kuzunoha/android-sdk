@@ -19,6 +19,10 @@ class NANJWallet constructor(private val nanjTransactionListener : NANJTransacti
 		this._name = newName
 	}
 	
+	fun setName(name: String) {
+		this._name = name
+	}
+	
 	fun getName() = _name
 	
 	fun setAddress(address : String) {

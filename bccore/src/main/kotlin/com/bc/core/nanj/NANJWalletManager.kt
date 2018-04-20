@@ -1,5 +1,7 @@
 package com.bc.core.nanj
 
+import android.content.Context
+import com.bc.core.database.NANJDatabase
 import com.bc.core.util.uiThread
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -20,13 +22,19 @@ import java.io.File
  * ____________________________________
  */
 
-class NANJWalletManager constructor(private val nanjWalletListener : NANJWalletListener) {
+class NANJWalletManager constructor(context: Context, private val nanjWalletListener : NANJWalletListener) {
 
-	private lateinit var _wallet : NANJWallet
 	private var _wallets : MutableMap<String, NANJWallet> = mutableMapOf()
+	private val _nanjDatabase = NANJDatabase(context)
+	
+	private lateinit var _wallet : NANJWallet
+	
+	init {
+		_wallets = _nanjDatabase.loadWallets()
+	}
 
 	fun getWallet() : NANJWallet = _wallet
-
+	
 	fun getWallets() : MutableList<NANJWallet> = _wallets.values.toMutableList()
 
 	fun addWallet(wallet : NANJWallet) {
@@ -77,6 +85,8 @@ class NANJWalletManager constructor(private val nanjWalletListener : NANJWalletL
 			setAddress(credentials.address)
 		}
 		_wallets[nanjWallet.getAddress()] = nanjWallet
+
+		_nanjDatabase.saveWallet(nanjWallet)
 	}
 
 	fun removeWallet(position : Int) {

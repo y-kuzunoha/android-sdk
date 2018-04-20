@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 
 	//Variables define
 	private String _password = Const.DEFAULT;
-	private NANJWalletManager nanjWalletManager = new NANJWalletManager(this);
+	private NANJWalletManager nanjWalletManager;
 	private WalletAdapter walletAdapter = new WalletAdapter();
 
 	@Override
@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		nanjWalletManager = new NANJWalletManager(this, this);
+		
 		RecyclerView walletList = findViewById(R.id.walletList);
 		walletList.addItemDecoration(
 			new DividerItemDecoration(
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 				LinearLayoutManager.VERTICAL
 			)
 		);
+		walletAdapter.setData(nanjWalletManager.getWallets());
 		walletList.setAdapter(walletAdapter);
 
 		Bundle bundle = getIntent().getExtras();

@@ -1,5 +1,10 @@
 package com.bc.core.nanj
 
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.protocol.core.methods.response.EthGetBalance
+import java.math.BigInteger
+
 
 /**
  * ____________________________________
@@ -10,10 +15,13 @@ package com.bc.core.nanj
  */
 
 class NANJWallet constructor(private val nanjTransactionListener : NANJTransactionListener? = null) {
+	
+	lateinit var web3j: Web3j
+	
 	private var _address : String = ""
 	private var _name : String = "Noname"
-	private var _amoutEth : Double = 0.0
 	private var _amountNanj : Double = 0.0
+	
 
 	fun editName(newName : String) {
 		this._name = newName
@@ -30,7 +38,14 @@ class NANJWallet constructor(private val nanjTransactionListener : NANJTransacti
 	}
 	fun getAddress() = _address
 
-	fun getAmountEth() = _amoutEth
+	fun getAmountEth() : BigInteger {
+		val getBalance : EthGetBalance = web3j.ethGetBalance(_address,  DefaultBlockParameterName.LATEST)
+			.sendAsync()
+			.get()
+		val wei = getBalance.balance
+		println("balance -->  $wei")
+		return wei
+	}
 
 	fun getAmountNanj() = _amountNanj
 

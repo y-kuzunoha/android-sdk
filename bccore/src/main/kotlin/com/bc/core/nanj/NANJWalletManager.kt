@@ -3,15 +3,12 @@ package com.bc.core.nanj
 import android.content.Context
 import com.bc.core.database.NANJDatabase
 import com.bc.core.util.uiThread
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.web3j.crypto.Credentials
-import org.web3j.crypto.Wallet
-import org.web3j.crypto.WalletFile
-import org.web3j.crypto.WalletUtils
+import org.web3j.crypto.*
+import org.web3j.protocol.Web3jFactory
+import org.web3j.protocol.http.HttpService
 import java.io.File
 
 /**
@@ -31,6 +28,11 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 
 	init {
 		_wallets = _nanjDatabase.loadWallets()
+		if (this._wallets.isNotEmpty()) {
+			val key = _wallets.keys.toMutableList()[0]
+			_wallet = _wallets[key]!!
+			_wallet.web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
+		}
 	}
 
 	fun getWallet() : NANJWallet = _wallet
@@ -70,10 +72,10 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 		doAsync(
 			{ uiThread { nanjWalletListener.onImportWalletFailure() } },
 			{
-				val objectMapper = ObjectMapper().apply {
+				val objectMapper = ObjectMapper()/*.apply {
 					this.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
 					this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-				}
+				}*/
 				val walletFile = objectMapper.readValue(jsonWallet, WalletFile::class.java)
 				val credentials = Credentials.create(Wallet.decrypt(password, walletFile))
 				importWalletFromCredentials(credentials)
@@ -118,22 +120,18 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 	 * Create a wallet.
 	 *
 	 * @param password
-	 * @param destinationDirectory
 	 *
 	 * */
-	fun createWallet(password : String, destinationDirectory : File) {
+	fun createWallet(password : String/*, destinationDirectory : File*/) {
 		doAsync(
 			{ uiThread { nanjWalletListener.onCreateWalletFailure() } },
 			{
-				val addressWallet = WalletUtils.generateNewWalletFile(
-					password,
-					destinationDirectory,
-					false
-				)
-				val pathWallet = "${destinationDirectory.path}/$addressWallet"
-				val credentials = WalletUtils.loadCredentials(password, pathWallet)
+				val ecKeyPair = Keys.createEcKeyPair()
+				val addressWallet = Wallet.createLight(password, ecKeyPair)
+				val credentials = Credentials.create(Wallet.decrypt(password, addressWallet))
 				importWalletFromCredentials(credentials)
-				uiThread { nanjWalletListener.onCreateWalletSuccess(credentials.ecKeyPair.privateKey.toString()) }
+				val objectMapper = ObjectMapper()
+				uiThread { nanjWalletListener.onCreateWalletSuccess(objectMapper.writeValueAsString(addressWallet)) }
 			}
 		)
 	}
@@ -145,6 +143,8 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 	fun enableWallet(position : Int) {
 	}
 
-	fun getNanjRate() : Double = 0.0
+	fun getNanjRate() : Double {
+		return 0.0
+	}
 
 }

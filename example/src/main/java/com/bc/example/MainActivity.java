@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
+import java.math.BigInteger;
+
 public class MainActivity extends AppCompatActivity implements NANJWalletListener {
 
 	//Views define 
@@ -76,13 +78,16 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 			case R.id.menuPrivateKeyImport:
 				importWalletFromPrivateKey();
 				break;
+			case R.id.menuGetBalance:
+				getBalanceEth();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void createWallet() {
 		_progressDialog.show();
-		nanjWalletManager.createWallet(_password, getFilesDir().getAbsoluteFile());
+		nanjWalletManager.createWallet(_password/*, getFilesDir().getAbsoluteFile()*/);
 	}
 
 	private void importWalletFromPrivateKey() {
@@ -150,5 +155,9 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 		sendIntent.putExtra(Intent.EXTRA_TEXT, privateKey);
 		sendIntent.setType("text/plain");
 		startActivity(Intent.createChooser(sendIntent, "Backup private key"));
+	}
+	
+	private void getBalanceEth() {
+		Log.i("ETH", "getBalanceEth: " + nanjWalletManager.getWallet().getAmountEth());
 	}
 }

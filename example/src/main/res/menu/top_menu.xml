@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item android:id="@+id/menuNewWallet"
         android:title="New wallet"
         android:icon="@android:drawable/ic_menu_add"
@@ -10,4 +11,6 @@
         android:title="Import from json" />
     <item android:id="@+id/menuPrivateKeyImport"
         android:title="Import private key" />
+    <item android:id="@+id/menuGetBalance" 
+        android:title="Get balance" />
 </menu>

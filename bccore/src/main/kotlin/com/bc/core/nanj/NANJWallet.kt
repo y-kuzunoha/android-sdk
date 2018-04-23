@@ -15,39 +15,25 @@ import java.math.BigInteger
  */
 
 class NANJWallet constructor(private val nanjTransactionListener : NANJTransactionListener? = null) {
-	
-	lateinit var web3j: Web3j
-	
-	private var _address : String = ""
-	private var _name : String = "Noname"
-	private var _amountNanj : Double = 0.0
-	
 
-	fun editName(newName : String) {
-		this._name = newName
-	}
-	
-	fun setName(name: String) {
-		this._name = name
-	}
-	
-	fun getName() = _name
-	
-	fun setAddress(address : String) {
-		this._address = address
-	}
-	fun getAddress() = _address
+	var address : String = ""
+	var name : String = "Noname"
+	var amountNanj : Double = 0.0
+	private lateinit var _web3j : Web3j
+	var web3j : Web3j?
+		get() = null
+		set(value) {
+			if (value != null) {
+				_web3j = value
+			}
+		}
 
 	fun getAmountEth() : BigInteger {
-		val getBalance : EthGetBalance = web3j.ethGetBalance(_address,  DefaultBlockParameterName.LATEST)
+		val getBalance : EthGetBalance = _web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST)
 			.sendAsync()
 			.get()
-		val wei = getBalance.balance
-		println("balance -->  $wei")
-		return wei
+		return getBalance.balance
 	}
-
-	fun getAmountNanj() = _amountNanj
 
 	fun getTransactions() : List<NANJTransaction> = emptyList()
 

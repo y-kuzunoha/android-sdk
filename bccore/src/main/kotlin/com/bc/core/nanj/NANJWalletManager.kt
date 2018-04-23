@@ -25,26 +25,17 @@ import java.io.File
 
 class NANJWalletManager constructor(context : Context, private val nanjWalletListener : NANJWalletListener) {
 
-	private var _wallets : MutableMap<String, NANJWallet> = mutableMapOf()
+	var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
 	private val _nanjDatabase = NANJDatabase(context)
-
-	private lateinit var _wallet : NANJWallet
+	private val _web3j  = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
+	lateinit var wallet : NANJWallet
 
 	init {
-		_wallets = _nanjDatabase.loadWallets()
-		if (this._wallets.isNotEmpty()) {
-			val key = _wallets.keys.toMutableList()[0]
-			_wallet = _wallets[key]!!
-			_wallet.web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
-		}
+		wallets = _nanjDatabase.loadWallets()
 	}
 
-	fun getWallet() : NANJWallet = _wallet
-
-	fun getWallets() : MutableList<NANJWallet> = _wallets.values.toMutableList()
-
 	fun addWallet(wallet : NANJWallet) {
-		_wallets[wallet.getAddress()] = wallet
+		wallets[wallet.address] = wallet
 	}
 
 	/**
@@ -76,10 +67,7 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 		doAsync(
 			{ uiThread { nanjWalletListener.onImportWalletFailure() } },
 			{
-				val objectMapper = ObjectMapper()/*.apply {
-					this.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
-					this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-				}*/
+				val objectMapper = ObjectMapper()
 				val walletFile = objectMapper.readValue(jsonWallet, WalletFile::class.java)
 				val credentials = Credentials.create(Wallet.decrypt(password, walletFile))
 				importWalletFromCredentials(credentials)
@@ -108,16 +96,16 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 
 	private fun importWalletFromCredentials(credentials : Credentials) {
 		val nanjWallet = NANJWallet().apply {
-			setAddress(credentials.address)
+			address = credentials.address
 		}
-		_wallets[nanjWallet.getAddress()] = nanjWallet
+		wallets[nanjWallet.address] = nanjWallet
 
 		_nanjDatabase.saveWallet(nanjWallet)
 	}
 
 	fun removeWallet(position : Int) {
-		val key = _wallets.keys.toMutableList()[position]
-		_wallets.remove(key)
+		val key = wallets.keys.toMutableList()[position]
+		wallets.remove(key)
 	}
 
 	/**
@@ -126,7 +114,7 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 	 * @param password
 	 *
 	 * */
-	fun createWallet(password : String/*, destinationDirectory : File*/) {
+	fun createWallet(password : String) {
 		doAsync(
 			{ uiThread { nanjWalletListener.onCreateWalletFailure() } },
 			{
@@ -141,14 +129,19 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 	}
 
 	fun enableWallet(wallet : NANJWallet) {
-		this._wallet = wallet
+		this.wallet = wallet
+		this.wallet.web3j = _web3j
 	}
 
 	fun enableWallet(position : Int) {
+		val list = wallets.keys.toMutableList()
+		if(position >= 0 && position < list.size) return
+		val key = list[position]
+		val wallet = wallets[key] ?: return
+		this.enableWallet(wallet)
 	}
 
-	fun getNanjRate() : Double {
+	fun getNANJRate() : Double {
 		return 0.0
 	}
-
 }

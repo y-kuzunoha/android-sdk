@@ -123,7 +123,7 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 	 * */
 	fun createWallet(password : String, destinationDirectory : File) {
 		doAsync(
-			{ nanjWalletListener.onCreateWalletFailure() },
+			{ uiThread { nanjWalletListener.onCreateWalletFailure() } },
 			{
 				val addressWallet = WalletUtils.generateNewWalletFile(
 					password,
@@ -133,7 +133,7 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 				val pathWallet = "${destinationDirectory.path}/$addressWallet"
 				val credentials = WalletUtils.loadCredentials(password, pathWallet)
 				importWalletFromCredentials(credentials)
-				nanjWalletListener.onCreateWalletSuccess(credentials.ecKeyPair.privateKey.toString())
+				uiThread { nanjWalletListener.onCreateWalletSuccess(credentials.ecKeyPair.privateKey.toString()) }
 			}
 		)
 	}

@@ -20,13 +20,14 @@ import com.bc.core.nanj.NANJWallet
 
 object DatabaseQuery {
 	const val SQL_DATABASE_NAME = "DB_NAME.db"
-	const val SQL_DATABASE_VERSION = 1
+	const val SQL_DATABASE_VERSION = 2
 
 	const val SQL_WALLET_TABLE = "wallet"
 
 	const val SQL_CREATE_WALLET = "CREATE TABLE $SQL_WALLET_TABLE (" +
 		"_id INTEGER PRIMARY KEY," +
 		"_address TEXT," +
+		"_wallet TEXT," +
 		"_name TEXT)"
 	const val SQL_LOAD_WALLET = "SELECT * FROM $SQL_WALLET_TABLE"
 
@@ -75,7 +76,8 @@ class NANJDatabaseHelper(context : Context) : SQLiteOpenHelper(context, SQL_DATA
 		db.execSQL(SQL_CREATE_WALLET)
 	}
 
-	override fun onUpgrade(db : SQLiteDatabase?, oldVersion : Int, newVersion : Int) {
+	override fun onUpgrade(db : SQLiteDatabase, oldVersion : Int, newVersion : Int) {
+		
 	}
 
 }

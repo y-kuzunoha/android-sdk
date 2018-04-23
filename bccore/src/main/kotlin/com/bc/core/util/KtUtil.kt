@@ -30,7 +30,7 @@ import java.util.concurrent.Executors
 private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
 private val POOL_EXECUTOR = Executors.newCachedThreadPool()
 private val handler = Handler(Looper.getMainLooper())
-private val mainThread: Thread = Looper.getMainLooper().thread
+private val mainThread : Thread = Looper.getMainLooper().thread
 
 /**
  * Utility method to run blocks on a dedicated background thread, used for io/database work.
@@ -43,9 +43,9 @@ fun poolThread(function : () -> Unit) {
 	POOL_EXECUTOR.execute(function)
 }
 
-class AnkoAsyncContext<T>(val weakRef: WeakReference<T>)
+class AnkoAsyncContext<T>(val weakRef : WeakReference<T>)
 
-fun uiThread(f : () -> Unit):Boolean {
+fun uiThread(f : () -> Unit) : Boolean {
 	if (mainThread == Thread.currentThread()) {
 		f()
 	} else {
@@ -89,14 +89,20 @@ inline fun FragmentManager.inTransaction(func : FragmentTransaction.() -> Unit) 
 }
 
 /** SharedPreference */
-inline fun Context.sharedPreferences() = getSharedPreferences("base-storage", Context.MODE_PRIVATE)!!
+inline fun Context.sharedPreferences() = getSharedPreferences("base-storage", Context.MODE_PRIVATE)
+	?: throw Exception("context must be not null !!!")
+
 inline fun Activity.sharedPreferences() = (this as Context).sharedPreferences()
-inline fun Fragment.sharedPreferences() = context.sharedPreferences()
+
+inline fun Fragment.sharedPreferences() = context?.sharedPreferences()
+	?: throw Exception("context must be not null !!!")
 
 /**  Converter */
 //dip to pixel
 inline fun dip(dp : Float) : Int = (Resources.getSystem().displayMetrics.density * dp).toInt()
+
 inline fun dip(dp : Int) : Int = (Resources.getSystem().displayMetrics.density * dp).toInt()
 //pixel to dip
 inline fun px2dip(px : Int) : Float = px.toFloat() / Resources.getSystem().displayMetrics.density
-inline fun dimen(@DimenRes resource: Int): Int = Resources.getSystem().getDimensionPixelSize(resource)
+
+inline fun dimen(@DimenRes resource : Int) : Int = Resources.getSystem().getDimensionPixelSize(resource)

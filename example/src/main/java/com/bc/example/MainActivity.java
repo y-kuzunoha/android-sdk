@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DividerItemDecoration;
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	//Variables define
 	private String _password = Const.DEFAULT;
 	private NANJWalletManager nanjWalletManager;
-	private WalletAdapter walletAdapter = new WalletAdapter();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +51,10 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	}
 	
 	private void initView() {
-		RecyclerView walletList = findViewById(R.id.walletList);
-		walletList.addItemDecoration(
-			new DividerItemDecoration(
-				this,
-				LinearLayoutManager.VERTICAL
-			)
-		);
-		walletAdapter.setData(nanjWalletManager.getWallets());
-		walletList.setAdapter(walletAdapter);
-
 		TabLayout tableLayout = findViewById(R.id.tabLayout);
-		tableLayout.addTab(tableLayout.newTab().setText("Wallets"));
-		tableLayout.addTab(tableLayout.newTab().setText("Transactions"));
+		ViewPager viewPager = findViewById(R.id.pagerTabLayout);
+		tableLayout.setupWithViewPager(viewPager);
+		viewPager.setAdapter(new TabViewPagerAdapter(getSupportFragmentManager()));
 	}
 
 	@Override
@@ -130,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	}
 
 	private void updateWalletView() {
-		walletAdapter.setData(nanjWalletManager.getWallets());
+		//walletAdapter.setData(nanjWalletManager.getWallets());
 	}
 
 	@Override

@@ -15,11 +15,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.support.design.widget.TabLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
-
-import java.math.BigInteger;
 
 public class MainActivity extends AppCompatActivity implements NANJWalletListener {
 
@@ -35,9 +35,22 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		setTitle("Test toolbar");
+		setSupportActionBar(findViewById(R.id.toolbar));
 		nanjWalletManager = new NANJWalletManager(this, this);
-		
+	
+		initView();
+
+		Bundle bundle = getIntent().getExtras();
+		if(bundle != null) {
+			_password = bundle.getString(Const.BUNDLE_KEY_PASSWORD, Const.DEFAULT);
+		}
+
+		_progressDialog = new Loading(this);
+
+	}
+	
+	private void initView() {
 		RecyclerView walletList = findViewById(R.id.walletList);
 		walletList.addItemDecoration(
 			new DividerItemDecoration(
@@ -48,13 +61,9 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 		walletAdapter.setData(nanjWalletManager.getWallets());
 		walletList.setAdapter(walletAdapter);
 
-		Bundle bundle = getIntent().getExtras();
-		if(bundle != null) {
-			_password = bundle.getString(Const.BUNDLE_KEY_PASSWORD, Const.DEFAULT);
-		}
-
-		_progressDialog = new Loading(this);
-
+		TabLayout tableLayout = findViewById(R.id.tabLayout);
+		tableLayout.addTab(tableLayout.newTab().setText("Wallets"));
+		tableLayout.addTab(tableLayout.newTab().setText("Transactions"));
 	}
 
 	@Override

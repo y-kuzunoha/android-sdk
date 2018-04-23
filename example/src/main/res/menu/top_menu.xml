@@ -4,6 +4,7 @@
 
     <item android:id="@+id/menuNewWallet"
         android:title="New wallet"
+        app:iconTint="@android:color/white"
         android:icon="@android:drawable/ic_menu_add"
         app:showAsAction="ifRoom"/>
     

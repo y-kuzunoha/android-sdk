@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import com.bc.core.nanj.NANJWalletManager;
 
 /**
  * ____________________________________
@@ -13,9 +14,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * ____________________________________
  */
 public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
+
+	private NANJWalletManager nanjWalletManager;
 	
-	public TabViewPagerAdapter(FragmentManager fm) {
+	public TabViewPagerAdapter(FragmentManager fm, NANJWalletManager nanjWalletManager) {
 		super(fm);
+		this.nanjWalletManager = nanjWalletManager;
 	}
 
 	@Nullable
@@ -30,7 +34,9 @@ public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		if(position == 0) {
-			return new WalletsFragment();
+			WalletsFragment walletsFragment = new WalletsFragment();
+			walletsFragment.setNanjWalletManager(nanjWalletManager);
+			return walletsFragment;
 		}
 		return new TransactionsFragment();
 	}

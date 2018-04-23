@@ -7,9 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
@@ -54,7 +50,12 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 		TabLayout tableLayout = findViewById(R.id.tabLayout);
 		ViewPager viewPager = findViewById(R.id.pagerTabLayout);
 		tableLayout.setupWithViewPager(viewPager);
-		viewPager.setAdapter(new TabViewPagerAdapter(getSupportFragmentManager()));
+		viewPager.setAdapter(
+			new TabViewPagerAdapter(
+				getSupportFragmentManager(),
+				nanjWalletManager
+			)
+		);
 	}
 
 	@Override

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bc.core.nanj.NANJWalletManager;
+
 /**
  * ____________________________________
  *
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
  */
 public class WalletsFragment extends Fragment {
 
+	private NANJWalletManager nanjWalletManager;
 	private WalletAdapter walletAdapter = new WalletAdapter();
 	
 	@Nullable
@@ -41,5 +44,9 @@ public class WalletsFragment extends Fragment {
 		);
 		walletAdapter.setData(nanjWalletManager.getWallets());
 		walletList.setAdapter(walletAdapter);
+	}
+
+	public void setNanjWalletManager(NANJWalletManager nanjWalletManager) {
+		this.nanjWalletManager = nanjWalletManager;
 	}
 }

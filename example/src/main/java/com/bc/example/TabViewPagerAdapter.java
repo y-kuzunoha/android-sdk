@@ -34,9 +34,7 @@ public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		if(position == 0) {
-			WalletsFragment walletsFragment = new WalletsFragment();
-			walletsFragment.setNanjWalletManager(nanjWalletManager);
-			return walletsFragment;
+			return new MyWalletFragment();
 		}
 		return new TransactionsFragment();
 	}

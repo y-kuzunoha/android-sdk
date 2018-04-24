@@ -2,4 +2,5 @@
     <string name="app_name">   </string>
     <string name="btn_barcode">Barcode-EN</string>
     <string name="btn_nfc">NFC-EN</string>
+    <string name="txt_receive">Receive</string>
 </resources>

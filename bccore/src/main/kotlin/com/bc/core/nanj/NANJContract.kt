@@ -1,5 +1,7 @@
 package com.bc.core.nanj
 
+import org.web3j.crypto.ContractUtils
+import org.web3j.ens.Contracts
 import org.web3j.tx.Contract
 
 /**
@@ -11,4 +13,5 @@ import org.web3j.tx.Contract
  */
 
 class NANJContract {
+
 }

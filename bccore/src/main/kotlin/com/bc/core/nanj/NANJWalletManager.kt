@@ -38,6 +38,8 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 		wallets[wallet.address] = wallet
 	}
 
+	fun getWalletList() : MutableList<NANJWallet> = wallets.values.toMutableList()
+	
 	/**
 	 * Import a wallet from keystore
 	 *

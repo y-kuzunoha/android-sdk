@@ -42,7 +42,7 @@ public class WalletsFragment extends Fragment {
 				LinearLayoutManager.VERTICAL
 			)
 		);
-		walletAdapter.setData(nanjWalletManager.getWallets());
+		walletAdapter.setData(nanjWalletManager.getWalletList());
 		walletList.setAdapter(walletAdapter);
 	}
 

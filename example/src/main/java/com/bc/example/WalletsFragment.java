@@ -38,7 +38,7 @@ public class WalletsFragment extends Fragment {
 		RecyclerView walletList = view.findViewById(R.id.walletList);
 		walletList.addItemDecoration(
 			new DividerItemDecoration(
-				getContext(),
+				view.getContext(),
 				LinearLayoutManager.VERTICAL
 			)
 		);

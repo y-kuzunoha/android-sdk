@@ -42,7 +42,7 @@ class NANJWallet constructor(private val nanjTransactionListener : NANJTransacti
 	}
 
 	fun sentNanjCoin(address : String, amount : Double) {
-
+		
 	}
 }
  

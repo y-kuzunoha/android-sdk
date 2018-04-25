@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import com.bc.core.nanj.NANJWalletListener;
+import com.bc.core.nanj.NANJWalletManager;
 
 /**
  * ____________________________________
@@ -16,6 +17,7 @@ import com.bc.core.nanj.NANJWalletListener;
  */
 public class WalletsActivity extends AppCompatActivity implements NANJWalletListener {
 
+	private NANJWalletManager nanjWalletManager;
 	private WalletsFragment _walletsFragment;
 	private String _password;
 	
@@ -24,13 +26,13 @@ public class WalletsActivity extends AppCompatActivity implements NANJWalletList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
+		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
 		_walletsFragment = (WalletsFragment) getSupportFragmentManager().findFragmentById(R.id.walletsFragment);
 		_walletsFragment.setPassword(_password);
-		_walletsFragment.setNanjWalletManager(((NANJApplication) getApplication()).getNanjWalletManager());
+		_walletsFragment.setNanjWalletManager(nanjWalletManager);
 		setupActionBar();
-
 		findViewById(R.id.btnCreateWallet).setOnClickListener(view -> {
-			
+			createWallet();
 		});
 	}
 	private void setupActionBar() {

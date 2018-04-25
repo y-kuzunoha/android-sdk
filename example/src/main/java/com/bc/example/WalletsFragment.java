@@ -57,7 +57,7 @@ public class WalletsFragment extends Fragment implements NANJWalletListener {
 
 	@Override
 	public void onCreateWalletSuccess(String privateKey) {
-		
+		walletAdapter.setData(nanjWalletManager.getWalletList());
 	}
 
 	@Override

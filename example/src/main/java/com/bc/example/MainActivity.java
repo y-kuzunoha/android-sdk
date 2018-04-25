@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 
 	//Views define 
 	private Loading _progressDialog;
-
 	//Variables define
 	private String _password = Const.DEFAULT;
 	private NANJWalletManager nanjWalletManager;
@@ -31,17 +30,15 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		setTitle("Test toolbar");
+		setTitle("ETH SDK");
 		setSupportActionBar(findViewById(R.id.toolbar));
-		nanjWalletManager = new NANJWalletManager(this, this);
-	
+		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
+		nanjWalletManager.nanjWalletListener = this;
 		initView();
-
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
 			_password = bundle.getString(Const.BUNDLE_KEY_PASSWORD, Const.DEFAULT);
 		}
-
 		_progressDialog = new Loading(this);
 
 	}
@@ -69,23 +66,14 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 		Log.e("menu click", "onContextItemSelected: " + item.getItemId());
 		switch (item.getItemId()) {
 			case R.id.menuNewWallet:
-				createWallet();
-				break;
-
-			case R.id.menuJsonImport:
-				importWalletFromJson();
-				break;
-
-			case R.id.menuPrivateKeyImport:
-				importWalletFromPrivateKey();
-				break;
-			case R.id.menuGetBalance:
-				getBalanceEth();
+				Intent intent = new Intent(this, WalletsActivity.class);
+				intent.putExtra(Const.BUNDLE_KEY_PASSWORD, _password);
+				startActivityForResult(intent, 100);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	private void createWallet() {
 		_progressDialog.show();
 		nanjWalletManager.createWallet(_password/*, getFilesDir().getAbsoluteFile()*/);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,64 +10,71 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="30dp"
+        android:text="$9,115.66"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:text="$9,115.66" />
+        android:textSize="20sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        app:layout_constraintTop_toBottomOf="@+id/amountUsd"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/amountUsd" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/envTestNet"
-        android:text="Rinkeby(ETH)"
-        android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="24dp"
+        android:text="Rinkeby(ETH)"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/amountUsd"/>
+        app:layout_constraintTop_toBottomOf="@+id/amountUsd" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/amountEth"
-        android:text="12"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/envTestNet"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="24dp"
-        android:layout_marginEnd="24dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="12 &#xf42e;"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        app:fontFamily="@font/font_awesome"
+        app:layout_constraintBaseline_toBaselineOf="@+id/envTestNet"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/changeRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        android:text="(8,12%)"
         android:textColor="@android:color/holo_blue_dark"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/amountEth"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginEnd="24dp"
-        android:text="(8,12%)"/>
+        app:layout_constraintTop_toBottomOf="@id/amountEth" />
 
     <android.support.v7.widget.AppCompatTextView
-        app:layout_constraintRight_toLeftOf="@+id/changeRate"
-        app:layout_constraintBaseline_toBaselineOf="@+id/changeRate"
-        android:layout_marginRight="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="$9,115.66"
         android:textColor="@android:color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/changeRate"
+        app:layout_constraintRight_toLeftOf="@+id/changeRate" />
 
     <android.support.v7.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/txt_receive"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/txt_send"
         app:layout_constraintBottom_toBottomOf="parent" />
+    
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@android:color/darker_gray" />
 
 </android.support.constraint.ConstraintLayout>

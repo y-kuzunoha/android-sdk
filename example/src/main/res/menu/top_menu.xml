@@ -5,13 +5,6 @@
     <item android:id="@+id/menuNewWallet"
         android:title="New wallet"
         app:iconTint="@android:color/white"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_add_white_24px"
         app:showAsAction="ifRoom"/>
-    
-    <item android:id="@+id/menuJsonImport"
-        android:title="Import from json" />
-    <item android:id="@+id/menuPrivateKeyImport"
-        android:title="Import private key" />
-    <item android:id="@+id/menuGetBalance" 
-        android:title="Get balance" />
 </menu>

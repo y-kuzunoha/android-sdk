@@ -23,8 +23,8 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 	private List<NANJWallet> nanjWalletList = new ArrayList<>();
 	
 	public void setData(List<NANJWallet> data) {
-		this.nanjWalletList = data;
-		notifyDataSetChanged();
+//		this.nanjWalletList = data;
+//		notifyDataSetChanged();
 	}
 
 	@Override

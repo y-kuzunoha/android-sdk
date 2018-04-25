@@ -23,8 +23,9 @@ import java.io.File
  * ____________________________________
  */
 
-class NANJWalletManager constructor(context : Context, private val nanjWalletListener : NANJWalletListener) {
+class NANJWalletManager constructor(context : Context) {
 
+	lateinit var nanjWalletListener : NANJWalletListener
 	var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
 	private val _nanjDatabase = NANJDatabase(context)
 	private val _web3j  = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
@@ -32,6 +33,7 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 
 	init {
 		wallets = _nanjDatabase.loadWallets()
+		println("wallets   ${wallets.size}")
 	}
 
 	fun addWallet(wallet : NANJWallet) {
@@ -101,7 +103,6 @@ class NANJWalletManager constructor(context : Context, private val nanjWalletLis
 			address = credentials.address
 		}
 		wallets[nanjWallet.address] = nanjWallet
-
 		_nanjDatabase.saveWallet(nanjWallet)
 	}
 

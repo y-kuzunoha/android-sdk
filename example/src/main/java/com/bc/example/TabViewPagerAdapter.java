@@ -26,7 +26,7 @@ public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public CharSequence getPageTitle(int position) {
 		if(position == 0) {
-			return "Wallets";
+			return "Wallet";
 		}
 		return "Transactions";
 	}

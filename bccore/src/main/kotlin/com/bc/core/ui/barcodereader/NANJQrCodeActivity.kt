@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import com.bc.core.R
 import com.bc.core.util.PermissionUtil
+import com.bc.core.util.uiThread
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
@@ -52,13 +53,10 @@ class NANJQrCodeActivity : AppCompatActivity() {
 
 	private fun initCamera() {
 		surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-			override fun surfaceChanged(p0 : SurfaceHolder?, p1 : Int, p2 : Int, p3 : Int) {
-			}
-
+			override fun surfaceChanged(p0 : SurfaceHolder?, p1 : Int, p2 : Int, p3 : Int) {}
 			override fun surfaceDestroyed(p0 : SurfaceHolder?) {
 				mCameraSource.stop()
 			}
-
 			override fun surfaceCreated(p0 : SurfaceHolder?) {
 				checkCameraPermission()
 			}
@@ -86,10 +84,7 @@ class NANJQrCodeActivity : AppCompatActivity() {
 			.build()
 		mCameraSource.start(surfaceView.holder)
 		mBarcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
-			override fun release() {
-
-			}
-
+			override fun release() {}
 			override fun receiveDetections(detections : Detector.Detections<Barcode>) {
 				val barcodes = detections.detectedItems
 				if (barcodes.size() > 0 && isDetector.not()) {
@@ -100,7 +95,7 @@ class NANJQrCodeActivity : AppCompatActivity() {
 	}
 
 	private fun barcodeReader(info : String) {
-		runOnUiThread {
+		uiThread {
 			isDetector = true
 			AlertDialog.Builder(this@NANJQrCodeActivity)
 				.setTitle("wtf")

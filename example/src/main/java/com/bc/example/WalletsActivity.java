@@ -1,11 +1,21 @@
 package com.bc.example;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import com.bc.core.nanj.NANJWalletListener;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.Toast;
+
+import com.bc.core.nanj.NANJCreateWalletListener;
+import com.bc.core.nanj.NANJImportWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
 /**
@@ -15,31 +25,34 @@ import com.bc.core.nanj.NANJWalletManager;
  * CreatedAt: 4/25/18
  * ____________________________________
  */
-public class WalletsActivity extends AppCompatActivity implements NANJWalletListener {
+public class WalletsActivity extends AppCompatActivity {
+
+	private Loading _progressDialog;
 
 	private NANJWalletManager nanjWalletManager;
 	private WalletsFragment _walletsFragment;
 	private String _password;
-	
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
+		_progressDialog = new Loading(this);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
 		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
 		_walletsFragment = (WalletsFragment) getSupportFragmentManager().findFragmentById(R.id.walletsFragment);
 		_walletsFragment.setPassword(_password);
 		_walletsFragment.setNanjWalletManager(nanjWalletManager);
 		setupActionBar();
-		findViewById(R.id.btnCreateWallet).setOnClickListener(view -> {
-			createWallet();
-		});
+		findViewById(R.id.btnCreateWallet).setOnClickListener(view -> createWallet());
+		findViewById(R.id.btnImportWallet).setOnClickListener(view -> importWalletDialog());
 	}
+
 	private void setupActionBar() {
 		setSupportActionBar(findViewById(R.id.toolbar));
 		setTitle("Wallet list");
 		ActionBar actionBar = getSupportActionBar();
-		if(actionBar != null) {
+		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setHomeAsUpIndicator(R.drawable.ic_back_24px);
 			actionBar.setHomeActionContentDescription("Back");
@@ -56,27 +69,66 @@ public class WalletsActivity extends AppCompatActivity implements NANJWalletList
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onCreateWalletSuccess(String privateKey) {
-		
-	}
-
-	@Override
-	public void onCreateWalletFailure() {
-
-	}
-
-	@Override
-	public void onImportWalletSuccess() {
-
-	}
-
-	@Override
-	public void onImportWalletFailure() {
-
-	}
-
 	private void createWallet() {
-		nanjWalletManager.createWallet(_password/*, getFilesDir().getAbsoluteFile()*/);
+		_progressDialog.show();
+		nanjWalletManager.createWallet(
+			_password,
+			new NANJCreateWalletListener() {
+				@Override
+				public void onCreateWalletSuccess(@NonNull String backup) {
+					_progressDialog.dismiss();
+					backupWallet(backup);
+					_walletsFragment.setData(nanjWalletManager.getWalletList());
+				}
+
+				@Override
+				public void onCreateWalletFailure() {
+					_progressDialog.dismiss();
+					Toast.makeText(WalletsActivity.this, "Create wallet failure.", Toast.LENGTH_LONG).show();
+				}
+			}
+		);
 	}
+
+	private void backupWallet(String wallet) {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, wallet);
+		sendIntent.setType("text/plain");
+		startActivity(Intent.createChooser(sendIntent, "Backup private key"));
+	}
+
+	private void importWalletDialog() {
+		View view = LayoutInflater.from(this).inflate(R.layout.dialog_import_json, null);
+		RadioButton radioButton = view.findViewById(R.id.rdJson);
+		AppCompatEditText edText = view.findViewById(R.id.edPrivateKey);
+		new AlertDialog.Builder(this)
+			.setTitle("Import wallet")
+			.setView(view)
+			.setNegativeButton("Cancel", null)
+			.setPositiveButton("Import", (dialogInterface, i) -> {
+				String s = edText.getText().toString();
+				_progressDialog.show();
+				if (radioButton.isChecked()) {
+					nanjWalletManager.importWallet(_password, s, nanjImportWalletListener);
+				} else {
+					nanjWalletManager.importWallet(s, nanjImportWalletListener);
+				}
+			})
+			.show();
+	}
+
+	private NANJImportWalletListener nanjImportWalletListener = new NANJImportWalletListener() {
+		@Override
+		public void onImportWalletSuccess() {
+			_progressDialog.dismiss();
+			_walletsFragment.setData(nanjWalletManager.getWalletList());
+		}
+
+		@Override
+		public void onImportWalletFailure() {
+			_progressDialog.dismiss();
+			Toast.makeText(WalletsActivity.this, "Import wallet failure.", Toast.LENGTH_LONG).show();
+		}
+	};
 }

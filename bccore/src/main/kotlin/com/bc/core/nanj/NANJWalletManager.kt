@@ -6,11 +6,7 @@ import com.bc.core.util.uiThread
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.web3j.crypto.Credentials
-import org.web3j.crypto.Keys
-import org.web3j.crypto.Wallet
-import org.web3j.crypto.WalletFile
-import org.web3j.crypto.WalletUtils
+import org.web3j.crypto.*
 import org.web3j.protocol.Web3jFactory
 import org.web3j.protocol.http.HttpService
 import java.io.File
@@ -25,10 +21,9 @@ import java.io.File
 
 class NANJWalletManager constructor(context : Context) {
 
-	lateinit var nanjWalletListener : NANJWalletListener
-	var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
+	private var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
 	private val _nanjDatabase = NANJDatabase(context)
-	private val _web3j  = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
+	private val _web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
 	lateinit var wallet : NANJWallet
 
 	init {
@@ -41,7 +36,7 @@ class NANJWalletManager constructor(context : Context) {
 	}
 
 	fun getWalletList() : MutableList<NANJWallet> = wallets.values.toMutableList()
-	
+
 	/**
 	 * Import a wallet from keystore
 	 *
@@ -49,7 +44,7 @@ class NANJWalletManager constructor(context : Context) {
 	 * @param fileKeystore
 	 *
 	 * */
-	fun importWallet(password : String, fileKeystore : File) {
+	fun importWallet(password : String, fileKeystore : File, nanjWalletListener : NANJImportWalletListener) {
 		doAsync(
 			{ uiThread { nanjWalletListener.onImportWalletFailure() } },
 			{
@@ -67,7 +62,7 @@ class NANJWalletManager constructor(context : Context) {
 	 * @param jsonWallet
 	 *
 	 * */
-	fun importWallet(password : String, jsonWallet : String) {
+	fun importWallet(password : String, jsonWallet : String, nanjWalletListener : NANJImportWalletListener) {
 		doAsync(
 			{ uiThread { nanjWalletListener.onImportWalletFailure() } },
 			{
@@ -86,7 +81,7 @@ class NANJWalletManager constructor(context : Context) {
 	 * @param privateKey
 	 *
 	 * */
-	fun importWallet(privateKey : String) {
+	fun importWallet(privateKey : String, nanjWalletListener : NANJImportWalletListener) {
 		doAsync(
 			{ uiThread { nanjWalletListener.onImportWalletFailure() } },
 			{
@@ -117,16 +112,16 @@ class NANJWalletManager constructor(context : Context) {
 	 * @param password
 	 *
 	 * */
-	fun createWallet(password : String) {
+	fun createWallet(password : String, createWalletListener : NANJCreateWalletListener) {
 		doAsync(
-			{ uiThread { nanjWalletListener.onCreateWalletFailure() } },
+			{ uiThread { createWalletListener.onCreateWalletFailure() } },
 			{
 				val ecKeyPair = Keys.createEcKeyPair()
 				val addressWallet = Wallet.createLight(password, ecKeyPair)
 				val credentials = Credentials.create(Wallet.decrypt(password, addressWallet))
 				importWalletFromCredentials(credentials)
 				val objectMapper = ObjectMapper()
-				uiThread { nanjWalletListener.onCreateWalletSuccess(objectMapper.writeValueAsString(addressWallet)) }
+				uiThread { createWalletListener.onCreateWalletSuccess(objectMapper.writeValueAsString(addressWallet)) }
 			}
 		)
 	}
@@ -137,10 +132,10 @@ class NANJWalletManager constructor(context : Context) {
 	}
 
 	fun enableWallet(position : Int) {
+		if (position >= 0 && position < wallets.size) return // return if out size of list
 		val list = wallets.keys.toMutableList()
-		if(position >= 0 && position < list.size) return
 		val key = list[position]
-		val wallet = wallets[key] ?: return
+		val wallet = wallets[key]!!
 		this.enableWallet(wallet)
 	}
 

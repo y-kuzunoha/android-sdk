@@ -18,10 +18,10 @@ import android.widget.Toast;
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
-public class MainActivity extends AppCompatActivity implements NANJWalletListener {
+public class MainActivity extends AppCompatActivity {
 
-	//Views define 
-	private Loading _progressDialog;
+	//Views define
+	
 	//Variables define
 	private String _password = Const.DEFAULT;
 	private NANJWalletManager nanjWalletManager;
@@ -33,14 +33,11 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 		setTitle("ETH SDK");
 		setSupportActionBar(findViewById(R.id.toolbar));
 		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
-		nanjWalletManager.nanjWalletListener = this;
 		initView();
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
 			_password = bundle.getString(Const.BUNDLE_KEY_PASSWORD, Const.DEFAULT);
 		}
-		_progressDialog = new Loading(this);
-
 	}
 	
 	private void initView() {
@@ -72,78 +69,6 @@ public class MainActivity extends AppCompatActivity implements NANJWalletListene
 				break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	private void createWallet() {
-		_progressDialog.show();
-		nanjWalletManager.createWallet(_password/*, getFilesDir().getAbsoluteFile()*/);
-	}
-
-	private void importWalletFromPrivateKey() {
-		View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_import_private_key, null, false);
-		AppCompatEditText edPrivateKey = contentView.findViewById(R.id.edPrivateKey);
-		new AlertDialog.Builder(this)
-			.setTitle("Input private key")
-			.setView(contentView)
-			.setNegativeButton("Cancel", null)
-			.setPositiveButton("Ok", (dialog, which) -> {
-				String privateKey = edPrivateKey.getText().toString();
-				if (!TextUtils.isEmpty(privateKey)) {
-					_progressDialog.show();
-					nanjWalletManager.importWallet(privateKey/*"19051355975941725161733792530046853610926205457968420220901640107349227711776"*/);
-				}}).show();
-	}
-	
-	private void importWalletFromJson() {
-		View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_import_json, null, false);
-		AppCompatEditText jsonEd = contentView.findViewById(R.id.edPrivateKey);
-		new AlertDialog.Builder(this)
-			.setTitle("Input Json")
-			.setView(contentView)
-			.setNegativeButton("Cancel", null)
-			.setPositiveButton("Ok", (dialog, which) -> {
-				String json = jsonEd.getText().toString();
-				if (!TextUtils.isEmpty(json)) {
-					_progressDialog.show();
-					nanjWalletManager.importWallet(_password, json);
-				}}).show();
-	}
-
-	private void updateWalletView() {
-		//walletAdapter.setData(nanjWalletManager.getWallets());
-	}
-
-	@Override
-	public void onCreateWalletSuccess(@NonNull String privateKey) {
-		updateWalletView();
-		_progressDialog.dismiss();
-		backupPrivateKey(privateKey);
-	}
-
-	@Override
-	public void onCreateWalletFailure() {
-		_progressDialog.dismiss();
-		Toast.makeText(this, "create wallet is failure", Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public void onImportWalletSuccess() {
-		updateWalletView();
-		_progressDialog.dismiss();
-	}
-
-	@Override
-	public void onImportWalletFailure() {
-		_progressDialog.dismiss();
-		Toast.makeText(this, "import wallet is failure", Toast.LENGTH_LONG).show();
-	}
-	
-	private void backupPrivateKey(String privateKey) {
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, privateKey);
-		sendIntent.setType("text/plain");
-		startActivity(Intent.createChooser(sendIntent, "Backup private key"));
 	}
 	
 	private void getBalanceEth() {

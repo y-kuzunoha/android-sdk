@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bc.core.nanj.NANJWallet;
 import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ____________________________________
@@ -23,7 +25,7 @@ import java.util.ArrayList;
  * CreatedAt: 4/23/18
  * ____________________________________
  */
-public class WalletsFragment extends Fragment implements NANJWalletListener {
+public class WalletsFragment extends Fragment {
 
 	private NANJWalletManager nanjWalletManager;
 	private WalletAdapter walletAdapter = new WalletAdapter();
@@ -51,28 +53,11 @@ public class WalletsFragment extends Fragment implements NANJWalletListener {
 
 	public void setNanjWalletManager(NANJWalletManager nanjWalletManager) {
 		this.nanjWalletManager = nanjWalletManager;
-		nanjWalletManager.nanjWalletListener = this;
-		walletAdapter.setData(nanjWalletManager.getWalletList());
+		setData(nanjWalletManager.getWalletList());
 	}
-
-	@Override
-	public void onCreateWalletSuccess(String privateKey) {
-		walletAdapter.setData(nanjWalletManager.getWalletList());
-	}
-
-	@Override
-	public void onCreateWalletFailure() {
-
-	}
-
-	@Override
-	public void onImportWalletSuccess() {
-
-	}
-
-	@Override
-	public void onImportWalletFailure() {
-
+	
+	public void setData(List<NANJWallet> wallets) {
+		walletAdapter.setData(wallets);
 	}
 
 	public void setPassword(String _password) {

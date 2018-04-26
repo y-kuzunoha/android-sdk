@@ -5,6 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rdJson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="From json"/>
+        <RadioButton
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From private key"/>
+    </RadioGroup>
+    
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edPrivateKey"
         android:layout_width="match_parent"

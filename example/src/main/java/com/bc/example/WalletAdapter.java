@@ -1,5 +1,6 @@
 package com.bc.example;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,24 +21,37 @@ import java.util.List;
  */
 public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHolder> {
 
+	public interface OnItemClickListener {
+		void onItemClick(int position, NANJWallet wallet);
+	}
+
 	private List<NANJWallet> nanjWalletList = new ArrayList<>();
+	private OnItemClickListener onClickListener;
 	
 	public void setData(List<NANJWallet> data) {
 		this.nanjWalletList = data;
 		notifyDataSetChanged();
 	}
 
+	public void setOnItemClickListener(OnItemClickListener onClickListener) {
+		this.onClickListener = onClickListener;
+	}
+
+	@NonNull
 	@Override
-	public WalletHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public WalletHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_wallet, parent, false);
 		return new WalletHolder(view);
 	}
 
 	@Override
-	public void onBindViewHolder(WalletHolder holder, int position) {
+	public void onBindViewHolder(@NonNull WalletHolder holder, int position) {
 		NANJWallet wallet = nanjWalletList.get(position);
 		holder.name.setText(wallet.getName());
 		holder.address.setText(wallet.getAddress());
+		holder.itemView.setOnClickListener(view ->
+			onClickListener.onItemClick(position, wallet)
+		);
 	}
 
 	@Override
@@ -49,7 +63,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		
 		public AppCompatTextView name;
 		public AppCompatTextView address;
-		
+
 		WalletHolder(View itemView) {
 			super(itemView);
 			name = itemView.findViewById(R.id.name);

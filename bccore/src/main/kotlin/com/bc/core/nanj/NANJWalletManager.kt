@@ -24,11 +24,13 @@ class NANJWalletManager constructor(context : Context) {
 	private var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
 	private val _nanjDatabase = NANJDatabase(context)
 	private val _web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
-	lateinit var wallet : NANJWallet
+	var wallet : NANJWallet?=null
 
 	init {
 		wallets = _nanjDatabase.loadWallets()
-		println("wallets   ${wallets.size}")
+		if(wallets.isNotEmpty()) {
+			enableWallet(0)
+		}
 	}
 
 	fun addWallet(wallet : NANJWallet) {
@@ -127,12 +129,13 @@ class NANJWalletManager constructor(context : Context) {
 	}
 
 	fun enableWallet(wallet : NANJWallet) {
-		this.wallet = wallet
-		this.wallet.web3j = _web3j
+		this.wallet = wallet.apply {
+			this.web3j = _web3j
+		}
 	}
 
 	fun enableWallet(position : Int) {
-		if (position >= 0 && position < wallets.size) return // return if out size of list
+		if (position < 0 || position >= wallets.size) return // return if out size of list
 		val list = wallets.keys.toMutableList()
 		val key = list[position]
 		val wallet = wallets[key]!!

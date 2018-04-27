@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -16,7 +17,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="30dp"
-        android:text="$9,115.66"
+        tools:text="$9,115.66"
         android:textColor="@android:color/black"
         android:textSize="20sp" />
 
@@ -31,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="24dp"
-        android:text="Rinkeby(ETH)"
+        android:text="@string/txt_env_eth"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/amountUsd" />
@@ -41,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:text="12 &#xf42e;"
+        tools:text="0 &#xf42e;"
         android:textColor="@android:color/black"
         android:textSize="12sp"
         app:fontFamily="@font/font_awesome"
@@ -54,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="8dp"
-        android:text="(8,12%)"
+        tools:text="(8,12%)"
         android:textColor="@android:color/holo_blue_dark"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/amountEth" />
@@ -63,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="$9,115.66"
+        tools:text="$9,115.66"
         android:textColor="@android:color/black"
         app:layout_constraintBaseline_toBaselineOf="@+id/changeRate"
         app:layout_constraintRight_toLeftOf="@+id/changeRate" />

@@ -5,4 +5,5 @@
     <string name="txt_receive">Receive</string>
     <string name="txt_send">Send</string>
     <string name="txt_amount_eth">%s &#xf42e;</string>
+    <string name="txt_env_eth">Rinkeby(ETH)</string>
 </resources>

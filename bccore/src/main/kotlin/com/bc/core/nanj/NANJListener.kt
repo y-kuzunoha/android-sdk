@@ -13,7 +13,7 @@ import org.web3j.tx.Contract
  */
 
 interface NANJCreateWalletListener {
-	fun onCreateWalletSuccess(backup: String)
+	fun onCreateWalletSuccess(backup: String, wallet: NANJWallet)
 	fun onCreateWalletFailure()
 }
 

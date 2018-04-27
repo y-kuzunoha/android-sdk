@@ -1,7 +1,10 @@
 package com.bc.example;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,9 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
 import com.bc.core.nanj.NANJCreateWalletListener;
 import com.bc.core.nanj.NANJImportWalletListener;
+import com.bc.core.nanj.NANJWallet;
 import com.bc.core.nanj.NANJWalletManager;
 
 /**
@@ -28,15 +31,16 @@ import com.bc.core.nanj.NANJWalletManager;
 public class WalletsActivity extends AppCompatActivity {
 
 	private Loading _progressDialog;
-
 	private NANJWalletManager nanjWalletManager;
 	private WalletsFragment _walletsFragment;
 	private String _password;
+	private SharedPreferences _sharedPreferences;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
+		_sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 		_progressDialog = new Loading(this);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
 		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
@@ -75,12 +79,14 @@ public class WalletsActivity extends AppCompatActivity {
 			_password,
 			new NANJCreateWalletListener() {
 				@Override
-				public void onCreateWalletSuccess(@NonNull String backup) {
+				public void onCreateWalletSuccess(@NonNull String backup, @NonNull NANJWallet wallet) {
 					_progressDialog.dismiss();
 					backupWallet(backup);
+					_sharedPreferences.edit()
+						.putString(Const.STORAGE_CURRENT_WALLET, wallet.toString())
+						.apply();
 					_walletsFragment.setData(nanjWalletManager.getWalletList());
 				}
-
 				@Override
 				public void onCreateWalletFailure() {
 					_progressDialog.dismiss();
@@ -95,9 +101,10 @@ public class WalletsActivity extends AppCompatActivity {
 		sendIntent.setAction(Intent.ACTION_SEND);
 		sendIntent.putExtra(Intent.EXTRA_TEXT, wallet);
 		sendIntent.setType("text/plain");
-		startActivity(Intent.createChooser(sendIntent, "Backup private key"));
+		startActivity(Intent.createChooser(sendIntent, "Backup wallet"));
 	}
 
+	@SuppressLint("InflateParams")
 	private void importWalletDialog() {
 		View view = LayoutInflater.from(this).inflate(R.layout.dialog_import_json, null);
 		RadioButton radioButton = view.findViewById(R.id.rdJson);

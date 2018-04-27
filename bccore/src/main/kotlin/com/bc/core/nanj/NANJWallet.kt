@@ -29,10 +29,15 @@ class NANJWallet constructor(private val nanjTransactionListener : NANJTransacti
 		}
 
 	fun getAmountEth() : BigInteger {
-		val getBalance : EthGetBalance = _web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST)
-			.sendAsync()
-			.get()
-		return getBalance.balance
+		try {
+			val getBalance : EthGetBalance = _web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST)
+				.sendAsync()
+				.get()
+			return getBalance.balance
+		} catch (e: Exception) {
+			e.printStackTrace()
+			return BigInteger("0")
+		}
 	}
 
 	fun getTransactions() : List<NANJTransaction> = emptyList()

@@ -6,7 +6,11 @@ import com.bc.core.util.uiThread
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.web3j.crypto.*
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.Keys
+import org.web3j.crypto.Wallet
+import org.web3j.crypto.WalletFile
+import org.web3j.crypto.WalletUtils
 import org.web3j.protocol.Web3jFactory
 import org.web3j.protocol.http.HttpService
 import java.io.File
@@ -24,11 +28,11 @@ class NANJWalletManager constructor(context : Context) {
 	private var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
 	private val _nanjDatabase = NANJDatabase(context)
 	private val _web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
-	var wallet : NANJWallet?=null
+	var wallet : NANJWallet? = null
 
 	init {
 		wallets = _nanjDatabase.loadWallets()
-		if(wallets.isNotEmpty()) {
+		if (wallets.isNotEmpty()) {
 			enableWallet(0)
 		}
 	}
@@ -95,17 +99,22 @@ class NANJWalletManager constructor(context : Context) {
 
 	}
 
-	private fun importWalletFromCredentials(credentials : Credentials) {
+	private fun importWalletFromCredentials(credentials : Credentials) : NANJWallet {
 		val nanjWallet = NANJWallet().apply {
 			address = credentials.address
 		}
 		wallets[nanjWallet.address] = nanjWallet
 		_nanjDatabase.saveWallet(nanjWallet)
+		return nanjWallet
 	}
 
 	fun removeWallet(position : Int) {
 		val key = wallets.keys.toMutableList()[position]
 		wallets.remove(key)
+	}
+	fun removeWallet(wallet : NANJWallet) {
+		_nanjDatabase.removeWallet(wallet)
+		wallets.remove(wallet.address)
 	}
 
 	/**
@@ -121,9 +130,9 @@ class NANJWalletManager constructor(context : Context) {
 				val ecKeyPair = Keys.createEcKeyPair()
 				val addressWallet = Wallet.createLight(password, ecKeyPair)
 				val credentials = Credentials.create(Wallet.decrypt(password, addressWallet))
-				importWalletFromCredentials(credentials)
+				val wallet = importWalletFromCredentials(credentials)
 				val objectMapper = ObjectMapper()
-				uiThread { createWalletListener.onCreateWalletSuccess(objectMapper.writeValueAsString(addressWallet)) }
+				uiThread { createWalletListener.onCreateWalletSuccess(objectMapper.writeValueAsString(addressWallet), wallet) }
 			}
 		)
 	}

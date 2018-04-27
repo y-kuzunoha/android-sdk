@@ -1,5 +1,6 @@
 package com.bc.example;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,25 +13,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bc.core.nanj.NANJWallet;
-import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ____________________________________
- *
- * Generator: Hieu.TV - tvhieuit@gmail.com
- * CreatedAt: 4/23/18
- * ____________________________________
+ ____________________________________
+
+ Generator: Hieu.TV - tvhieuit@gmail.com
+ CreatedAt: 4/23/18
+ ____________________________________
  */
 public class WalletsFragment extends Fragment {
 
 	private NANJWalletManager nanjWalletManager;
 	private WalletAdapter walletAdapter = new WalletAdapter();
 	private String _password;
-	
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,14 +50,29 @@ public class WalletsFragment extends Fragment {
 		walletAdapter.setOnItemClickListener((position, wallet) ->
 			nanjWalletManager.enableWallet(wallet)
 		);
+		walletAdapter.setOnRemoveWalletListener(wallet -> {
+			nanjWalletManager.removeWallet(wallet);
+			walletAdapter.setData(nanjWalletManager.getWalletList());
+		});
+		walletAdapter.setOnBackupWalletListener(wallet ->
+			backupWallet("don't know")
+		);
 		walletList.setAdapter(walletAdapter);
+	}
+
+	private void backupWallet(String wallet) {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, wallet);
+		sendIntent.setType("text/plain");
+		startActivity(Intent.createChooser(sendIntent, "Backup wallet"));
 	}
 
 	public void setNanjWalletManager(NANJWalletManager nanjWalletManager) {
 		this.nanjWalletManager = nanjWalletManager;
 		setData(nanjWalletManager.getWalletList());
 	}
-	
+
 	public void setData(List<NANJWallet> wallets) {
 		walletAdapter.setData(wallets);
 	}

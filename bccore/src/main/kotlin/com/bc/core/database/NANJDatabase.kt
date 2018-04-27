@@ -23,7 +23,7 @@ object DatabaseQuery {
 	const val SQL_DATABASE_VERSION = 2
 	const val SQL_WALLET_TABLE = "wallet"
 	const val SQL_CREATE_WALLET = "CREATE TABLE $SQL_WALLET_TABLE (" +
-		"_id INTEGER PRIMARY KEY," +
+		"_id TEXT PRIMARY KEY," +
 		"_address TEXT," +
 		"_wallet TEXT," +
 		"_name TEXT)"
@@ -60,10 +60,15 @@ class NANJDatabase(context : Context) {
 
 	fun saveWallet(wallet : NANJWallet) {
 		val values = ContentValues().apply {
+			put("_id", wallet.address)
 			put("_address", wallet.address)
 			put("_name", wallet.name)
 		}
 		dbWrite.insert(SQL_WALLET_TABLE, null, values)
+	}
+
+	fun removeWallet(wallet : NANJWallet) {
+		dbWrite.delete(SQL_WALLET_TABLE, "_address = '" + wallet.address +"'", null)
 	}
 }
 

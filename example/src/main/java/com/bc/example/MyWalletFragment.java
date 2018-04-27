@@ -1,6 +1,8 @@
 package com.bc.example;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bc.core.nanj.NANJWalletManager;
+
+import java.math.BigInteger;
 
 /**
  ____________________________________
@@ -30,6 +34,7 @@ public class MyWalletFragment extends Fragment {
 
 	public void onViewCreated(@NonNull View view, Bundle bundle) {
 		super.onViewCreated(view, bundle);
+		_nanjWalletManager = ((NANJApplication)getActivity().getApplication()).getNanjWalletManager();
 		address = view.findViewById(R.id.address);
 		amountEth = view.findViewById(R.id.amountEth);
 	}
@@ -37,14 +42,18 @@ public class MyWalletFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		_nanjWalletManager = ((NANJApplication)getActivity().getApplication()).getNanjWalletManager();
 		intView();
 	}
 
 	private void intView() {
-		if(_nanjWalletManager.getWallet() != null) {
+		if(_nanjWalletManager != null && _nanjWalletManager.getWallet() != null) {
 			address.setText(_nanjWalletManager.getWallet().getAddress());
-			amountEth.setText(String.format(getString(R.string.txt_amount_eth), _nanjWalletManager.getWallet().getAmountEth()));
+			new Handler().post(() -> {
+				BigInteger bigInteger = _nanjWalletManager.getWallet().getAmountEth();
+				new Handler(Looper.getMainLooper()).post(() ->
+					amountEth.setText(String.format(getString(R.string.txt_amount_eth), bigInteger))
+				);
+			});
 		}
 	}
 }

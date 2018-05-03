@@ -25,7 +25,7 @@ object DatabaseQuery {
 	const val SQL_CREATE_WALLET = "CREATE TABLE $SQL_WALLET_TABLE (" +
 		"_id TEXT PRIMARY KEY," +
 		"_address TEXT," +
-		"_wallet TEXT," +
+		"_private_key TEXT," +
 		"_name TEXT)"
 }
 
@@ -50,6 +50,7 @@ class NANJDatabase(context : Context) {
 				val wallet = NANJWallet().apply {
 					address = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_address"))
 					name = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_name"))
+					privatekey = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_private_key"))
 				}
 				wallets[wallet.address] = wallet
 			} while (walletsCursor.moveToNext())
@@ -63,12 +64,13 @@ class NANJDatabase(context : Context) {
 			put("_id", wallet.address)
 			put("_address", wallet.address)
 			put("_name", wallet.name)
+			put("_private_key", wallet.privatekey)
 		}
 		dbWrite.insert(SQL_WALLET_TABLE, null, values)
 	}
 
 	fun removeWallet(wallet : NANJWallet) {
-		dbWrite.delete(SQL_WALLET_TABLE, "_address = '" + wallet.address +"'", null)
+		dbWrite.delete(SQL_WALLET_TABLE, "_address = '" + wallet.address + "'", null)
 	}
 }
 
@@ -78,7 +80,7 @@ class NANJDatabaseHelper(context : Context) : SQLiteOpenHelper(context, SQL_DATA
 	}
 
 	override fun onUpgrade(db : SQLiteDatabase, oldVersion : Int, newVersion : Int) {
-		
+
 	}
 
 }

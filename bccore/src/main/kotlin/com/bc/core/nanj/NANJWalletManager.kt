@@ -101,7 +101,9 @@ class NANJWalletManager constructor(context : Context) {
 
 	private fun importWalletFromCredentials(credentials : Credentials) : NANJWallet {
 		val nanjWallet = NANJWallet().apply {
-			address = credentials.address
+			this.address = credentials.address
+			this.cridentals = credentials
+			this.privatekey = credentials.ecKeyPair.privateKey.toString()
 		}
 		wallets[nanjWallet.address] = nanjWallet
 		_nanjDatabase.saveWallet(nanjWallet)
@@ -130,9 +132,12 @@ class NANJWalletManager constructor(context : Context) {
 				val ecKeyPair = Keys.createEcKeyPair()
 				val addressWallet = Wallet.createLight(password, ecKeyPair)
 				val credentials = Credentials.create(Wallet.decrypt(password, addressWallet))
-				val wallet = importWalletFromCredentials(credentials)
 				val objectMapper = ObjectMapper()
-				uiThread { createWalletListener.onCreateWalletSuccess(objectMapper.writeValueAsString(addressWallet), wallet) }
+				val strWallet = objectMapper.writeValueAsString(addressWallet)
+				val wallet = importWalletFromCredentials(credentials)
+				println("mywallet address           -> ${addressWallet.address}")
+				println("mywallet private key       -> ${ecKeyPair.privateKey}")
+				uiThread { createWalletListener.onCreateWalletSuccess(strWallet, wallet) }
 			}
 		)
 	}
@@ -140,6 +145,12 @@ class NANJWalletManager constructor(context : Context) {
 	fun enableWallet(wallet : NANJWallet) {
 		this.wallet = wallet.apply {
 			this.web3j = _web3j
+			this.cridentals = Credentials.create(wallet.privatekey)
+			this.contract = NANJSmartContract.load(
+				"0x6a1b05e6d219b84184ab76acc373706763e3bcfd",
+				_web3j,
+				cridentals!!
+			)
 		}
 	}
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/nfc"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:padding="4dp"
+        android:text="NFC"
+        android:gravity="center"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/qrcode"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:padding="4dp"
+        android:text="QR"
+        android:gravity="center"
+        app:layout_constraintRight_toLeftOf="@+id/nfc"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/address"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/qrcode"
+        android:hint="Address"
+        android:layout_width="0dp"
+        android:layout_height="48dp" />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/amountEth"
+        app:layout_constraintTop_toBottomOf="@+id/address"
+        android:hint="amount Eth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>

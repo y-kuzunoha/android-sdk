@@ -27,6 +27,7 @@
         android:hint="Input password"
         android:inputType="textPassword"
         android:lines="1"
+        android:text="qwerty2018"
         android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@+id/glLoginAction" />
 

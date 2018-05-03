@@ -2,12 +2,14 @@ package com.bc.core.ui.barcodereader
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import com.bc.core.R
+import com.bc.core.nanj.NANJWallet
 import com.bc.core.util.PermissionUtil
 import com.bc.core.util.uiThread
 import com.google.android.gms.vision.CameraSource
@@ -15,6 +17,7 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_barcode_reader.*
+import org.web3j.crypto.WalletUtils
 
 
 /**
@@ -87,8 +90,19 @@ class NANJQrCodeActivity : AppCompatActivity() {
 			override fun release() {}
 			override fun receiveDetections(detections : Detector.Detections<Barcode>) {
 				val barcodes = detections.detectedItems
+				println("barcode detect size -->  ${barcodes.size()}")
 				if (barcodes.size() > 0 && isDetector.not()) {
-					barcodeReader(barcodes.valueAt(0).displayValue)
+					isDetector = true
+//					barcodeReader(barcodes.valueAt(0).displayValue)
+					val address = barcodes.valueAt(0).displayValue
+					if (WalletUtils.isValidAddress(address)) {
+						val intent = Intent()
+						intent.putExtra(NANJWallet.WALLET_ADDRESS, address)
+						setResult(NANJWallet.QRCODE_RESULT_CODE, intent)
+						finish()
+					} else {
+						isDetector = false
+					}
 				}
 			}
 		})
@@ -96,16 +110,18 @@ class NANJQrCodeActivity : AppCompatActivity() {
 
 	private fun barcodeReader(info : String) {
 		uiThread {
-			isDetector = true
 			AlertDialog.Builder(this@NANJQrCodeActivity)
-				.setTitle("wtf")
-				.setMessage(info)
-				.apply {
-					setOnDismissListener {
-						isDetector = false
-					}
-					setPositiveButton("Ok") { _, _ -> isDetector = false }
-				}.show()
+				.setTitle("wallet address")
+				.setMessage("Do you want send to this wallet address ?\n$info")
+				.setCancelable(false)
+				.setNegativeButton("Cancel", { _,_ -> isDetector = false })
+				.setPositiveButton("Ok") { _, _ ->
+					val intent = Intent()
+					intent.putExtra(NANJWallet.WALLET_ADDRESS, info)
+					setResult(NANJWallet.QRCODE_RESULT_CODE, intent)
+					finish()
+				}
+				.show()
 		}
 	}
 }

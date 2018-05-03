@@ -1,21 +1,13 @@
 package com.bc.example;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.support.design.widget.TabLayout;
-import android.widget.Toast;
-import com.bc.core.nanj.NANJWalletListener;
 import com.bc.core.nanj.NANJWalletManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -70,8 +62,9 @@ public class MainActivity extends AppCompatActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void getBalanceEth() {
-		Log.i("ETH", "getBalanceEth: " + nanjWalletManager.getWallet().getAmountEth());
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 }

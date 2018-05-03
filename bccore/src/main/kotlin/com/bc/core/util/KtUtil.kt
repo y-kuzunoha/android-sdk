@@ -70,6 +70,16 @@ inline fun <reified T : Any> Activity.launchActivity(
 	startActivityForResult(intent, requestCode, options)
 }
 
+inline fun <reified T : Any> Fragment.launchActivity(
+	requestCode : Int = -1,
+	options : Bundle? = null,
+	noinline init : Intent.() -> Unit = {}) {
+
+	val intent = newIntent<T>(context!!)
+	intent.init()
+	startActivityForResult(intent, requestCode, options)
+}
+
 inline fun <reified T : Any> Context.launchActivity(
 	options : Bundle? = null,
 	noinline init : Intent.() -> Unit = {}) {

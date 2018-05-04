@@ -68,7 +68,7 @@ public class MyWalletFragment extends Fragment {
 	@SuppressLint("SetTextI18n")
 	private void intView() {
 		if(_nanjWalletManager != null && _nanjWalletManager.getWallet() != null) {
-			address.setText(_nanjWalletManager.getWallet().getAddress());
+			address.setText(String.format("Address: %s", _nanjWalletManager.getWallet().getAddress()));
 			Log.d("MyWalletFragment", "address --> " + _nanjWalletManager.getWallet().getAddress());
 
 			Executors.newCachedThreadPool().execute(() -> {
@@ -78,7 +78,7 @@ public class MyWalletFragment extends Fragment {
 				if(getActivity() != null) {
 					getActivity().runOnUiThread(() -> {
 							amountEth.setText(String.format(getString(R.string.txt_amount_eth), bigInteger));
-							amountUsd.setText(coin);
+							amountUsd.setText(String.format("%s (NANJ COIN)", coin));
 						}
 					);
 				}

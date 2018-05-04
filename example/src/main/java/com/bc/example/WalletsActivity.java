@@ -109,7 +109,6 @@ public class WalletsActivity extends AppCompatActivity {
 		View view = LayoutInflater.from(this).inflate(R.layout.dialog_import_json, null);
 		RadioButton radioButton = view.findViewById(R.id.rdJson);
 		AppCompatEditText edText = view.findViewById(R.id.edPrivateKey);
-		edText.setText("d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020");
 		new AlertDialog.Builder(this)
 			.setTitle("Import wallet")
 			.setView(view)

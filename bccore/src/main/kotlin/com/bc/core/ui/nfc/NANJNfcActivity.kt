@@ -9,6 +9,17 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.bc.core.R
 import kotlinx.android.synthetic.main.activity_nfc.*
+import android.R.attr.tag
+import android.nfc.tech.Ndef
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
+import com.bc.core.nanj.NANJWallet
+import org.web3j.crypto.WalletUtils
+import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
+import java.util.*
+import kotlin.experimental.and
+
 
 /**
  * ____________________________________
@@ -18,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_nfc.*
  * ____________________________________
  */
 
-class NANJNfcActivity : AppCompatActivity() {
+open class NANJNfcActivity : AppCompatActivity() {
 
 	companion object {
 		const val REQUEST_CODE = 0
@@ -30,10 +41,10 @@ class NANJNfcActivity : AppCompatActivity() {
 	private lateinit var pendingIntent : PendingIntent
 
 	private var filterIntent : Array<IntentFilter> = arrayOf(
-		IntentFilter.create(NfcAdapter.ACTION_NDEF_DISCOVERED, "*/*")
+		IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
 	)
 
-	private var mTechLists : Array<Array<String>>? = null
+	private var mTechLists : Array<Array<String>>? = arrayOf(arrayOf(Ndef::class.java.name))
 
 	override fun onCreate(savedInstanceState : Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -62,12 +73,41 @@ class NANJNfcActivity : AppCompatActivity() {
 	}
 
 	override fun onNewIntent(intent : Intent?) {
-		println("nfc read : wwwwwwwwwwwwwwwwwwwwwww")
-		nfcInfo.text = intent.toString()
+		println("nfc start parser")
 		intent?.let {
 			val tag = it.getParcelableExtra(NfcAdapter.EXTRA_TAG) as Tag
-			println("tag -> ${tag.id}")
+			val ndef = Ndef.get(tag)
+			/*ndef.connect()
+			println("nfc can write ${ndef.isWritable}")
+			if(ndef.isWritable) {
+				val payload = "0xb66e92f4713de200bc9cb61269a746aa005cbec3"
+				val nfcRecord = NdefRecord(NdefRecord.TNF_MIME_MEDIA,ByteArray(0), ByteArray(0), payload.toByteArray())
+				val nfcMessage = NdefMessage(arrayOf(nfcRecord))
+				ndef.writeNdefMessage(nfcMessage)
+				ndef.close()
+			}*/
+
+
+			val ndefMessage = ndef.cachedNdefMessage
+			val records = ndefMessage.records
+			for (ndefRecord in records) {
+					try {
+						val payload = ndefRecord.payload
+						val s = String(payload)
+						println("nfc string -> $s")
+						if(WalletUtils.isValidAddress(s)) {
+							val intent = Intent()
+							intent.putExtra(NANJWallet.WALLET_ADDRESS, s)
+							setResult(NANJWallet.QRCODE_RESULT_CODE, intent)
+							finish()
+							return
+						}
+					} catch (e : Exception) {
+						e.printStackTrace()
+					}
+			}
 		}
+		println("nfc end parser")
 	}
 
 	private fun dispatch(enable : Boolean) {

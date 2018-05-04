@@ -9,6 +9,7 @@ import com.bc.core.database.DatabaseQuery.SQL_DATABASE_NAME
 import com.bc.core.database.DatabaseQuery.SQL_DATABASE_VERSION
 import com.bc.core.database.DatabaseQuery.SQL_WALLET_TABLE
 import com.bc.core.nanj.NANJWallet
+import org.web3j.crypto.Wallet
 
 /**
  * ____________________________________
@@ -59,7 +60,7 @@ class NANJDatabase(context : Context) {
 		return wallets
 	}
 
-	fun saveWallet(wallet : NANJWallet) {
+	fun saveWallet(wallet : NANJWallet, keystore: String?= null) {
 		val values = ContentValues().apply {
 			put("_id", wallet.address)
 			put("_address", wallet.address)

@@ -6,11 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.NANJTransactionListener;
 import com.bc.core.nanj.NANJWalletManager;
+
+import java.util.Objects;
 
 
 /**
@@ -31,6 +35,7 @@ public class SendCoinActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_send_nanj_coin);
 		setupActionBar();
 		_nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
+		AppCompatTextView status = findViewById(R.id.status);
 		findViewById(R.id.qr).setOnClickListener(v -> {
 			if(_nanjWalletManager.getWallet() != null) {
 				_nanjWalletManager.getWallet().sendNANJCoinByQrCode(this);
@@ -40,17 +45,21 @@ public class SendCoinActivity extends AppCompatActivity {
 		AppCompatEditText edAmount = findViewById(R.id.amount);
 		walletHandle.setWalletAddressListener(edAddress::setText);
 		findViewById(R.id.send).setOnClickListener(v2 -> {
-			_nanjWalletManager.getWallet().sentNANJCoin(
-				edAddress.getText().toString(),
-				edAmount.getText().toString(),
+			String address = edAddress.getText().toString();
+			status.setText("Nanj coin sending to address: " + address);
+			Objects.requireNonNull(_nanjWalletManager.getWallet()).sentNANJCoin(
+				address,
+				NANJConvert.INSTANCE.toWei(edAmount.getText().toString(), NANJConvert.Unit.NANJ).toString(),
 				new NANJTransactionListener() {
 					@Override
 					public void onTransferSuccess() {
 						finish();
+						status.setText("Nanj coin sent success!");
 					}
 
 					@Override
 					public void onTransferFailure() {
+						status.setText("Nanj coin sent failure!");
 						Toast.makeText(SendCoinActivity.this, "Send coin error", Toast.LENGTH_LONG).show();
 					}
 				}

@@ -55,7 +55,9 @@ class NANJWalletManager constructor(context : Context) {
 			{ uiThread { nanjWalletListener.onImportWalletFailure() } },
 			{
 				val credentials = WalletUtils.loadCredentials(password, fileKeystore)
-				importWalletFromCredentials(credentials)
+				val wallet : WalletFile = Wallet.createLight(password, credentials.ecKeyPair)
+				val objectMapper = ObjectMapper()
+				importWalletFromCredentials(credentials, objectMapper.writeValueAsString(wallet))
 				uiThread { nanjWalletListener.onImportWalletSuccess() }
 			}
 		)
@@ -75,7 +77,7 @@ class NANJWalletManager constructor(context : Context) {
 				val objectMapper = ObjectMapper()
 				val walletFile = objectMapper.readValue(jsonWallet, WalletFile::class.java)
 				val credentials = Credentials.create(Wallet.decrypt(password, walletFile))
-				importWalletFromCredentials(credentials)
+				importWalletFromCredentials(credentials, jsonWallet)
 				uiThread { nanjWalletListener.onImportWalletSuccess() }
 			}
 		)
@@ -99,15 +101,14 @@ class NANJWalletManager constructor(context : Context) {
 
 	}
 
-	private fun importWalletFromCredentials(credentials : Credentials) : NANJWallet {
+	private fun importWalletFromCredentials(credentials : Credentials, keystore : String? = null) : NANJWallet {
 		val nanjWallet = NANJWallet().apply {
 			this.address = credentials.address
 			this.cridentals = credentials
 			this.privatekey = credentials.ecKeyPair.privateKey.toString(16)
-
 		}
 		wallets[nanjWallet.address] = nanjWallet
-		_nanjDatabase.saveWallet(nanjWallet)
+		_nanjDatabase.saveWallet(nanjWallet, keystore)
 		enableWallet(nanjWallet)
 		return nanjWallet
 	}
@@ -116,7 +117,7 @@ class NANJWalletManager constructor(context : Context) {
 		val key = wallets.keys.toMutableList()[position]
 		wallets.remove(key)
 		this.wallet?.let {
-			if(it.address == key) {
+			if (it.address == key) {
 				this.wallet = null
 			}
 		}
@@ -126,7 +127,7 @@ class NANJWalletManager constructor(context : Context) {
 		_nanjDatabase.removeWallet(wallet)
 		wallets.remove(wallet.address)
 		this.wallet?.let {
-			if(it.address == wallet.address) {
+			if (it.address == wallet.address) {
 				this.wallet = null
 			}
 		}
@@ -147,7 +148,7 @@ class NANJWalletManager constructor(context : Context) {
 				val credentials = Credentials.create(Wallet.decrypt(password, addressWallet))
 				val objectMapper = ObjectMapper()
 				val strWallet = objectMapper.writeValueAsString(addressWallet)
-				val wallet = importWalletFromCredentials(credentials)
+				val wallet = importWalletFromCredentials(credentials, strWallet)
 				println("mywallet address           -> ${addressWallet.address}")
 				println("mywallet private key       -> ${ecKeyPair.privateKey}")
 				println("mywallet private key       -> ${credentials.ecKeyPair.privateKey.toString(16)}")

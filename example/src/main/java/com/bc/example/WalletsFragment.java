@@ -55,15 +55,15 @@ public class WalletsFragment extends Fragment {
 			walletAdapter.setData(nanjWalletManager.getWalletList());
 		});
 		walletAdapter.setOnBackupWalletListener(wallet ->
-			backupWallet("don't know")
+			backupWallet(wallet.getPrivatekey())
 		);
 		walletList.setAdapter(walletAdapter);
 	}
 
-	private void backupWallet(String wallet) {
+	private void backupWallet(String privateKey) {
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, wallet);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, privateKey);
 		sendIntent.setType("text/plain");
 		startActivity(Intent.createChooser(sendIntent, "Backup wallet"));
 	}

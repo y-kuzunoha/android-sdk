@@ -82,7 +82,7 @@ class NANJWallet {
 				uiThread { transferListener.onTransferFailure() }
 			},
 			{
-				println("my wallet transfer $address")
+				println("my wallet transfer $toAddress")
 				println("my wallet transfer $amount")
 				val transactionReceipt = contract?.transfer(toAddress, BigInteger(amount))?.send()
 				println("my wallet transaction status           -> ${transactionReceipt?.status}")

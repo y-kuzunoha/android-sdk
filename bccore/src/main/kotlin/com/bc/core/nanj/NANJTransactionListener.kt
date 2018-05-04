@@ -9,4 +9,6 @@ package com.bc.core.nanj
  * ____________________________________
  */
 interface NANJTransactionListener {
+	fun onTransferSuccess()
+	fun onTransferFailure()
 }

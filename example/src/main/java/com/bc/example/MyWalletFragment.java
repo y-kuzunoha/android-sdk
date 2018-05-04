@@ -2,7 +2,6 @@ package com.bc.example;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,9 +16,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bc.core.nanj.NANJTransactionListener;
 import com.bc.core.nanj.NANJWalletManager;
+
 import java.math.BigInteger;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 /**
  ____________________________________
@@ -47,8 +49,13 @@ public class MyWalletFragment extends Fragment {
 		address = view.findViewById(R.id.address);
 		amountEth = view.findViewById(R.id.amountEth);
 		amountUsd = view.findViewById(R.id.amountUsd);
-		view.findViewById(R.id.sendNANJCoin).setOnClickListener(view1 ->
-			sendNANJCoinDialog()
+		view.findViewById(R.id.sendNANJCoin).setOnClickListener(
+			view1 -> {
+				//sendNANJCoinDialog()
+				if(_nanjWalletManager.getWallet() != null) {
+					startActivity(new Intent(view1.getContext(), SendCoinActivity.class));
+				}
+			}
 		);
 	}
 
@@ -64,21 +71,18 @@ public class MyWalletFragment extends Fragment {
 			address.setText(_nanjWalletManager.getWallet().getAddress());
 			Log.d("MyWalletFragment", "address --> " + _nanjWalletManager.getWallet().getAddress());
 
-			new Handler().post(() -> {
+			Executors.newCachedThreadPool().execute(() -> {
 				BigInteger bigInteger = _nanjWalletManager.getWallet().getAmountEth();
-				_nanjWalletManager.getWallet().sentNANJCoin("", "");
-				new Handler(Looper.getMainLooper()).post(() ->
-					amountEth.setText(String.format(getString(R.string.txt_amount_eth), bigInteger))
-				);
+				String coin = _nanjWalletManager.getWallet().getNANJCoin().toString();
+				Log.d("MyWalletFragment", "  coin  " + coin);
+				if(getActivity() != null) {
+					getActivity().runOnUiThread(() -> {
+							amountEth.setText(String.format(getString(R.string.txt_amount_eth), bigInteger));
+							amountUsd.setText(coin);
+						}
+					);
+				}
 			});
-
-			try {
-				amountUsd.setText(_nanjWalletManager.getWallet().getNANJCoin().get().toString());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -101,12 +105,22 @@ public class MyWalletFragment extends Fragment {
 				walletHandle.setWalletAddressListener(null);
 			})
 			.setNegativeButton("Cancel", null)
-			.setPositiveButton("Send", (dialogInterface, i) -> {
+			.setPositiveButton("Send", (dialogInterface, i) ->
 				_nanjWalletManager.getWallet().sentNANJCoin(
 					edAddress.getText().toString(),
-					amountEth.getText().toString()
-				);
-			})
+					amountEth.getText().toString(),
+					new NANJTransactionListener() {
+						@Override
+						public void onTransferSuccess() {
+							intView();
+						}
+
+						@Override
+						public void onTransferFailure() {
+
+						}
+					}
+				))
 			.show();
 		walletHandle.setWalletAddressListener(edAddress::setText);
 	}

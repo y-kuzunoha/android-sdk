@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
+import android.nfc.Tag
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.bc.core.R
@@ -63,6 +64,10 @@ class NANJNfcActivity : AppCompatActivity() {
 	override fun onNewIntent(intent : Intent?) {
 		println("nfc read : wwwwwwwwwwwwwwwwwwwwwww")
 		nfcInfo.text = intent.toString()
+		intent?.let {
+			val tag = it.getParcelableExtra(NfcAdapter.EXTRA_TAG) as Tag
+			println("tag -> ${tag.id}")
+		}
 	}
 
 	private fun dispatch(enable : Boolean) {

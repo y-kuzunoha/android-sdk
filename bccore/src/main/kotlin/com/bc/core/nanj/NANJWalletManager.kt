@@ -103,20 +103,33 @@ class NANJWalletManager constructor(context : Context) {
 		val nanjWallet = NANJWallet().apply {
 			this.address = credentials.address
 			this.cridentals = credentials
-			this.privatekey = credentials.ecKeyPair.privateKey.toString()
+			this.privatekey = credentials.ecKeyPair.privateKey.toString(16)
+
 		}
 		wallets[nanjWallet.address] = nanjWallet
 		_nanjDatabase.saveWallet(nanjWallet)
+		enableWallet(nanjWallet)
 		return nanjWallet
 	}
 
 	fun removeWallet(position : Int) {
 		val key = wallets.keys.toMutableList()[position]
 		wallets.remove(key)
+		this.wallet?.let {
+			if(it.address == key) {
+				this.wallet = null
+			}
+		}
 	}
+
 	fun removeWallet(wallet : NANJWallet) {
 		_nanjDatabase.removeWallet(wallet)
 		wallets.remove(wallet.address)
+		this.wallet?.let {
+			if(it.address == wallet.address) {
+				this.wallet = null
+			}
+		}
 	}
 
 	/**
@@ -137,17 +150,20 @@ class NANJWalletManager constructor(context : Context) {
 				val wallet = importWalletFromCredentials(credentials)
 				println("mywallet address           -> ${addressWallet.address}")
 				println("mywallet private key       -> ${ecKeyPair.privateKey}")
+				println("mywallet private key       -> ${credentials.ecKeyPair.privateKey.toString(16)}")
+				println("mywallet keystore          -> ${objectMapper.writeValueAsString(addressWallet)}")
 				uiThread { createWalletListener.onCreateWalletSuccess(strWallet, wallet) }
 			}
 		)
 	}
 
 	fun enableWallet(wallet : NANJWallet) {
+		val c = Credentials.create(wallet.privatekey)
 		this.wallet = wallet.apply {
 			this.web3j = _web3j
-			this.cridentals = Credentials.create(wallet.privatekey)
+			this.cridentals = c
 			this.contract = NANJSmartContract.load(
-				"0x6a1b05e6d219b84184ab76acc373706763e3bcfd",
+				"0x39d575711bbca97d554f57801de3090afe74dc12",
 				_web3j,
 				cridentals!!
 			)

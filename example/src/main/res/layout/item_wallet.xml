@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
         android:layout_toStartOf="@+id/walletMenu"
-        android:lines="1"
         tools:text="111" />
 
     <android.support.v7.widget.AppCompatImageView

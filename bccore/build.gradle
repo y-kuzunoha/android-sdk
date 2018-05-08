@@ -84,7 +84,7 @@ dependencies {
 //    implementation ('com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar')
 
     // Document at https://github.com/web3j/web3j
-    compile('org.web3j:core:3.3.1-android')
+    implementation('org.web3j:core:3.3.1-android')
 }
 
 kotlin {

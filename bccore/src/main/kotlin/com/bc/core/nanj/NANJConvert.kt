@@ -1,5 +1,6 @@
 package com.bc.core.nanj
 
+import org.web3j.utils.Convert
 import java.math.BigDecimal
 
 
@@ -30,6 +31,16 @@ object NANJConvert {
 	}
 
 	enum class Unit private constructor(name : String, factor : Int) {
+		WEI("wei", 0),
+		KWEI("kwei", 3),
+		MWEI("mwei", 6),
+		GWEI("gwei", 9),
+		SZABO("szabo", 12),
+		FINNEY("finney", 15),
+		ETHER("ether", 18),
+		KETHER("kether", 21),
+		METHER("mether", 24),
+		GETHER("gether", 27),
 		NANJ("nanj", 8);
 
 		val weiFactor : BigDecimal

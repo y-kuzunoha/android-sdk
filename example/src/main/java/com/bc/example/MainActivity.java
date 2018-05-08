@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		setTitle("ETH SDK");
+		setTitle("NANJ Wallet");
 		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
 		initView();
 		Bundle bundle = getIntent().getExtras();

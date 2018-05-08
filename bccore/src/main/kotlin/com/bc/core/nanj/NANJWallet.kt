@@ -11,7 +11,6 @@ import org.jetbrains.anko.uiThread
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
-import org.web3j.protocol.core.methods.response.EthGetBalance
 import java.math.BigInteger
 import java.util.concurrent.ExecutionException
 
@@ -41,7 +40,6 @@ class NANJWallet {
 	var name : String = "No name"
 	var privatekey : String? = null
 	var cridentals : Credentials? = null
-	var amountNanj : Double = 0.0
 	private lateinit var _web3j : Web3j
 	var web3j : Web3j? = null
 		set(value) {
@@ -52,8 +50,7 @@ class NANJWallet {
 	fun getAmountEth() : BigInteger {
 		return try {
 			_web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST)
-				.sendAsync()
-				.get()
+				.send()
 				.balance
 		} catch (e : Exception) {
 			e.printStackTrace()
@@ -62,9 +59,10 @@ class NANJWallet {
 	}
 
 	fun getNANJCoinObservable() = contract?.balanceOf(address)?.observable()
-	fun getNANJCoin() : BigInteger {
+
+	fun getAmountNanj() : BigInteger {
 		return  try {
-			contract?.balanceOf(address)?.sendAsync()?.get()
+			contract?.balanceOf(address)?.send()
 				?: ZERO_AMOUNT_NANJ_COIN
 		} catch (e : Exception) {
 			e.printStackTrace()

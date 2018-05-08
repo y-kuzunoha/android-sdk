@@ -23,6 +23,7 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/address"
         app:layout_constraintRight_toRightOf="parent"
         android:padding="8dp"
+        android:visibility="gone"
         android:text="NFC"/>
 
     <android.support.v7.widget.AppCompatTextView

@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,15 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.NANJTransactionListener;
 import com.bc.core.nanj.NANJWalletManager;
-
-import org.web3j.utils.Convert;
-
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.concurrent.Executors;
@@ -87,23 +80,23 @@ public class MyWalletFragment extends Fragment {
 				Bitmap mIcon_val = null;
 				try {
 					URL newurl = new URL("http://api.qrserver.com/v1/create-qr-code/?data=" + _nanjWalletManager.getWallet().getAddress());
-					mIcon_val = BitmapFactory.decodeStream(newurl.openConnection() .getInputStream());
+					mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
 				BigInteger bigInteger = _nanjWalletManager.getWallet().getAmountEth();
-				String coin = _nanjWalletManager.getWallet().getNANJCoin().toString();
+				String coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
 				Log.d("MyWalletFragment", "  coin  " + coin);
 				if(getActivity() != null) {
 					Bitmap finalMIcon_val = mIcon_val;
 					getActivity().runOnUiThread(() -> {
-							amountEth.setText(String.format(getString(R.string.txt_amount_eth), Convert.fromWei(bigInteger.toString(), Convert.Unit.ETHER)));
-							amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), NANJConvert.INSTANCE.fromWei(coin, NANJConvert.Unit.NANJ)));
-							if(finalMIcon_val != null) {
-								ivAddressWallet.setImageBitmap(finalMIcon_val);
-							}
+						amountEth.setText(String.format(getString(R.string.txt_amount_eth), NANJConvert.INSTANCE.fromWei(bigInteger.toString(), NANJConvert.Unit.ETHER)));
+						amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), NANJConvert.INSTANCE.fromWei(coin, NANJConvert.Unit.NANJ)));
+						if(finalMIcon_val != null) {
+							ivAddressWallet.setImageBitmap(finalMIcon_val);
 						}
-					);
+					});
 				}
 			});
 		}

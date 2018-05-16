@@ -1,18 +1,25 @@
 package com.bc.core.nanj
 
 import android.app.Activity
+import android.net.NetworkRequest
 import android.support.v4.app.Fragment
 import com.bc.core.ui.barcodereader.NANJQrCodeActivity
 import com.bc.core.ui.nfc.NANJNfcActivity
 import com.bc.core.util.launchActivity
 import com.bc.core.util.uiThread
+import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import java.math.BigInteger
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.concurrent.ExecutionException
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 
 /**
  * ____________________________________
@@ -70,7 +77,36 @@ class NANJWallet {
 		}
 	}
 
-	fun getTransactions() : List<NANJTransaction> = emptyList()
+	fun getTransactions(listener : NANJTransactionsListener) {
+		doAsync(
+				{
+					it.printStackTrace()
+					uiThread { listener.onTransferFailure() }
+				},
+				{
+					val url = URL("http://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=$address&startblock=0&endblock=999999999&sort=desc&apikey=1Sxab6iBbbiFHwtnbZfO")
+					val httpURLConnection = url.openConnection() as HttpURLConnection
+					val stringBuilder = StringBuilder()
+					val transactionList: TransactionResponse?
+					try {
+						val bufferedReader = BufferedReader(InputStreamReader(httpURLConnection.inputStream))
+						var line : String? = bufferedReader.readLine()
+						while (line != null) {
+							stringBuilder.append(line).append("\n")
+							line = bufferedReader.readLine()
+						}
+						bufferedReader.close()
+						val toString = stringBuilder.toString()
+						println(toString)
+						transactionList = Gson().fromJson(toString, TransactionResponse::class.java)
+					}
+					finally {
+					    httpURLConnection.disconnect()
+					}
+					uiThread { listener.onTransferSuccess(transactionList?.transactions) }
+				}
+		)
+	}
 
 	fun sentNANJCoin(toAddress : String, amount : String, transferListener : NANJTransactionListener) {
 		doAsync(
@@ -80,14 +116,7 @@ class NANJWallet {
 				uiThread { transferListener.onTransferFailure() }
 			},
 			{
-				println("my wallet transfer $toAddress")
-				println("my wallet transfer $amount")
 				val transactionReceipt = contract?.transfer(toAddress, BigInteger(amount))?.send()
-				println("my wallet transaction status           -> ${transactionReceipt?.status}")
-				println("my wallet transaction block hash       -> ${transactionReceipt?.blockHash}")
-				println("my wallet transaction contract address -> ${transactionReceipt?.contractAddress}")
-				println("my wallet transaction to               -> ${transactionReceipt?.to}")
-				println("my wallet transaction from             -> ${transactionReceipt?.from}")
 				uiThread { transferListener.onTransferSuccess() }
 			}
 		)

@@ -1,19 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        sign_apk {
-            keyAlias 'nanjsdk'
-            keyPassword 'nanjsdk'
-            storeFile file('/Users/tvhieuit/_WorkSpace/Android/android-sdk/sign_apk.jks')
-            storePassword 'nanjsdk'
-        }
-    }
+//    signingConfigs {
+//        sign_apk {
+//            keyAlias 'nanjsdk'
+//            keyPassword 'nanjsdk'
+//            storeFile file('/Users/tvhieuit/_WorkSpace/Android/android-sdk/sign_apk.jks')
+//            storePassword 'nanjsdk'
+//        }
+//    }
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.bc.example"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -24,10 +24,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.sign_apk
+//            signingConfig signingConfigs.sign_apk
         }
         debug {
-            signingConfig signingConfigs.sign_apk
+//            signingConfig signingConfigs.sign_apk
         }
     }
     compileOptions {

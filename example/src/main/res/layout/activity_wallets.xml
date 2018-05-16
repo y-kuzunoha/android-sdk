@@ -20,7 +20,7 @@
     <!--</android.support.design.widget.AppBarLayout>-->
 
     <android.support.constraint.Guideline
-        android:id="@+id/glVerticalCenter"
+        android:id="@+id/glHorCenter"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -33,7 +33,7 @@
         android:layout_margin="8dp"
         android:text="Create wallet"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/glVerticalCenter"
+        app:layout_constraintRight_toRightOf="@+id/glHorCenter"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.AppCompatButton
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="Import wallet"
-        app:layout_constraintLeft_toLeftOf="@+id/glVerticalCenter"
+        app:layout_constraintLeft_toLeftOf="@+id/glHorCenter"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     

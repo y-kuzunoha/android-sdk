@@ -1,6 +1,7 @@
 package com.bc.example;
 
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.bc.core.nanj.NANJConvert;
@@ -66,7 +68,9 @@ public class SendCoinActivity extends AppCompatActivity {
 			);
 		});
 
-		findViewById(R.id.nfc).setOnClickListener(v -> {
+		AppCompatTextView nfc = findViewById(R.id.nfc);
+		nfc.setVisibility(NfcAdapter.getDefaultAdapter(this) == null? View.GONE:View.VISIBLE);
+		nfc.setOnClickListener(v -> {
 			if(_nanjWalletManager.getWallet() != null) {
 				_nanjWalletManager.getWallet().sendNANJCoinByNfcCode(this);
 			}

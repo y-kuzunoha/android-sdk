@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,17 +31,25 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 
     private String address;
-    private List<Transaction> transactions;
+    private List<Transaction> transactions = new ArrayList<>();
 
     TransactionAdapter(String address) {
         this.address = address;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public void setData(List<Transaction> transactions) {
-        this.transactions = transactions;
+        this.transactions .addAll(transactions);
         notifyDataSetChanged();
     }
 
+    public void clearData() {
+        this.transactions.clear();
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,6 +57,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         return new TransactionViewHolder(view);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {

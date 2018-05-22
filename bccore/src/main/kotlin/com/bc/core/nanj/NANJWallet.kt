@@ -84,8 +84,15 @@ class NANJWallet {
                     uiThread { listener.onTransferFailure() }
                 },
                 {
-                    val url = URL("http://api-rinkeby.etherscan.io/api?module=account&action=tokentx&contractaddress=${contract?.contractAddress}&address=$address&page=$page&offset=$offset&sort=desc&apikey=1Sxab6iBbbiFHwtnbZfO")
-                    println("url = $url")
+                    val url = URL(
+                            String.format(
+                                    NANJConfig.URL_TRANSACTION,
+                                    contract?.contractAddress,
+                                    address,
+                                    page,
+                                    offset
+                            )
+                    )
                     val httpURLConnection = url.openConnection() as HttpURLConnection
                     val stringBuilder = StringBuilder()
                     val transactionList: TransactionResponse?

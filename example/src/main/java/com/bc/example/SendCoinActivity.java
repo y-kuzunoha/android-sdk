@@ -1,5 +1,6 @@
 package com.bc.example;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -31,7 +32,9 @@ public class SendCoinActivity extends AppCompatActivity {
 	private NANJWalletManager _nanjWalletManager;
 	private WalletHandle walletHandle = new WalletHandle();
 
-	@Override
+	@SuppressLint("SetTextI18n")
+    @SuppressWarnings("ConstantConditions")
+    @Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_send_nanj_coin);
@@ -49,7 +52,7 @@ public class SendCoinActivity extends AppCompatActivity {
 		findViewById(R.id.send).setOnClickListener(v2 -> {
 			String address = edAddress.getText().toString();
 			status.setText("Nanj coin sending to address: " + address);
-			Objects.requireNonNull(_nanjWalletManager.getWallet()).sentNANJCoin(
+			_nanjWalletManager.getWallet().sentNANJCoin(
 				address,
 				NANJConvert.INSTANCE.toWei(edAmount.getText().toString(), NANJConvert.Unit.NANJ).toString(),
 				new NANJTransactionListener() {

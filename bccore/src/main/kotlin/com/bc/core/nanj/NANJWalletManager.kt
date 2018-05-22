@@ -27,7 +27,7 @@ class NANJWalletManager constructor(context : Context) {
 
 	private var wallets : MutableMap<String, NANJWallet> = mutableMapOf()
 	private val _nanjDatabase = NANJDatabase(context)
-	private val _web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/1Sxab6iBbbiFHwtnbZfO"))
+	private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
 	var wallet : NANJWallet? = null
 
 	init {
@@ -149,10 +149,6 @@ class NANJWalletManager constructor(context : Context) {
 				val objectMapper = ObjectMapper()
 				val strWallet = objectMapper.writeValueAsString(addressWallet)
 				val wallet = importWalletFromCredentials(credentials, strWallet)
-				println("mywallet address           -> ${addressWallet.address}")
-				println("mywallet private key       -> ${ecKeyPair.privateKey}")
-				println("mywallet private key       -> ${credentials.ecKeyPair.privateKey.toString(16)}")
-				println("mywallet keystore          -> ${objectMapper.writeValueAsString(addressWallet)}")
 				uiThread { createWalletListener.onCreateWalletSuccess(strWallet, wallet) }
 			}
 		)
@@ -164,7 +160,7 @@ class NANJWalletManager constructor(context : Context) {
 			this.web3j = _web3j
 			this.cridentals = c
 			this.contract = NANJSmartContract.load(
-				"0x39d575711bbca97d554f57801de3090afe74dc12",
+				NANJConfig.SMART_CONTRACT_ADDRESS,
 				_web3j,
 				cridentals!!
 			)

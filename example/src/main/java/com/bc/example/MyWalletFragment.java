@@ -19,12 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bc.core.nanj.NANJConvert;
+import com.bc.core.nanj.NANJRateListener;
 import com.bc.core.nanj.NANJTransactionListener;
 import com.bc.core.nanj.NANJTransactionsListener;
 import com.bc.core.nanj.NANJWalletManager;
 import com.bc.core.nanj.Transaction;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.List;
@@ -43,6 +45,7 @@ public class MyWalletFragment extends Fragment {
     private AppCompatTextView amountEth;
     private AppCompatTextView amountUsd;
     private AppCompatImageView ivAddressWallet;
+    private AppCompatTextView nanjRate;
 
     private NANJWalletManager _nanjWalletManager;
     private WalletHandle walletHandle = new WalletHandle();
@@ -58,6 +61,7 @@ public class MyWalletFragment extends Fragment {
         amountEth = view.findViewById(R.id.amountEth);
         amountUsd = view.findViewById(R.id.amountUsd);
         ivAddressWallet = view.findViewById(R.id.imAddressWallet);
+        nanjRate = view.findViewById(R.id.nanjRate);
         view.findViewById(R.id.sendNANJCoin).setOnClickListener(
                 view1 -> {
                     //sendNANJCoinDialog()
@@ -94,15 +98,31 @@ public class MyWalletFragment extends Fragment {
                 String coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
                 Log.d("MyWalletFragment", "  coin  " + coin);
                 if (getActivity() != null) {
+                    BigDecimal realCoin = NANJConvert.fromWei(coin, NANJConvert.Unit.NANJ);
                     Bitmap finalMIcon_val = mIcon_val;
                     getActivity().runOnUiThread(() -> {
-                        amountEth.setText(String.format(getString(R.string.txt_amount_eth), NANJConvert.INSTANCE.fromWei(bigInteger.toString(), NANJConvert.Unit.ETHER)));
-                        amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), NANJConvert.INSTANCE.fromWei(coin, NANJConvert.Unit.NANJ)));
+                        amountEth.setText(String.format(getString(R.string.txt_amount_eth), NANJConvert.fromWei(bigInteger.toString(), NANJConvert.Unit.ETHER)));
+                        amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), realCoin));
                         if (finalMIcon_val != null) {
                             ivAddressWallet.setImageBitmap(finalMIcon_val);
                         }
                     });
+
+                    _nanjWalletManager.getNANJRate(new NANJRateListener() {
+                        @Override
+                        public void onSuccess(@NonNull BigDecimal value) {
+                            nanjRate.setText(
+                                    "Yen: " + realCoin.multiply(value).toBigInteger()
+                            );
+                        }
+
+                        @Override
+                        public void onFailure(String e) {
+
+                        }
+                    });
                 }
+
             });
 
         }

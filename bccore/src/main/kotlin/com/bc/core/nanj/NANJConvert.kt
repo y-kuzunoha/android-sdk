@@ -14,19 +14,19 @@ import java.math.BigDecimal
 
 object NANJConvert {
 
-	fun fromWei(number : String, unit : Unit) : BigDecimal {
+	@JvmStatic fun fromWei(number : String, unit : Unit) : BigDecimal {
 		return fromWei(BigDecimal(number), unit)
 	}
 
-	fun fromWei(number : BigDecimal, unit : Unit) : BigDecimal {
+	@JvmStatic fun fromWei(number : BigDecimal, unit : Unit) : BigDecimal {
 		return number.divide(unit.weiFactor)
 	}
 
-	fun toWei(number : String, unit : Unit) : BigDecimal {
+	@JvmStatic fun toWei(number : String, unit : Unit) : BigDecimal {
 		return toWei(BigDecimal(number), unit)
 	}
 
-	fun toWei(number : BigDecimal, unit : Unit) : BigDecimal {
+	@JvmStatic fun toWei(number : BigDecimal, unit : Unit) : BigDecimal {
 		return number.multiply(unit.weiFactor)
 	}
 

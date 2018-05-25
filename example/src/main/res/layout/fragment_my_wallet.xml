@@ -27,18 +27,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="30dp"
+        android:paddingTop="30dp"
         tools:text="$9,115.66 &#xf3d1;"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         app:fontFamily="@font/font_awesome"
         app:layout_constraintTop_toBottomOf="@+id/address"/>
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/nanjRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="30dp"
+        android:padding="10dp"
+        tools:text="$9,115.66"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:fontFamily="@font/font_awesome"
+        app:layout_constraintTop_toBottomOf="@+id/amountUsd"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@+id/amountUsd" />
+        app:layout_constraintTop_toBottomOf="@+id/nanjRate" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/envTestNet"
@@ -48,7 +61,7 @@
         android:text="@string/txt_env_eth"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/amountUsd" />
+        app:layout_constraintTop_toBottomOf="@+id/nanjRate" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/amountEth"

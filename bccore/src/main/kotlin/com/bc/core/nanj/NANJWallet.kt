@@ -1,7 +1,6 @@
 package com.bc.core.nanj
 
 import android.app.Activity
-import android.net.NetworkRequest
 import android.support.v4.app.Fragment
 import com.bc.core.ui.barcodereader.NANJQrCodeActivity
 import com.bc.core.ui.nfc.NANJNfcActivity
@@ -10,9 +9,10 @@ import com.bc.core.util.uiThread
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.web3j.crypto.Credentials
+import org.web3j.crypto.*
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.utils.Numeric
 import java.math.BigInteger
 import java.net.HttpURLConnection
 import java.net.URL
@@ -93,6 +93,7 @@ class NANJWallet {
                                     offset
                             )
                     )
+                    println("nanj transactions :  $url")
                     val httpURLConnection = url.openConnection() as HttpURLConnection
                     val stringBuilder = StringBuilder()
                     val transactionList: TransactionResponse?
@@ -110,9 +111,45 @@ class NANJWallet {
                     } finally {
                         httpURLConnection.disconnect()
                     }
+
+                    testSign()
+
                     uiThread { listener.onTransferSuccess(transactionList?.transactions) }
                 }
         )
+    }
+
+    private fun testSign() {
+        val msg = "Hello World".toByteArray()
+        /* val sign = Sign.signMessage(msg.toByteArray(), cridentals!!.ecKeyPair)
+         val hash = Hash.sha3(msg.toByteArray())
+         val pub = Sign.signedMessageToKey(msg.toByteArray(), sign)
+         println("hash = ${Numeric.toHexString(hash)}")
+         println("r = ${Numeric.toHexString(sign.r)}")
+         println("s = ${Numeric.toHexString(sign.s)}")
+         println("v = ${sign.v}")
+         println("key = ${pub.toString()}")
+         println("aaa = ${cridentals!!.ecKeyPair.publicKey.toString()}")*/
+
+       val p = "d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+        val pub = Sign.publicKeyFromPrivate(BigInteger(p, 16))
+        println("rrr ->  $pub")
+        val hash = msg
+        val s = Numeric.hexStringToByteArray("0x6612d114ac4769ad9968eb014a6029da381328106e17e48f58c3a256542ee85e")
+        val r = Numeric.hexStringToByteArray("0x26cdc16571a273bcba4a3160bfc499e791757ea3e79c3caef29465f2e886291c")
+        val v = 27.toByte()
+        val sd = Sign.SignatureData(v, r, s)
+        val dd = Sign.signedMessageToKey(hash, sd)
+        val re = Sign.signedMessageToKey(Hash.sha3(hash), sd)
+        println("wtf ${dd}")
+        println("wtf ${dd.toString(16)}")
+
+        /*var ms = "Hello World".toByteArray()
+        val sd = Sign.signMessage(ms, cridentals!!.ecKeyPair)
+        val key = Sign.signedMessageToKey(ms, sd)
+
+        println("key = $key")
+        println("key = ${cridentals!!.ecKeyPair.publicKey}")*/
     }
 
     fun sentNANJCoin(toAddress: String, amount: String, transferListener: NANJTransactionListener) {
@@ -123,7 +160,7 @@ class NANJWallet {
                     uiThread { transferListener.onTransferFailure() }
                 },
                 {
-                    val transactionReceipt = contract?.transfer(toAddress, BigInteger(amount))?.send()
+                    contract?.transfer(toAddress, BigInteger(amount))?.send()
                     uiThread { transferListener.onTransferSuccess() }
                 }
         )

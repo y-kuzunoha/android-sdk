@@ -69,11 +69,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         if (isSend) {
             holder.address.setText("To: " + data.getTo());
             holder.coin.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
-            holder.coin.setText("-" + NANJConvert.INSTANCE.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString());
+            holder.coin.setText("-" + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString());
         } else {
             holder.address.setText("From: " + data.getFrom());
             holder.coin.setTextColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
-            holder.coin.setText(NANJConvert.INSTANCE.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString());
+            holder.coin.setText(NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString());
         }
     }
 

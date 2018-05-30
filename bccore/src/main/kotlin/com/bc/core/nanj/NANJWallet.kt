@@ -1,14 +1,25 @@
 package com.bc.core.nanj
 
 import android.app.Activity
+import android.content.Context
 import android.support.v4.app.Fragment
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.bc.core.ui.barcodereader.NANJQrCodeActivity
 import com.bc.core.ui.nfc.NANJNfcActivity
-import com.bc.core.util.launchActivity
-import com.bc.core.util.uiThread
+import com.bc.core.util.*
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.json.JSONObject
+import org.web3j.abi.FunctionEncoder
+import org.web3j.abi.FunctionReturnDecoder
+import org.web3j.abi.datatypes.Address
+import org.web3j.abi.datatypes.DynamicBytes
+import org.web3j.abi.datatypes.Function
+import org.web3j.abi.datatypes.Type
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
@@ -77,13 +88,15 @@ class NANJWallet {
         }
     }
 
-    fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
+    fun getTransactions(context: Context, page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
         doAsync(
                 {
                     it.printStackTrace()
                     uiThread { listener.onTransferFailure() }
                 },
                 {
+                    testEncodeFunction(context)
+                    testSign()
                     val url = URL(
                             String.format(
                                     NANJConfig.URL_TRANSACTION,
@@ -111,9 +124,6 @@ class NANJWallet {
                     } finally {
                         httpURLConnection.disconnect()
                     }
-
-                    testSign()
-
                     uiThread { listener.onTransferSuccess(transactionList?.transactions) }
                 }
         )
@@ -121,16 +131,6 @@ class NANJWallet {
 
     private fun testSign() {
         val msg = "Hello World".toByteArray()
-        /* val sign = Sign.signMessage(msg.toByteArray(), cridentals!!.ecKeyPair)
-         val hash = Hash.sha3(msg.toByteArray())
-         val pub = Sign.signedMessageToKey(msg.toByteArray(), sign)
-         println("hash = ${Numeric.toHexString(hash)}")
-         println("r = ${Numeric.toHexString(sign.r)}")
-         println("s = ${Numeric.toHexString(sign.s)}")
-         println("v = ${sign.v}")
-         println("key = ${pub.toString()}")
-         println("aaa = ${cridentals!!.ecKeyPair.publicKey.toString()}")*/
-
        val p = "d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
         val pub = Sign.publicKeyFromPrivate(BigInteger(p, 16))
         println("rrr ->  $pub")
@@ -140,17 +140,63 @@ class NANJWallet {
         val v = 27.toByte()
         val sd = Sign.SignatureData(v, r, s)
         val dd = Sign.signedMessageToKey(hash, sd)
-        val re = Sign.signedMessageToKey(Hash.sha3(hash), sd)
         println("wtf ${dd}")
         println("wtf ${dd.toString(16)}")
-
-        /*var ms = "Hello World".toByteArray()
-        val sd = Sign.signMessage(ms, cridentals!!.ecKeyPair)
-        val key = Sign.signedMessageToKey(ms, sd)
-
-        println("key = $key")
-        println("key = ${cridentals!!.ecKeyPair.publicKey}")*/
     }
+
+    fun testEncodeFunction(context: Context) {
+        val param = arrayListOf<Type<*>>(
+//                DynamicBytes("address".toByteArray())
+                Address(address)
+        )
+
+        val f = Function(
+                "createWallet",
+                param,
+                arrayListOf()
+        )
+        val nonce = _web3j.ethGetTransactionCount(address, DefaultBlockParameterName.LATEST)
+                .sendAsync()
+                .get()
+                .transactionCount
+        println("nonce $nonce")
+        val data = FunctionEncoder.encode(f)
+        println("encode function $data")
+        val sign = Sign.signMessage(data.toByteArray(), cridentals!!.ecKeyPair)
+        val nonceString = "0"//nonce.toString(16)
+        val pad = nonceString.padStart(64, '0')
+        println("pad $pad")
+        val hasInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${NANJCOIN_ADDRESS.replace("0x", "")}${data.replace("0x", "")}"
+        println("hashInput $hasInput")
+        val hash = Hash.sha3(hasInput)
+        println("hash $hash")
+        val restData = Test(
+                Numeric.toHexString(sign.r),
+                Numeric.toHexString(sign.s),
+                sign.v.toString(),
+                data,
+                pad,
+                NANJCOIN_ADDRESS,//dest
+                hash
+        )
+        println("data ${Gson().toJson(restData)}")
+        val lastSign = Hash.sha3(Gson().toJson(restData))
+        val abc = _web3j.ethSendRawTransaction(lastSign)
+                .send()
+        println("response ${abc.transactionHash}")
+        val volley = Volley.newRequestQueue(context)
+        var jsonOject = JSONObject(Gson().toJson(restData).toString())
+        val request = JsonObjectRequest(
+                Request.Method.POST,
+                "http://192.168.1.19:4000/api/relayTx",
+                jsonOject,
+                Response.Listener {
+                    println("aaaa $it")
+                },
+                Response.ErrorListener { it.printStackTrace() })
+        volley.add(request)
+    }
+
 
     fun sentNANJCoin(toAddress: String, amount: String, transferListener: NANJTransactionListener) {
         doAsync(

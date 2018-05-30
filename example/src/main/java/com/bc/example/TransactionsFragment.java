@@ -92,7 +92,7 @@ public class TransactionsFragment extends Fragment {
         if (_nanjWalletManager.getWallet() != null) {
             transactionAdapter.setAddress(_nanjWalletManager.getWallet().getAddress());
             isLoading = true;
-            _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
+            _nanjWalletManager.getWallet().getTransactions(getContext(), page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override
                 public void onTransferSuccess(List<Transaction> transactions) {
                     transactionAdapter.setData(transactions);

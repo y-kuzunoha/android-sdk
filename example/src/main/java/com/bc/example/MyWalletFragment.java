@@ -66,7 +66,8 @@ public class MyWalletFragment extends Fragment {
                 view1 -> {
                     //sendNANJCoinDialog()
                     if (_nanjWalletManager.getWallet() != null) {
-                        startActivity(new Intent(view1.getContext(), SendCoinActivity.class));
+                        //startActivity(new Intent(view1.getContext(), SendCoinActivity.class));
+                        //_nanjWalletManager.getWallet().getContract().get
                     }
                 }
         );

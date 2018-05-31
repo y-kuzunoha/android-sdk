@@ -15,9 +15,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 import org.web3j.abi.FunctionEncoder
-import org.web3j.abi.FunctionReturnDecoder
 import org.web3j.abi.datatypes.Address
-import org.web3j.abi.datatypes.DynamicBytes
 import org.web3j.abi.datatypes.Function
 import org.web3j.abi.datatypes.Type
 import org.web3j.crypto.*
@@ -31,6 +29,7 @@ import java.util.concurrent.ExecutionException
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+//web3j solidity generate MetaNANJCOINManager.bin MetaNANJCOINManager.abi -o . -p org.your.package
 
 /**
  * ____________________________________
@@ -44,9 +43,6 @@ class NANJWallet {
 
     companion object {
         private val ZERO_AMOUNT_NANJ_COIN = BigInteger.valueOf(0)
-        private val REAL_AMOUNT_NANJ_COIN = BigInteger.valueOf(1_000_000_000)
-        private val REAL_AMOUNT_ETH_COIN = BigInteger.valueOf(1_000_000_000_000_000_000)
-
         const val WALLET_ADDRESS = "WALLET_ADDRESS"
         const val QRCODE_REQUEST_CODE: Int = 10001
         const val QRCODE_RESULT_CODE: Int = 10003
@@ -63,7 +59,39 @@ class NANJWallet {
         set(value) {
             _web3j = value ?: return
         }
-    var contract: NANJSmartContract? = null
+    private var nanjSmartContract: NANJSmartContract? = null
+    private var txRelay: TxRelay? = null
+    private var metaNANJCOINManager: MetaNANJCOINManager? = null
+
+    fun init() {
+        initNANJSmartContract()
+        initMetaNANJCOINManager()
+        initTxRelay()
+    }
+
+    private fun initNANJSmartContract() {
+        this.nanjSmartContract = NANJSmartContract.load(
+                NANJConfig.SMART_CONTRACT_ADDRESS,
+                _web3j,
+                cridentals!!
+        )
+    }
+
+    private fun initTxRelay() {
+        this.txRelay = TxRelay.load(
+                TX_RELAY_ADDRESS,
+                _web3j,
+                cridentals!!
+        )
+    }
+
+    private fun initMetaNANJCOINManager() {
+        this.metaNANJCOINManager = MetaNANJCOINManager.load(
+                NANJCOIN_ADDRESS,
+                _web3j,
+                cridentals!!
+        )
+    }
 
     fun getAmountEth(): BigInteger {
         return try {
@@ -76,11 +104,11 @@ class NANJWallet {
         }
     }
 
-    fun getNANJCoinObservable() = contract?.balanceOf(address)?.observable()
+    fun getNANJCoinObservable() = nanjSmartContract?.balanceOf(address)?.observable()
 
     fun getAmountNanj(): BigInteger {
         return try {
-            contract?.balanceOf(address)?.send()
+            nanjSmartContract?.balanceOf(address)?.send()
                     ?: ZERO_AMOUNT_NANJ_COIN
         } catch (e: Exception) {
             e.printStackTrace()
@@ -88,19 +116,20 @@ class NANJWallet {
         }
     }
 
-    fun getTransactions(context: Context, page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
+    fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
         doAsync(
                 {
                     it.printStackTrace()
                     uiThread { listener.onTransferFailure() }
                 },
                 {
-                    testEncodeFunction(context)
-                    testSign()
+                    getNANJWallet()
+                    //testEncodeFunction(context)
+                    //testSign()
                     val url = URL(
                             String.format(
                                     NANJConfig.URL_TRANSACTION,
-                                    contract?.contractAddress,
+                                    nanjSmartContract?.contractAddress,
                                     address,
                                     page,
                                     offset
@@ -129,9 +158,62 @@ class NANJWallet {
         )
     }
 
+    fun getNANJWallet(listener: GetNANJWalletListener ?= null) {
+        doAsync(
+                {
+                    it.printStackTrace()
+                    uiThread { listener?.onError() }
+                },
+                {
+                    val nanjWallet = metaNANJCOINManager!!.getWallet(address).send()
+                    uiThread { listener?.onSuccess(nanjWallet) }
+                }
+        )
+    }
+
+    fun createNANJWallet(listener : CreateNANJWalletListener ?= null) {
+        doAsync (
+                {
+                    it.printStackTrace()
+                    uiThread { listener?.onError() }
+                },
+                {
+                    val param = arrayListOf<Type<*>>(Address(address))
+                    val f = Function("createWallet", param, arrayListOf())
+                    val data = FunctionEncoder.encode(f)
+                    val sign = Sign.signMessage(data.toByteArray(), cridentals!!.ecKeyPair)
+                    val nonceString = "0"//nonce.toString(16)
+                    val pad = nonceString.padStart(64, '0')
+                    val hashInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${NANJCOIN_ADDRESS.replace("0x", "")}${data.replace("0x", "")}"
+                    val hash = Hash.sha3(hashInput)
+                    val restData = Test(
+                            Numeric.toHexString(sign.r),
+                            Numeric.toHexString(sign.s),
+                            sign.v.toString(),
+                            data,
+                            pad,
+                            NANJCOIN_ADDRESS,//dest
+                            hash
+                    )
+                    val jsonObject = JSONObject(Gson().toJson(restData).toString())
+                    val request = JsonObjectRequest(
+                            Request.Method.POST,
+                            "https://nanj-demo.herokuapp.com/api/relayTx",
+                            jsonObject,
+                            Response.Listener { response ->
+                                println("response --> $response")
+                            },
+                            Response.ErrorListener { it.printStackTrace() })
+                    Volley.newRequestQueue(null).add(request)
+                }
+        )
+    }
+
+
+
     private fun testSign() {
         val msg = "Hello World".toByteArray()
-       val p = "d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+        val p = "d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
         val pub = Sign.publicKeyFromPrivate(BigInteger(p, 16))
         println("rrr ->  $pub")
         val hash = msg
@@ -146,7 +228,6 @@ class NANJWallet {
 
     fun testEncodeFunction(context: Context) {
         val param = arrayListOf<Type<*>>(
-//                DynamicBytes("address".toByteArray())
                 Address(address)
         )
 
@@ -166,9 +247,9 @@ class NANJWallet {
         val nonceString = "0"//nonce.toString(16)
         val pad = nonceString.padStart(64, '0')
         println("pad $pad")
-        val hasInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${NANJCOIN_ADDRESS.replace("0x", "")}${data.replace("0x", "")}"
-        println("hashInput $hasInput")
-        val hash = Hash.sha3(hasInput)
+        val hashInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${NANJCOIN_ADDRESS.replace("0x", "")}${data.replace("0x", "")}"
+        println("hashInput $hashInput")
+        val hash = Hash.sha3(hashInput)
         println("hash $hash")
         val restData = Test(
                 Numeric.toHexString(sign.r),
@@ -185,11 +266,11 @@ class NANJWallet {
                 .send()
         println("response ${abc.transactionHash}")
         val volley = Volley.newRequestQueue(context)
-        var jsonOject = JSONObject(Gson().toJson(restData).toString())
+        val jsonObject = JSONObject(Gson().toJson(restData).toString())
         val request = JsonObjectRequest(
                 Request.Method.POST,
-                "http://192.168.1.19:4000/api/relayTx",
-                jsonOject,
+                "https://nanj-demo.herokuapp.com/api/relayTx",
+                jsonObject,
                 Response.Listener {
                     println("aaaa $it")
                 },
@@ -206,7 +287,7 @@ class NANJWallet {
                     uiThread { transferListener.onTransferFailure() }
                 },
                 {
-                    contract?.transfer(toAddress, BigInteger(amount))?.send()
+                    nanjSmartContract?.transfer(toAddress, BigInteger(amount))?.send()
                     uiThread { transferListener.onTransferSuccess() }
                 }
         )

@@ -526,6 +526,15 @@ class NANJSmartContract : Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger::class.java)
     }
 
+    fun getNanjWallet(_owner: String): RemoteCall<BigInteger> {
+        val function = Function("getWallet",
+                Arrays.asList<Type<*>>(org.web3j.abi.datatypes.Address(_owner)),
+                Arrays.asList<TypeReference<*>>(object : TypeReference<Uint256>() {
+
+                }))
+        return executeRemoteCallSingleValueReturn(function, BigInteger::class.java)
+    }
+
     fun finishMinting(): RemoteCall<TransactionReceipt> {
         val function = Function(
                 "finishMinting",

@@ -4,7 +4,9 @@ import android.content.Context
 import com.bc.core.database.NANJDatabase
 import com.bc.core.model.NANJRateData
 import com.bc.core.model.YenRate
+import com.bc.core.util.NANJCOIN_ADDRESS
 import com.bc.core.util.NetworkUtil
+import com.bc.core.util.TX_RELAY_ADDRESS
 import com.bc.core.util.uiThread
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -13,14 +15,9 @@ import org.jetbrains.anko.uiThread
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3jFactory
 import org.web3j.protocol.http.HttpService
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 import java.math.BigDecimal
-import java.math.MathContext
 import java.math.RoundingMode
-import java.net.HttpURLConnection
-import java.net.URL
 
 /**
  * ____________________________________
@@ -166,11 +163,7 @@ class NANJWalletManager constructor(context: Context) {
         this.wallet = wallet.apply {
             this.web3j = _web3j
             this.cridentals = c
-            this.contract = NANJSmartContract.load(
-                    NANJConfig.SMART_CONTRACT_ADDRESS,
-                    _web3j,
-                    cridentals!!
-            )
+            init()
         }
     }
 

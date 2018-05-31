@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bc.core.nanj.GetNANJWalletListener;
 import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.NANJRateListener;
 import com.bc.core.nanj.NANJTransactionListener;
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 /**
@@ -41,8 +43,7 @@ import java.util.concurrent.Executors;
  */
 public class MyWalletFragment extends Fragment {
 
-    private AppCompatTextView address;
-    private AppCompatTextView amountEth;
+    private AppCompatTextView tvaddress;
     private AppCompatTextView amountUsd;
     private AppCompatImageView ivAddressWallet;
     private AppCompatTextView nanjRate;
@@ -56,9 +57,8 @@ public class MyWalletFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        _nanjWalletManager = ((NANJApplication) getActivity().getApplication()).getNanjWalletManager();
-        address = view.findViewById(R.id.address);
-        amountEth = view.findViewById(R.id.amountEth);
+        _nanjWalletManager = ((NANJApplication) Objects.requireNonNull(getActivity()).getApplication()).getNanjWalletManager();
+        tvaddress = view.findViewById(R.id.address);
         amountUsd = view.findViewById(R.id.amountUsd);
         ivAddressWallet = view.findViewById(R.id.imAddressWallet);
         nanjRate = view.findViewById(R.id.nanjRate);
@@ -67,7 +67,7 @@ public class MyWalletFragment extends Fragment {
                     //sendNANJCoinDialog()
                     if (_nanjWalletManager.getWallet() != null) {
                         //startActivity(new Intent(view1.getContext(), SendCoinActivity.class));
-                        //_nanjWalletManager.getWallet().getContract().get
+                        //_nanjWalletManager.getWallet().getNanjSmartContract().get
                     }
                 }
         );
@@ -83,50 +83,64 @@ public class MyWalletFragment extends Fragment {
     private void intView() {
         if (_nanjWalletManager != null && _nanjWalletManager.getWallet() != null) {
 
-            address.setText(String.format("Address: %s", _nanjWalletManager.getWallet().getAddress()));
-            Log.d("MyWalletFragment", "address --> " + _nanjWalletManager.getWallet().getAddress());
+            _nanjWalletManager.getWallet().getNANJWallet(new GetNANJWalletListener() {
+                @Override
+                public void onError() {
 
-            Executors.newCachedThreadPool().execute(() -> {
-                Bitmap mIcon_val = null;
-                try {
-                    URL newurl = new URL("http://api.qrserver.com/v1/create-qr-code/?data=" + _nanjWalletManager.getWallet().getAddress());
-                    mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
 
-                BigInteger bigInteger = _nanjWalletManager.getWallet().getAmountEth();
-                String coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
-                Log.d("MyWalletFragment", "  coin  " + coin);
-                if (getActivity() != null) {
-                    BigDecimal realCoin = NANJConvert.fromWei(coin, NANJConvert.Unit.NANJ);
-                    Bitmap finalMIcon_val = mIcon_val;
-                    getActivity().runOnUiThread(() -> {
-                        amountEth.setText(String.format(getString(R.string.txt_amount_eth), NANJConvert.fromWei(bigInteger.toString(), NANJConvert.Unit.ETHER)));
-                        amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), realCoin));
-                        if (finalMIcon_val != null) {
-                            ivAddressWallet.setImageBitmap(finalMIcon_val);
-                        }
-                    });
-
-                    _nanjWalletManager.getNANJRate(new NANJRateListener() {
-                        @Override
-                        public void onSuccess(@NonNull BigDecimal value) {
-                            nanjRate.setText(
-                                    "Yen: " + realCoin.multiply(value).toBigInteger()
-                            );
-                        }
-
-                        @Override
-                        public void onFailure(String e) {
-
-                        }
-                    });
+                @Override
+                public void onSuccess(@NonNull String address) {
+                    initView(address);
                 }
-
             });
 
+
+
         }
+    }
+
+    private void initView(String address) {
+        tvaddress.setText(String.format("Address: %s", address));
+
+        Executors.newCachedThreadPool().execute(() -> {
+            Bitmap mIcon_val = null;
+            try {
+                URL newurl = new URL("http://api.qrserver.com/v1/create-qr-code/?data=" +address);
+                mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+            Log.d("MyWalletFragment", "  coin  " + coin);
+            if (getActivity() != null) {
+                BigDecimal realCoin = NANJConvert.fromWei(coin, NANJConvert.Unit.NANJ);
+                Bitmap finalMIcon_val = mIcon_val;
+                getActivity().runOnUiThread(() -> {
+                    amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), realCoin));
+                    if (finalMIcon_val != null) {
+                        ivAddressWallet.setImageBitmap(finalMIcon_val);
+                    }
+                });
+
+                _nanjWalletManager.getNANJRate(new NANJRateListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onSuccess(@NonNull BigDecimal value) {
+                        nanjRate.setText(
+                                "Yen: " + realCoin.multiply(value).toBigInteger()
+                        );
+                    }
+
+                    @Override
+                    public void onFailure(String e) {
+
+                    }
+                });
+            }
+
+        });
     }
 
     @SuppressLint("InflateParams")
@@ -149,7 +163,7 @@ public class MyWalletFragment extends Fragment {
                 })
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Send", (dialogInterface, i) ->
-                        _nanjWalletManager.getWallet().sentNANJCoin(
+                        Objects.requireNonNull(_nanjWalletManager.getWallet()).sentNANJCoin(
                                 edAddress.getText().toString(),
                                 amountEth.getText().toString(),
                                 new NANJTransactionListener() {

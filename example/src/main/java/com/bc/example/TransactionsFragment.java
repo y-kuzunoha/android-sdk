@@ -15,6 +15,7 @@ import com.bc.core.nanj.NANJTransactionsListener;
 import com.bc.core.nanj.NANJWalletManager;
 import com.bc.core.nanj.Transaction;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ____________________________________
@@ -43,7 +44,7 @@ public class TransactionsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = (RecyclerView) view;
 
-        _nanjWalletManager = ((NANJApplication) getActivity().getApplication()).getNanjWalletManager();
+        _nanjWalletManager = ((NANJApplication) Objects.requireNonNull(getActivity()).getApplication()).getNanjWalletManager();
         String address = "";
         if (_nanjWalletManager.getWallet() != null) {
             address = _nanjWalletManager.getWallet().getAddress();
@@ -92,7 +93,7 @@ public class TransactionsFragment extends Fragment {
         if (_nanjWalletManager.getWallet() != null) {
             transactionAdapter.setAddress(_nanjWalletManager.getWallet().getAddress());
             isLoading = true;
-            _nanjWalletManager.getWallet().getTransactions(getContext(), page, ITEMS_PAGE, new NANJTransactionsListener() {
+            _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override
                 public void onTransferSuccess(List<Transaction> transactions) {
                     transactionAdapter.setData(transactions);

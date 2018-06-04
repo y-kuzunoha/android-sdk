@@ -1,5 +1,6 @@
 package com.bc.core.util
 
+import com.bc.core.nanj.NANJConfig
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Retrofit
@@ -35,7 +36,7 @@ object NetworkUtil {
 
     val retofit : Retrofit by lazy {
         Retrofit.Builder()
-                .baseUrl("https://nanj-demo.herokuapp.com/api/relayTx/")
+                .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }

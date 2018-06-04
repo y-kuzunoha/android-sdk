@@ -14,8 +14,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bc.core.nanj.NANJConvert;
+import com.bc.core.nanj.listener.CreateNANJWalletListener;
 import com.bc.core.nanj.listener.NANJTransactionListener;
 import com.bc.core.nanj.NANJWalletManager;
+import com.bc.core.nanj.listener.SendNANJCoinListener;
 
 
 /**
@@ -47,23 +49,21 @@ public class SendCoinActivity extends AppCompatActivity {
 		AppCompatEditText edAddress = findViewById(R.id.address);
 		AppCompatEditText edAmount = findViewById(R.id.amount);
 		walletHandle.setWalletAddressListener(edAddress::setText);
-		findViewById(R.id.send).setOnClickListener(v2 -> {
+		findViewById(R.id.send).setOnClickListener((View v2) -> {
 			String address = edAddress.getText().toString();
 			status.setText("Nanj coin sending to address: " + address);
-			_nanjWalletManager.getWallet().sentNANJCoin(
+			_nanjWalletManager.getWallet().sendNANJCoin(
 				address,
-				NANJConvert.INSTANCE.toWei(edAmount.getText().toString(), NANJConvert.Unit.NANJ).toString(),
-				new NANJTransactionListener() {
+				NANJConvert.toWei(edAmount.getText().toString(), NANJConvert.Unit.NANJ).toString(),
+				new SendNANJCoinListener() {
 					@Override
-					public void onTransferSuccess() {
-						finish();
-						status.setText("Nanj coin sent success!");
+					public void onError() {
+						status.setText("Failure!");
 					}
 
 					@Override
-					public void onTransferFailure() {
-						status.setText("Nanj coin sent failure!");
-						Toast.makeText(SendCoinActivity.this, "Send coin error", Toast.LENGTH_LONG).show();
+					public void onSuccess() {
+						status.setText("Sending!");
 					}
 				}
 			);

@@ -288,6 +288,7 @@ class NANJWalletManager constructor(context: Context) {
         this.wallet = wallet.apply {
             this.web3j = _web3j
             this.cridentals = c
+            nanjDatabase = _nanjDatabase
             init()
         }
     }

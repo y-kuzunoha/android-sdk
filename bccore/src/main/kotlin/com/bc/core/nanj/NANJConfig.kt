@@ -1,6 +1,7 @@
 package com.bc.core.nanj
 
 object NANJConfig  {
+    const val NANJ_SERVER_ADDRESS = "https://nanj-demo.herokuapp.com/api/relayTx"
     const val URL_NANJ_RATE = "https://api.coinmarketcap.com/v2/ticker/1/?convert=NANJ"
     const val URL_YEN_RATE = "http://free.currencyconverterapi.com/api/v5/convert?q=USD_JPY&compact=y"
     private const val API_KEY = "1Sxab6iBbbiFHwtnbZfO"

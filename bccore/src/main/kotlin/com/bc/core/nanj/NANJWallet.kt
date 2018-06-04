@@ -2,6 +2,8 @@ package com.bc.core.nanj
 
 import android.app.Activity
 import android.support.v4.app.Fragment
+import android.text.TextUtils
+import com.bc.core.database.NANJDatabase
 import com.bc.core.model.TxRelayData
 import com.bc.core.nanj.listener.*
 import com.bc.core.ui.barcodereader.NANJQrCodeActivity
@@ -22,6 +24,7 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.utils.Numeric
 import java.math.BigInteger
+import java.util.*
 import java.util.concurrent.ExecutionException
 
 //web3j solidity generate MetaNANJCOINManager.bin MetaNANJCOINManager.abi -o . -p org.your.package
@@ -44,6 +47,8 @@ class NANJWallet {
         const val NFC_REQUEST_CODE: Int = 10002
         const val NFC_RESULT_CODE: Int = 10004
     }
+
+    var nanjDatabase : NANJDatabase ? = null
 
     var nanjAddress: String? = ""
     var address: String = ""
@@ -106,7 +111,6 @@ class NANJWallet {
             val nanjAddress = getNANJWallet()
             val value = nanjSmartContract?.balanceOf(nanjAddress)?.send()
                     ?: ZERO_AMOUNT_NANJ_COIN
-            println("nanj coin   $value")
             value
         } catch (e: Exception) {
             e.printStackTrace()
@@ -132,7 +136,6 @@ class NANJWallet {
                             page,
                             offset
                     )
-                    println("url transaction : $url")
                     NetworkUtil.retofit.create(Api::class.java)
                             .getNANJTransactions(url)
                             .subscribeOn(Schedulers.computation())
@@ -160,13 +163,21 @@ class NANJWallet {
                 {
                     val nanjWallet = getNANJWallet()
                     //sendNANJCoin()
-                    println("nanj wallet  $nanjWallet")
                     uiThread { listener?.onSuccess(nanjWallet) }
                 }
         )
     }
 
-    fun getNANJWallet(): String = metaNANJCOINManager!!.getWallet(address).send()
+    fun getNANJWallet(): String {
+        if(!TextUtils.isEmpty(nanjAddress)) return nanjAddress!!
+        val address = metaNANJCOINManager!!.getWallet(address).send()
+        if(UNKNOWN_NANJ_WALLET != address) {
+            nanjAddress = address
+            nanjDatabase?.saveWallet(this)
+            return address
+        }
+        return ""
+    }
 
     fun createNANJWallet(listener: CreateNANJWalletListener? = null) {
         doAsync(
@@ -175,7 +186,6 @@ class NANJWallet {
                     uiThread { listener?.onError() }
                 },
                 {
-                    println("create nanj wallet")
                     val param = arrayListOf<Type<*>>(Address(address))
                     val f = Function("createWallet", param, arrayListOf())
                     val data = FunctionEncoder.encode(f)
@@ -196,13 +206,12 @@ class NANJWallet {
                     val requestBody = RequestBody.create(MediaType.parse("application/json"), Gson().toJson(restData))
                     NetworkUtil.retofit.create(Api::class.java)
                             .postCreateNANJWallet(
-                                    "https://nanj-demo.herokuapp.com/api/relayTx",
+                                    NANJConfig.NANJ_SERVER_ADDRESS,
                                     requestBody
                             )
                             .subscribeOn(Schedulers.computation())
                             .subscribe(
                                     {
-                                        println("re ${Gson().toJson(it)}")
                                         uiThread { listener?.onCreateProcess() }
                                     },
                                     {
@@ -214,7 +223,7 @@ class NANJWallet {
         )
     }
 
-    fun sendNANJCoin(toAddress: String = "0x9dd6c17889c75047406b764aca689242ba47cdbb", amount: String = "1", listener: SendNANJCoinListener?=null) {
+    fun sendNANJCoin(toAddress: String, amount: String, listener: SendNANJCoinListener?=null) {
         doAsync(
                 {
                     it.printStackTrace()
@@ -224,7 +233,7 @@ class NANJWallet {
                     val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
                     val param = arrayListOf<Type<*>>(
                             Address(toAddress),
-                            Uint256(BigInteger.ONE.multiply(BigInteger.TEN.pow(8)))
+                            Uint256(BigInteger(amount).multiply(BigInteger.TEN.pow(8)))
                     )
                     val f = Function("transfer", param, arrayListOf())
                     val data = FunctionEncoder.encode(f)
@@ -256,13 +265,12 @@ class NANJWallet {
                     val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonParamApi)
                     NetworkUtil.retofit.create(Api::class.java)
                             .postCreateNANJWallet(
-                                    "https://nanj-demo.herokuapp.com/api/relayTx",
+                                    NANJConfig.NANJ_SERVER_ADDRESS,
                                     requestBody
                             )
                             .subscribeOn(Schedulers.computation())
                             .subscribe(
                                     {
-                                        println("re ${Gson().toJson(it.string())}")
                                         uiThread { listener?.onSuccess() }
                                     },
                                     {
@@ -277,7 +285,6 @@ class NANJWallet {
     fun sentNANJCoin(toAddress: String, amount: String, transferListener: NANJTransactionListener) {
         doAsync(
                 {
-                    println("my wallet transfer error")
                     it.printStackTrace()
                     uiThread { transferListener.onTransferFailure() }
                 },

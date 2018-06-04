@@ -9,7 +9,6 @@ import com.bc.core.database.DatabaseQuery.SQL_DATABASE_NAME
 import com.bc.core.database.DatabaseQuery.SQL_DATABASE_VERSION
 import com.bc.core.database.DatabaseQuery.SQL_WALLET_TABLE
 import com.bc.core.nanj.NANJWallet
-import org.web3j.crypto.Wallet
 
 /**
  * ____________________________________

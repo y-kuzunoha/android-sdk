@@ -60,10 +60,8 @@ public class MyWalletFragment extends Fragment {
         nanjRate = view.findViewById(R.id.nanjRate);
         view.findViewById(R.id.sendNANJCoin).setOnClickListener(
                 view1 -> {
-                    //sendNANJCoinDialog()
                     if (_nanjWalletManager.getWallet() != null) {
-                        //startActivity(new Intent(view1.getContext(), SendCoinActivity.class));
-                        //_nanjWalletManager.getWallet().getNanjSmartContract().get
+                        startActivity(new Intent(view1.getContext(), SendCoinActivity.class));
                     }
                 }
         );

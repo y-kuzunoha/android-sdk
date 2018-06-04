@@ -18,19 +18,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bc.core.nanj.GetNANJWalletListener;
+import com.bc.core.nanj.listener.GetNANJWalletListener;
 import com.bc.core.nanj.NANJConvert;
-import com.bc.core.nanj.NANJRateListener;
-import com.bc.core.nanj.NANJTransactionListener;
-import com.bc.core.nanj.NANJTransactionsListener;
+import com.bc.core.nanj.listener.NANJRateListener;
+import com.bc.core.nanj.listener.NANJTransactionListener;
 import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.nanj.Transaction;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 

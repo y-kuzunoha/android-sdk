@@ -7,11 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.bc.core.nanj.NANJTransactionsListener;
+import com.bc.core.nanj.listener.NANJTransactionsListener;
 import com.bc.core.nanj.NANJWalletManager;
 import com.bc.core.nanj.Transaction;
 import java.util.List;
@@ -47,8 +48,9 @@ public class TransactionsFragment extends Fragment {
         _nanjWalletManager = ((NANJApplication) Objects.requireNonNull(getActivity()).getApplication()).getNanjWalletManager();
         String address = "";
         if (_nanjWalletManager.getWallet() != null) {
-            address = _nanjWalletManager.getWallet().getAddress();
+            address = _nanjWalletManager.getWallet().getNanjAddress();
         }
+        Log.d("wtf", "onViewCreated: " + address);
         transactionAdapter = new TransactionAdapter(address);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayout.VERTICAL));
@@ -91,7 +93,7 @@ public class TransactionsFragment extends Fragment {
     private void getTransactions() {
 
         if (_nanjWalletManager.getWallet() != null) {
-            transactionAdapter.setAddress(_nanjWalletManager.getWallet().getAddress());
+            transactionAdapter.setAddress(_nanjWalletManager.getWallet().getNanjAddress());
             isLoading = true;
             _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override

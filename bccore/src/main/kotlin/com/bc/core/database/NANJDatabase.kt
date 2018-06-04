@@ -20,68 +20,63 @@ import org.web3j.crypto.Wallet
  */
 
 object DatabaseQuery {
-	const val SQL_DATABASE_NAME = "DB_NAME.db"
-	const val SQL_DATABASE_VERSION = 2
-	const val SQL_WALLET_TABLE = "wallet"
-	const val SQL_CREATE_WALLET = "CREATE TABLE $SQL_WALLET_TABLE (" +
-		"_id TEXT PRIMARY KEY," +
-		"_address TEXT," +
-		"_private_key TEXT," +
-		"_name TEXT)"
+    const val SQL_DATABASE_NAME = "DB_NAME.db"
+    const val SQL_DATABASE_VERSION = 3
+    const val SQL_WALLET_TABLE = "wallet"
+    const val SQL_CREATE_WALLET = "CREATE TABLE $SQL_WALLET_TABLE (" +
+            "_id TEXT PRIMARY KEY," +
+            "_nanj_address TEXT," +
+            "_eth_address TEXT," +
+            "_private_key TEXT," +
+            "_name TEXT)"
 }
 
-class NANJDatabase(context : Context) {
-	private val db = NANJDatabaseHelper(context)
-	private val dbWrite = db.writableDatabase
-	private val dbRead = db.readableDatabase
+class NANJDatabase(context: Context) {
+    private val db = NANJDatabaseHelper(context)
+    private val dbWrite = db.writableDatabase
+    private val dbRead = db.readableDatabase
 
-	fun loadWallets() : MutableMap<String, NANJWallet> {
-		val walletsCursor = dbRead.query(
-			SQL_WALLET_TABLE,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null
-		)
-		val wallets : MutableMap<String, NANJWallet> = mutableMapOf()
-		if (walletsCursor.moveToFirst()) {
-			do {
-				val wallet = NANJWallet().apply {
-					address = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_address"))
-					name = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_name"))
-					privatekey = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_private_key"))
-				}
-				wallets[wallet.address] = wallet
-			} while (walletsCursor.moveToNext())
-		}
-		walletsCursor.close()
-		return wallets
-	}
+    fun loadWallets(): MutableMap<String, NANJWallet> {
+        val walletsCursor = dbRead.query(SQL_WALLET_TABLE, null, null, null, null, null, null)
+        val wallets: MutableMap<String, NANJWallet> = mutableMapOf()
+        if (walletsCursor.moveToFirst()) {
+            do {
+                val wallet = NANJWallet().apply {
+                    nanjAddress = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_nanj_address"))
+                    address = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_eth_address"))
+                    name = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_name"))
+                    privatekey = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_private_key"))
+                }
+                wallets[wallet.address] = wallet
+            } while (walletsCursor.moveToNext())
+        }
+        walletsCursor.close()
+        return wallets
+    }
 
-	fun saveWallet(wallet : NANJWallet, keystore: String?= null) {
-		val values = ContentValues().apply {
-			put("_id", wallet.address)
-			put("_address", wallet.address)
-			put("_name", wallet.name)
-			put("_private_key", wallet.privatekey)
-		}
-		dbWrite.insert(SQL_WALLET_TABLE, null, values)
-	}
+    fun saveWallet(wallet: NANJWallet) {
+        val values = ContentValues().apply {
+            put("_id", wallet.address)
+            put("_eth_address", wallet.address)
+            put("_nanj_address", wallet.nanjAddress)
+            put("_name", wallet.name)
+            put("_private_key", wallet.privatekey)
+        }
+        dbWrite.insertWithOnConflict(SQL_WALLET_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
+    }
 
-	fun removeWallet(wallet : NANJWallet) {
-		dbWrite.delete(SQL_WALLET_TABLE, "_address = '" + wallet.address + "'", null)
-	}
+    fun removeWallet(wallet: NANJWallet) {
+        dbWrite.delete(SQL_WALLET_TABLE, "_eth_address = '${wallet.address}'", null)
+    }
 }
 
-class NANJDatabaseHelper(context : Context) : SQLiteOpenHelper(context, SQL_DATABASE_NAME, null, SQL_DATABASE_VERSION) {
-	override fun onCreate(db : SQLiteDatabase) {
-		db.execSQL(SQL_CREATE_WALLET)
-	}
+class NANJDatabaseHelper(context: Context) : SQLiteOpenHelper(context, SQL_DATABASE_NAME, null, SQL_DATABASE_VERSION) {
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(SQL_CREATE_WALLET)
+    }
 
-	override fun onUpgrade(db : SQLiteDatabase, oldVersion : Int, newVersion : Int) {
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
 
-	}
+    }
 
 }

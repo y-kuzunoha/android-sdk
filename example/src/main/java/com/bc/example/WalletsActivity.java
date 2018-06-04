@@ -16,10 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import com.bc.core.nanj.NANJCreateWalletListener;
-import com.bc.core.nanj.NANJImportWalletListener;
+import com.bc.core.nanj.listener.NANJCreateWalletListener;
+import com.bc.core.nanj.listener.NANJImportWalletListener;
 import com.bc.core.nanj.NANJWallet;
 import com.bc.core.nanj.NANJWalletManager;
+import com.google.gson.Gson;
 
 /**
  * ____________________________________
@@ -83,7 +84,7 @@ public class WalletsActivity extends AppCompatActivity {
 					_progressDialog.dismiss();
 					backupWallet(backup);
 					_sharedPreferences.edit()
-						.putString(Const.STORAGE_CURRENT_WALLET, wallet.toString())
+						.putString(Const.STORAGE_CURRENT_WALLET, new Gson().toJson(wallet))
 						.apply();
 					_walletsFragment.setData(nanjWalletManager.getWalletList());
 				}

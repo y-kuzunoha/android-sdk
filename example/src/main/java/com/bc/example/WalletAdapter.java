@@ -70,7 +70,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		Context context = holder.itemView.getContext();
 		NANJWallet wallet = nanjWalletList.get(position);
 		holder.name.setText(wallet.getName());
-		holder.address.setText(wallet.getAddress());
+		holder.address.setText(wallet.getNanjAddress());
 		holder.itemView.setOnClickListener(view ->
 			onClickListener.onItemClick(position, wallet)
 		);

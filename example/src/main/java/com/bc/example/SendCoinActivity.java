@@ -14,10 +14,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bc.core.nanj.NANJConvert;
-import com.bc.core.nanj.NANJTransactionListener;
+import com.bc.core.nanj.listener.NANJTransactionListener;
 import com.bc.core.nanj.NANJWalletManager;
-
-import java.util.Objects;
 
 
 /**

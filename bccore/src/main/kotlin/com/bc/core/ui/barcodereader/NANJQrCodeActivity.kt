@@ -93,7 +93,6 @@ class NANJQrCodeActivity : AppCompatActivity() {
 				println("barcode detect size -->  ${barcodes.size()}")
 				if (barcodes.size() > 0 && isDetector.not()) {
 					isDetector = true
-//					barcodeReader(barcodes.valueAt(0).displayValue)
 					val address = barcodes.valueAt(0).displayValue
 					if (WalletUtils.isValidAddress(address)) {
 						val intent = Intent()

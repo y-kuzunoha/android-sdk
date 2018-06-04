@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         Transaction data = transactions.get(position);
         if (data == null) return;
         boolean isSend = Objects.equals(address, data.getFrom());
+        Log.d("ahehe", "onBindViewHolder: " + address);
         holder.title.setText(data.getTokenName());
         if (isSend) {
             holder.address.setText("To: " + data.getTo());

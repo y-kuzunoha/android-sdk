@@ -4,6 +4,7 @@ import android.app.Activity
 import android.support.v4.app.Fragment
 import android.text.TextUtils
 import com.bc.core.database.NANJDatabase
+import com.bc.core.model.TransactionResponse
 import com.bc.core.model.TxRelayData
 import com.bc.core.nanj.listener.*
 import com.bc.core.ui.barcodereader.NANJQrCodeActivity
@@ -24,7 +25,6 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.utils.Numeric
 import java.math.BigInteger
-import java.util.*
 import java.util.concurrent.ExecutionException
 
 //web3j solidity generate MetaNANJCOINManager.bin MetaNANJCOINManager.abi -o . -p org.your.package

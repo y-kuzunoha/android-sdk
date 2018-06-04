@@ -1,6 +1,6 @@
 package com.bc.core.nanj.listener
 
-import com.bc.core.nanj.Transaction
+import com.bc.core.model.Transaction
 
 
 /**

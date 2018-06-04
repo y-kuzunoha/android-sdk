@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.bc.core.nanj.listener.NANJTransactionsListener;
 import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.nanj.Transaction;
+import com.bc.core.model.Transaction;
 import java.util.List;
 import java.util.Objects;
 

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bc.core.nanj.NANJConvert;
-import com.bc.core.nanj.Transaction;
+import com.bc.core.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;

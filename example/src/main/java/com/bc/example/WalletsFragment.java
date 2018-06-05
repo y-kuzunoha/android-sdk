@@ -27,7 +27,7 @@ import java.util.List;
 public class WalletsFragment extends Fragment {
 
 	private NANJWalletManager nanjWalletManager;
-	private WalletAdapter walletAdapter = new WalletAdapter();
+	private WalletAdapter walletAdapter;
 	private String _password;
 
 	@Nullable
@@ -39,7 +39,7 @@ public class WalletsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
+		walletAdapter = new WalletAdapter(view.getContext());
 		RecyclerView walletList = view.findViewById(R.id.walletList);
 		walletList.addItemDecoration(
 			new DividerItemDecoration(

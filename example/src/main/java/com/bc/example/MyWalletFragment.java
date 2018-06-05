@@ -77,7 +77,7 @@ public class MyWalletFragment extends Fragment {
     private void intView() {
         if (_nanjWalletManager != null && _nanjWalletManager.getWallet() != null) {
 
-            _nanjWalletManager.getWallet().getNANJWallet(new GetNANJWalletListener() {
+            _nanjWalletManager.getWallet().getNANJWalletAsync(new GetNANJWalletListener() {
                 @Override
                 public void onError() {
 

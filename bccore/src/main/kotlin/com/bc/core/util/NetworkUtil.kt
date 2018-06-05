@@ -36,7 +36,7 @@ object NetworkUtil {
 
     val retofit : Retrofit by lazy {
         Retrofit.Builder()
-                .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS)
+                .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS + "/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }

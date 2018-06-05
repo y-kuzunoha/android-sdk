@@ -6,15 +6,22 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bc.core.nanj.NANJWallet;
+import com.bc.core.nanj.NANJWalletManager;
+import com.bc.core.nanj.listener.GetNANJWalletListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.bc.core.util.ConstantKt.UNKNOWN_NANJ_WALLET;
 
 /**
  * ____________________________________
@@ -24,6 +31,12 @@ import java.util.List;
  * ____________________________________
  */
 public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHolder> {
+
+	private NANJWalletManager nanjWalletManager;
+
+	WalletAdapter(Context context) {
+		nanjWalletManager = ((NANJApplication) context.getApplicationContext()).getNanjWalletManager();
+	}
 
 	public interface OnItemClickListener {
 		void onItemClick(int position, NANJWallet wallet);
@@ -70,7 +83,30 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		Context context = holder.itemView.getContext();
 		NANJWallet wallet = nanjWalletList.get(position);
 		holder.name.setText(wallet.getName());
-		holder.address.setText(wallet.getNanjAddress());
+		if(TextUtils.isEmpty(wallet.getNanjAddress())) {
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					nanjWalletManager.getNANJWalletAsync(wallet.getAddress(), new GetNANJWalletListener() {
+						@Override
+						public void onError() {
+							timer.cancel();
+						}
+
+						@Override
+						public void onSuccess(String address) {
+							if(!Objects.equals(UNKNOWN_NANJ_WALLET, address)) {
+								timer.cancel();
+								holder.address.setText(address);
+							}
+						}
+					});
+				}
+			}, 0, 10000);
+		}
+		String nanjAddress = TextUtils.isEmpty(wallet.getNanjAddress()) ? "Initializing …" : wallet.getNanjAddress();
+		holder.address.setText(nanjAddress);
 		holder.itemView.setOnClickListener(view ->
 			onClickListener.onItemClick(position, wallet)
 		);

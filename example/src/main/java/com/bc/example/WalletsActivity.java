@@ -80,7 +80,7 @@ public class WalletsActivity extends AppCompatActivity {
 			_password,
 			new NANJCreateWalletListener() {
 				@Override
-				public void onCreateWalletSuccess(@NonNull String backup, @NonNull NANJWallet wallet) {
+				public void onCreateProcess(@NonNull String backup, @NonNull NANJWallet wallet) {
 					_progressDialog.dismiss();
 					backupWallet(backup);
 					_sharedPreferences.edit()

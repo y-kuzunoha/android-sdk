@@ -11,7 +11,7 @@ import com.bc.core.nanj.NANJWallet
  */
 
 interface NANJCreateWalletListener {
-	fun onCreateWalletSuccess(backup: String, wallet: NANJWallet)
+	fun onCreateProcess(backup: String, wallet: NANJWallet)
 	fun onCreateWalletFailure()
 }
 

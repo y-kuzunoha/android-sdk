@@ -64,6 +64,13 @@ class NANJDatabase(context: Context) {
         dbWrite.insertWithOnConflict(SQL_WALLET_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
     }
 
+    fun updateWallet(owner : String, nanjAddress: String) {
+        val values = ContentValues().apply {
+            put("_nanj_address", nanjAddress)
+        }
+        dbWrite.update(SQL_WALLET_TABLE, values, "_eth_address = ?", arrayOf(owner))
+    }
+
     fun removeWallet(wallet: NANJWallet) {
         dbWrite.delete(SQL_WALLET_TABLE, "_eth_address = '${wallet.address}'", null)
     }

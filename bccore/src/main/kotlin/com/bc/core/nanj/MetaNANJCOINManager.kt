@@ -32,7 +32,7 @@ import org.web3j.tx.TransactionManager
  */
 class MetaNANJCOINManager : Contract {
 
-    protected constructor(contractAddress: String, web3j: Web3j, credentials: Credentials, gasPrice: BigInteger, gasLimit: BigInteger) : super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit)
+    protected constructor(contractAddress: String, web3j: Web3j, credentials: Credentials?, gasPrice: BigInteger, gasLimit: BigInteger) : super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit)
 
     protected constructor(contractAddress: String, web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger, gasLimit: BigInteger) : super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit)
 
@@ -101,7 +101,7 @@ class MetaNANJCOINManager : Contract {
             return Contract.deployRemoteCall(MetaNANJCOINManager::class.java, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor)
         }
 
-        fun load(contractAddress: String = META_NANJCOIN_MANAGER, web3j: Web3j, credentials: Credentials, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT): MetaNANJCOINManager {
+        fun load(contractAddress: String = META_NANJCOIN_MANAGER, web3j: Web3j, credentials: Credentials?, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT): MetaNANJCOINManager {
             return MetaNANJCOINManager(contractAddress, web3j, credentials, gasPrice, gasLimit)
         }
 

@@ -40,7 +40,6 @@ import java.util.concurrent.ExecutionException
 class NANJWallet {
 
     companion object {
-        private val ZERO_AMOUNT_NANJ_COIN = BigInteger.valueOf(0)
         const val WALLET_ADDRESS = "WALLET_ADDRESS"
         const val QRCODE_REQUEST_CODE: Int = 10001
         const val QRCODE_RESULT_CODE: Int = 10003
@@ -48,7 +47,7 @@ class NANJWallet {
         const val NFC_RESULT_CODE: Int = 10004
     }
 
-    var nanjDatabase : NANJDatabase ? = null
+    var nanjDatabase: NANJDatabase? = null
 
     var nanjAddress: String? = ""
     var address: String = ""
@@ -100,7 +99,7 @@ class NANJWallet {
                     .balance
         } catch (e: Exception) {
             e.printStackTrace()
-            ZERO_AMOUNT_NANJ_COIN
+            BigInteger.ZERO
         }
     }
 
@@ -110,11 +109,11 @@ class NANJWallet {
         return try {
             val nanjAddress = getNANJWallet()
             val value = nanjSmartContract?.balanceOf(nanjAddress)?.send()
-                    ?: ZERO_AMOUNT_NANJ_COIN
+                    ?: BigInteger.ZERO
             value
         } catch (e: Exception) {
             e.printStackTrace()
-            ZERO_AMOUNT_NANJ_COIN
+            BigInteger.ZERO
         }
     }
 
@@ -154,29 +153,24 @@ class NANJWallet {
 
     }
 
-    fun getNANJWallet(listener: GetNANJWalletListener? = null) {
+    fun getNANJWalletAsync(listener: GetNANJWalletListener) {
         doAsync(
+                { uiThread { listener.onError()  }},
                 {
-                    it.printStackTrace()
-                    uiThread { listener?.onError() }
-                },
-                {
-                    val nanjWallet = getNANJWallet()
-                    //sendNANJCoin()
-                    uiThread { listener?.onSuccess(nanjWallet) }
+                    val address = getNANJWallet()
+                    uiThread { listener.onSuccess(address) }
                 }
         )
     }
 
     fun getNANJWallet(): String {
-        if(!TextUtils.isEmpty(nanjAddress)) return nanjAddress!!
+        if (!TextUtils.isEmpty(nanjAddress)) return nanjAddress!!
         val address = metaNANJCOINManager!!.getWallet(address).send()
-        if(UNKNOWN_NANJ_WALLET != address) {
+        if (UNKNOWN_NANJ_WALLET != address) {
             nanjAddress = address
             nanjDatabase?.saveWallet(this)
-            return address
         }
-        return ""
+        return address
     }
 
     fun createNANJWallet(listener: CreateNANJWalletListener? = null) {
@@ -216,14 +210,14 @@ class NANJWallet {
                                     },
                                     {
                                         it.printStackTrace()
-                                        uiThread { listener?.onError()  }
+                                        uiThread { listener?.onError() }
                                     }
                             )
                 }
         )
     }
 
-    fun sendNANJCoin(toAddress: String, amount: String, listener: SendNANJCoinListener?=null) {
+    fun sendNANJCoin(toAddress: String, amount: String, listener: SendNANJCoinListener? = null) {
         doAsync(
                 {
                     it.printStackTrace()
@@ -275,7 +269,7 @@ class NANJWallet {
                                     },
                                     {
                                         it.printStackTrace()
-                                        uiThread { listener?.onError()  }
+                                        uiThread { listener?.onError() }
                                     }
                             )
                 }
@@ -301,7 +295,7 @@ class NANJWallet {
             val ethGetTransactionCount = it.ethGetTransactionCount(address, DefaultBlockParameterName.PENDING).sendAsync().get()
             return ethGetTransactionCount.transactionCount
         }
-        return ZERO_AMOUNT_NANJ_COIN
+        return BigInteger.ZERO
     }
 
     fun sendNANJCoinByQrCode(activity: Activity) {

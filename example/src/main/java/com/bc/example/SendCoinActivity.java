@@ -21,85 +21,85 @@ import com.bc.core.nanj.listener.SendNANJCoinListener;
 
 
 /**
- ____________________________________
-
- Generator: Hieu.TV - tvhieuit@gmail.com
- CreatedAt: 5/4/18
- ____________________________________
+ * ____________________________________
+ * <p>
+ * Generator: Hieu.TV - tvhieuit@gmail.com
+ * CreatedAt: 5/4/18
+ * ____________________________________
  */
 public class SendCoinActivity extends AppCompatActivity {
 
-	private NANJWalletManager _nanjWalletManager;
-	private WalletHandle walletHandle = new WalletHandle();
+    private NANJWalletManager _nanjWalletManager;
+    private WalletHandle walletHandle = new WalletHandle();
 
-	@SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n")
     @SuppressWarnings("ConstantConditions")
     @Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_send_nanj_coin);
-		setupActionBar();
-		_nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
-		AppCompatTextView status = findViewById(R.id.status);
-		findViewById(R.id.qr).setOnClickListener(v -> {
-			if(_nanjWalletManager.getWallet() != null) {
-				_nanjWalletManager.getWallet().sendNANJCoinByQrCode(this);
-			}
-		});
-		AppCompatEditText edAddress = findViewById(R.id.address);
-		AppCompatEditText edAmount = findViewById(R.id.amount);
-		walletHandle.setWalletAddressListener(edAddress::setText);
-		findViewById(R.id.send).setOnClickListener((View v2) -> {
-			String address = edAddress.getText().toString();
-			status.setText("Nanj coin sending to address: " + address);
-			_nanjWalletManager.getWallet().sendNANJCoin(
-				address,
-				NANJConvert.toWei(edAmount.getText().toString(), NANJConvert.Unit.NANJ).toString(),
-				new SendNANJCoinListener() {
-					@Override
-					public void onError() {
-						status.setText("Failure!");
-					}
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_send_nanj_coin);
+        setupActionBar();
+        _nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
+        AppCompatTextView status = findViewById(R.id.status);
+        findViewById(R.id.qr).setOnClickListener(v -> {
+            if (_nanjWalletManager.getWallet() != null) {
+                _nanjWalletManager.getWallet().sendNANJCoinByQrCode(this);
+            }
+        });
+        AppCompatEditText edAddress = findViewById(R.id.address);
+        AppCompatEditText edAmount = findViewById(R.id.amount);
+        walletHandle.setWalletAddressListener(edAddress::setText);
+        findViewById(R.id.send).setOnClickListener((View v2) -> {
+            String address = edAddress.getText().toString();
+            status.setText("Nanj coin sending to address: " + address);
+            _nanjWalletManager.getWallet().sendNANJCoin(
+                    address,
+                    edAmount.getText().toString(),
+                    new SendNANJCoinListener() {
+                        @Override
+                        public void onError() {
+                            status.setText("Failure!");
+                        }
 
-					@Override
-					public void onSuccess() {
-						status.setText("Sending!");
-					}
-				}
-			);
-		});
+                        @Override
+                        public void onSuccess() {
+                            status.setText("Sending!");
+                        }
+                    }
+            );
+        });
 
-		AppCompatTextView nfc = findViewById(R.id.nfc);
-		nfc.setVisibility(NfcAdapter.getDefaultAdapter(this) == null? View.GONE:View.VISIBLE);
-		nfc.setOnClickListener(v -> {
-			if(_nanjWalletManager.getWallet() != null) {
-				_nanjWalletManager.getWallet().sendNANJCoinByNfcCode(this);
-			}
-		});
-	}
+        AppCompatTextView nfc = findViewById(R.id.nfc);
+        nfc.setVisibility(NfcAdapter.getDefaultAdapter(this) == null ? View.GONE : View.VISIBLE);
+        nfc.setOnClickListener(v -> {
+            if (_nanjWalletManager.getWallet() != null) {
+                _nanjWalletManager.getWallet().sendNANJCoinByNfcCode(this);
+            }
+        });
+    }
 
-	private void setupActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		if(actionBar == null) return;
-		actionBar.setTitle("Send NANJ coin");
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeAsUpIndicator(R.drawable.ic_back_24px);
-		actionBar.setHomeActionContentDescription("Back");
-	}
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) return;
+        actionBar.setTitle("Send NANJ coin");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back_24px);
+        actionBar.setHomeActionContentDescription("Back");
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		walletHandle.onActivityResult(requestCode, resultCode, data);
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        walletHandle.onActivityResult(requestCode, resultCode, data);
+    }
 }

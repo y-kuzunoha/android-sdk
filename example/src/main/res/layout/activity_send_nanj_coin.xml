@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintRight_toLeftOf="@+id/qr"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="0x4c94d0b90e5ad08251ff522e24d05b6ea9ce2787"
+        android:text="0x315f29a91e8185df6e0cc4b0a5718bdbc5dd5fc3"
         android:hint="address"/>
 
     <android.support.v7.widget.AppCompatTextView
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1233453545756867867"
+        android:text="1"
         android:hint="amount"/>
 
     <android.support.v7.widget.AppCompatTextView

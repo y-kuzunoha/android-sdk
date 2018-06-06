@@ -83,9 +83,9 @@ public class WalletsActivity extends AppCompatActivity {
 				public void onCreateProcess(@NonNull String backup, @NonNull NANJWallet wallet) {
 					_progressDialog.dismiss();
 					backupWallet(backup);
-					_sharedPreferences.edit()
-						.putString(Const.STORAGE_CURRENT_WALLET, new Gson().toJson(wallet))
-						.apply();
+//					_sharedPreferences.edit()
+//						.putString(Const.STORAGE_CURRENT_WALLET, new Gson().toJson(wallet))
+//						.apply();
 					_walletsFragment.setData(nanjWalletManager.getWalletList());
 				}
 				@Override

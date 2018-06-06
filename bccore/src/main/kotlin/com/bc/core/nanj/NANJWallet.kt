@@ -155,7 +155,7 @@ class NANJWallet {
 
     fun getNANJWalletAsync(listener: GetNANJWalletListener) {
         doAsync(
-                { uiThread { listener.onError()  }},
+                { uiThread { listener.onError() } },
                 {
                     val address = getNANJWallet()
                     uiThread { listener.onSuccess(address) }
@@ -181,38 +181,12 @@ class NANJWallet {
                 },
                 {
                     val param = arrayListOf<Type<*>>(Address(address))
-                    val f = Function("createWallet", param, arrayListOf())
-                    val data = FunctionEncoder.encode(f)
-                    val sign = Sign.signMessage(Numeric.hexStringToByteArray(data), cridentals!!.ecKeyPair)
-                    val nonceString = "0"
-                    val pad = nonceString.padStart(64, '0')
-                    val hashInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${META_NANJCOIN_MANAGER.replace("0x", "")}${data.replace("0x", "")}"
-                    val hash = Hash.sha3(hashInput)
-                    val restData = TxRelayData(
-                            Numeric.toHexString(sign.r),
-                            Numeric.toHexString(sign.s),
-                            sign.v.toString(),
-                            data,
-                            pad,
-                            META_NANJCOIN_MANAGER,//dest
-                            hash
+                    val createNanjWalletFunction = Function("createWallet", param, arrayListOf())
+                    sendFunctionToServer(
+                            createNanjWalletFunction,
+                            error = { listener?.onError() },
+                            success = { listener?.onCreateProcess() }
                     )
-                    val requestBody = RequestBody.create(MediaType.parse("application/json"), Gson().toJson(restData))
-                    NetworkUtil.retofit.create(Api::class.java)
-                            .postCreateNANJWallet(
-                                    NANJConfig.NANJ_SERVER_ADDRESS,
-                                    requestBody
-                            )
-                            .subscribeOn(Schedulers.computation())
-                            .subscribe(
-                                    {
-                                        uiThread { listener?.onCreateProcess() }
-                                    },
-                                    {
-                                        it.printStackTrace()
-                                        uiThread { listener?.onError() }
-                                    }
-                            )
                 }
         )
     }
@@ -240,40 +214,49 @@ class NANJWallet {
                             DynamicBytes(hexData)
                     )
                     val forwardToFunction = Function("forwardTo", params, arrayListOf())
-                    val dataForwardTo = FunctionEncoder.encode(forwardToFunction)
-                    val sign = Sign.signMessage(Numeric.hexStringToByteArray(dataForwardTo), cridentals!!.ecKeyPair)
-                    val nonceString = txRelay!!.getNonce(address).send().toString(16).replace("0x", "")
-                    val pad = nonceString.padStart(64, '0')
-                    val hashInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${META_NANJCOIN_MANAGER.replace("0x", "")}${dataForwardTo.replace("0x", "")}"
-                    val hash = Hash.sha3(hashInput)
-                    val restData = TxRelayData(
-                            Numeric.toHexString(sign.r),
-                            Numeric.toHexString(sign.s),
-                            sign.v.toString(),
-                            dataForwardTo,
-                            nonceString,
-                            META_NANJCOIN_MANAGER,//dest
-                            hash
+                    sendFunctionToServer(
+                            forwardToFunction,
+                            error = { listener?.onError() },
+                            success = { listener?.onSuccess() }
                     )
-                    val jsonParamApi = Gson().toJson(restData)
-                    val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonParamApi)
-                    NetworkUtil.retofit.create(Api::class.java)
-                            .postCreateNANJWallet(
-                                    NANJConfig.NANJ_SERVER_ADDRESS,
-                                    requestBody
-                            )
-                            .subscribeOn(Schedulers.computation())
-                            .subscribe(
-                                    {
-                                        uiThread { listener?.onSuccess() }
-                                    },
-                                    {
-                                        it.printStackTrace()
-                                        uiThread { listener?.onError() }
-                                    }
-                            )
                 }
         )
+    }
+
+    private fun sendFunctionToServer(function: Function, error: () -> Unit, success: () -> Unit) {
+        val encodeFunction = FunctionEncoder.encode(function)
+        val sign = Sign.signMessage(Numeric.hexStringToByteArray(encodeFunction), cridentals!!.ecKeyPair)
+        val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
+        val nonceString = txRelay!!.getNonce(nanjAddress).send().toString(16).replace("0x", "")
+        val pad = nonceString.padStart(64, '0')
+        val hashInput = "0x1900${TX_RELAY_ADDRESS.replace("0x", "")}${WALLET_OWNER.replace("0x", "")}$pad${META_NANJCOIN_MANAGER.replace("0x", "")}${encodeFunction.replace("0x", "")}"
+        val hash = Hash.sha3(hashInput)
+        val restData = TxRelayData(
+                Numeric.toHexString(sign.r),
+                Numeric.toHexString(sign.s),
+                sign.v.toString(),
+                encodeFunction,
+                nonceString,
+                META_NANJCOIN_MANAGER,//dest
+                hash
+        )
+        val jsonParamApi = Gson().toJson(restData)
+        val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonParamApi)
+        NetworkUtil.retofit.create(Api::class.java)
+                .postCreateNANJWallet(
+                        NANJConfig.NANJ_SERVER_ADDRESS,
+                        requestBody
+                )
+                .subscribeOn(Schedulers.computation())
+                .subscribe(
+                        {
+                            uiThread { success.invoke() }
+                        },
+                        {
+                            it.printStackTrace()
+                            uiThread { error.invoke() }
+                        }
+                )
     }
 
     fun sentNANJCoin(toAddress: String, amount: String, transferListener: NANJTransactionListener) {

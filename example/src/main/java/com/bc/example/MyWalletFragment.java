@@ -46,6 +46,7 @@ public class MyWalletFragment extends Fragment {
 
     private NANJWalletManager _nanjWalletManager;
     private WalletHandle walletHandle = new WalletHandle();
+    private String prevAddress;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my_wallet, container, false);
@@ -95,8 +96,14 @@ public class MyWalletFragment extends Fragment {
     }
 
     private void initView(String address) {
+        if(!Objects.equals(prevAddress, address)) {
+            prevAddress = address;
+            ivAddressWallet.setImageDrawable(null);
+            tvaddress.setText("");
+            amountUsd.setText("");
+            nanjRate.setText("");
+        }
         tvaddress.setText(String.format("Address: %s", address));
-
         Executors.newCachedThreadPool().execute(() -> {
             Bitmap mIcon_val = null;
             try {

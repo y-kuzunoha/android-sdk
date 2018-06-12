@@ -98,8 +98,8 @@ public class TransactionsFragment extends Fragment {
             _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override
                 public void onTransferSuccess(List<Transaction> transactions) {
-                    transactionAdapter.setData(transactions);
                     isLoading = false;
+                    getActivity().runOnUiThread(() -> transactionAdapter.setData(transactions));
                 }
 
                 @Override

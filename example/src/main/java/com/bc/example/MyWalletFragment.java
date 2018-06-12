@@ -86,7 +86,9 @@ public class MyWalletFragment extends Fragment {
 
                 @Override
                 public void onSuccess(@NonNull String address) {
-                    initView(address);
+                    getActivity().runOnUiThread(() -> {
+                        initView(address);
+                    });
                 }
             });
 
@@ -113,7 +115,10 @@ public class MyWalletFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            String coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+            String coin = "";
+            try{
+                coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+            } catch (Exception e) {e.printStackTrace();}
             Log.d("MyWalletFragment", "  coin  " + coin);
             if (getActivity() != null) {
                 BigDecimal realCoin = NANJConvert.fromWei(coin, NANJConvert.Unit.NANJ);
@@ -129,9 +134,9 @@ public class MyWalletFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onSuccess(@NonNull BigDecimal value) {
-                        nanjRate.setText(
-                                "Yen: " + realCoin.multiply(value).toBigInteger()
-                        );
+                        getActivity().runOnUiThread(() -> {
+                            nanjRate.setText("Yen: " + realCoin.multiply(value).toBigInteger());
+                        });
                     }
 
                     @Override

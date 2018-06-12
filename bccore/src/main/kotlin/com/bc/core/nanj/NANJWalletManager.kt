@@ -9,15 +9,12 @@ import com.bc.core.util.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3jFactory
 import org.web3j.protocol.http.HttpService
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
-import kotlin.concurrent.scheduleAtFixedRate
 
 /**
  * ____________________________________
@@ -27,32 +24,44 @@ import kotlin.concurrent.scheduleAtFixedRate
  * ____________________________________
  */
 
-class NANJWalletManager constructor(context: Context) {
+open class NANJWalletManager {
+
+    companion object {
+        @JvmStatic fun Builder(): NANJWalletManager {
+            return NANJWalletManager()
+        }
+    }
 
     private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
-    private val _nanjDatabase = NANJDatabase(context)
+    private var _nanjDatabase: NANJDatabase? = null
     private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
     var wallet: NANJWallet? = null
     private var metaNANJCOINManager: MetaNANJCOINManager? = MetaNANJCOINManager.load(
             web3j = _web3j,
             credentials = Credentials.create(Keys.createEcKeyPair()))
 
-    init {
-        wallets = _nanjDatabase.loadWallets()
+    fun setContext(context: Context): NANJWalletManager {
+        _nanjDatabase = NANJDatabase(context)
+        return this
+    }
+
+    fun build(): NANJWalletManager? {
+        wallets = _nanjDatabase?.loadWallets() ?: return this
         if (wallets.isNotEmpty()) {
             enableWallet(0)
         }
+        return this
     }
 
     fun getNANJWalletAsync(owner: String, listener: GetNANJWalletListener) {
         doAsync(
-                { uiThread { listener.onError()  }},
+                { listener.onError()  },
                 {
                     val address = metaNANJCOINManager!!.getWallet(owner).send()
                     if(UNKNOWN_NANJ_WALLET != address) {
-                        _nanjDatabase.updateWallet(owner, address)
+                        _nanjDatabase?.updateWallet(owner, address)
                     }
-                    uiThread { listener.onSuccess(address) }
+                    listener.onSuccess(address)
                 }
         )
     }
@@ -74,7 +83,7 @@ class NANJWalletManager constructor(context: Context) {
      * */
     fun importWallet(password: String, fileKeystore: File, nanjWalletListener: NANJImportWalletListener) {
         doAsync(
-                { uiThread { nanjWalletListener.onImportWalletFailure() } },
+                {  nanjWalletListener.onImportWalletFailure() } ,
                 {
                     val credentials = WalletUtils.loadCredentials(password, fileKeystore)
                     metaNANJCOINManager = MetaNANJCOINManager.load(
@@ -85,28 +94,17 @@ class NANJWalletManager constructor(context: Context) {
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     println("wtf  $nanjAddress")
                     if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-                        uiThread { nanjWalletListener.onImportWalletSuccess() }
+                        importWalletFromCredentials(credentials, nanjAddress)
+                        nanjWalletListener.onImportWalletSuccess()
                     } else {
 
                         this@NANJWalletManager.wallet?.createNANJWallet(object : CreateNANJWalletListener {
                             override fun onError() {
-                                uiThread { nanjWalletListener.onImportWalletFailure() }
+                                nanjWalletListener.onImportWalletFailure()
                             }
 
                             override fun onCreateProcess() {
-                                uiThread { nanjWalletListener.onImportWalletSuccess() }
-//                                val timer = Timer()
-//                                timer.scheduleAtFixedRate(0, 10000) {
-//
-//                                    val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
-//                                    println("wtf  $nanjAddress")
-//                                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-//                                        timer.cancel()
-//                                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-//                                        uiThread { nanjWalletListener.onImportWalletSuccess() }
-//                                    }
-//                                }
+                                nanjWalletListener.onImportWalletSuccess()
                             }
                         })
 
@@ -119,15 +117,15 @@ class NANJWalletManager constructor(context: Context) {
      * Import a wallet from json
      *
      * @param password
-     * @param jsonWallet
+     * @param jsonKeystore
      *
      * */
-    fun importWallet(password: String, jsonWallet: String, nanjWalletListener: NANJImportWalletListener) {
+    fun importWallet(password: String, jsonKeystore: String, nanjWalletListener: NANJImportWalletListener) {
         doAsync(
-                { uiThread { nanjWalletListener.onImportWalletFailure() } },
+                { nanjWalletListener.onImportWalletFailure() },
                 {
                     val objectMapper = ObjectMapper()
-                    val walletFile = objectMapper.readValue(jsonWallet, WalletFile::class.java)
+                    val walletFile = objectMapper.readValue(jsonKeystore, WalletFile::class.java)
                     val credentials = Credentials.create(Wallet.decrypt(password, walletFile))
                     metaNANJCOINManager = MetaNANJCOINManager.load(
                             web3j = _web3j,
@@ -137,27 +135,17 @@ class NANJWalletManager constructor(context: Context) {
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     println("wtf  $nanjAddress")
                     if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-                        uiThread { nanjWalletListener.onImportWalletSuccess() }
+                        importWalletFromCredentials(credentials, nanjAddress)
+                        nanjWalletListener.onImportWalletSuccess()
                     } else {
 
                         this@NANJWalletManager.wallet?.createNANJWallet(object : CreateNANJWalletListener {
                             override fun onError() {
-                                uiThread { nanjWalletListener.onImportWalletFailure() }
+                                nanjWalletListener.onImportWalletFailure()
                             }
 
                             override fun onCreateProcess() {
-                                uiThread { nanjWalletListener.onImportWalletSuccess() }
-//                                val timer = Timer()
-//                                timer.scheduleAtFixedRate(0, 10000) {
-//                                    val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
-//                                    println("wtf  $nanjAddress")
-//                                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-//                                        timer.cancel()
-//                                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-//                                        uiThread { nanjWalletListener.onImportWalletSuccess() }
-//                                    }
-//                                }
+                                nanjWalletListener.onImportWalletSuccess()
                             }
                         })
 
@@ -174,7 +162,7 @@ class NANJWalletManager constructor(context: Context) {
      * */
     fun importWallet(privateKey: String, nanjWalletListener: NANJImportWalletListener) {
         doAsync(
-                { uiThread { nanjWalletListener.onImportWalletFailure() } },
+                { nanjWalletListener.onImportWalletFailure() },
                 {
                     val credentials = Credentials.create(privateKey)
                     metaNANJCOINManager = MetaNANJCOINManager.load(
@@ -185,27 +173,17 @@ class NANJWalletManager constructor(context: Context) {
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     println("wtf  $nanjAddress")
                     if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-                        uiThread { nanjWalletListener.onImportWalletSuccess() }
+                        importWalletFromCredentials(credentials, nanjAddress)
+                        nanjWalletListener.onImportWalletSuccess()
                     } else {
 
                         this@NANJWalletManager.wallet?.createNANJWallet(object : CreateNANJWalletListener {
                             override fun onError() {
-                                uiThread { nanjWalletListener.onImportWalletFailure() }
+                                nanjWalletListener.onImportWalletFailure()
                             }
 
                             override fun onCreateProcess() {
-                                uiThread { nanjWalletListener.onImportWalletSuccess() }
-//                                val timer = Timer()
-//                                timer.scheduleAtFixedRate(0, 10000) {
-//                                    val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
-//                                    println("wtf  $nanjAddress")
-//                                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-//                                        timer.cancel()
-//                                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-//                                        uiThread { nanjWalletListener.onImportWalletSuccess() }
-//                                    }
-//                                }
+                                nanjWalletListener.onImportWalletSuccess()
                             }
                         })
 
@@ -223,7 +201,7 @@ class NANJWalletManager constructor(context: Context) {
             this.nanjAddress = nanjAddress
         }
         wallets[nanjWallet.address] = nanjWallet
-        _nanjDatabase.saveWallet(nanjWallet)
+        _nanjDatabase?.saveWallet(nanjWallet)
         enableWallet(nanjWallet)
         return nanjWallet
     }
@@ -240,7 +218,7 @@ class NANJWalletManager constructor(context: Context) {
     }
 
     fun removeWallet(wallet: NANJWallet) {
-        _nanjDatabase.removeWallet(wallet)
+        _nanjDatabase?.removeWallet(wallet)
         wallets.remove(wallet.address)
         this.wallet?.let {
             if (it.address == wallet.address) {
@@ -257,7 +235,7 @@ class NANJWalletManager constructor(context: Context) {
      * */
     fun createWallet(password: String, createWalletListener: NANJCreateWalletListener) {
         doAsync(
-                { uiThread { createWalletListener.onCreateWalletFailure() } },
+                { createWalletListener.onCreateWalletFailure() } ,
                 {
                     val ecKeyPair = Keys.createEcKeyPair()
                     val addressWallet = Wallet.createLight(password, ecKeyPair)
@@ -269,38 +247,18 @@ class NANJWalletManager constructor(context: Context) {
                             credentials = credentials
                     )
                     importWalletFromCredentials(credentials, "")
-                    val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
-                    println("wtf  $nanjAddress")
-                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-                        uiThread { createWalletListener.onCreateProcess(strWallet, wallet) }
-                    } else {
 
                         this@NANJWalletManager.wallet?.createNANJWallet(object : CreateNANJWalletListener {
                             override fun onError() {
-                                uiThread { createWalletListener.onCreateWalletFailure() }
+                                createWalletListener.onCreateWalletFailure()
                             }
 
                             override fun onCreateProcess() {
                                     val wallet = importWalletFromCredentials(credentials, "")
-                                    uiThread { createWalletListener.onCreateProcess(strWallet, wallet) }
-
-                                /*
-                                val timer = Timer()
-                                timer.scheduleAtFixedRate(0, 10000) {
-                                    val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
-                                    println("wtf  $nanjAddress")
-                                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
-                                        timer.cancel()
-                                        val wallet = importWalletFromCredentials(credentials, nanjAddress)
-                                        uiThread { createWalletListener.onCreateProcess(strWallet, wallet) }
-                                    }
-                                }
-                                * */
+                                    createWalletListener.onCreateProcess(strWallet, wallet)
                             }
                         })
 
-                    }
 
                 }
         )
@@ -321,7 +279,7 @@ class NANJWalletManager constructor(context: Context) {
         val list = wallets.keys.toMutableList()
         val key = list[position]
         val wallet = wallets[key]!!
-        if(!wallet.nanjAddress.isNullOrBlank()) {
+        if (!wallet.nanjAddress.isNullOrBlank()) {
             this.enableWallet(wallet)
         }
     }
@@ -330,7 +288,7 @@ class NANJWalletManager constructor(context: Context) {
         doAsync(
                 {
                     it.printStackTrace()
-                    uiThread { listener.onFailure("error") }
+                    listener.onFailure("error")
                 },
                 {
                     var nanjRate: BigDecimal = 0.toBigDecimal()
@@ -346,7 +304,7 @@ class NANJWalletManager constructor(context: Context) {
                         yenRate = yenData.Usd2Yen.value
                     }
 
-                    uiThread { listener.onSuccess(nanjRate.multiply(yenRate)) }
+                    listener.onSuccess(nanjRate.multiply(yenRate))
                 }
         )
     }

@@ -22,7 +22,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'jacoco'
+
 android {
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     compileSdkVersion 27
 
     defaultConfig {
@@ -35,6 +40,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -49,6 +57,10 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -56,6 +68,9 @@ dependencies {
 
     //Test
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:1.9.5"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testImplementation 'org.slf4j:slf4j-simple:1.7.21'
     androidTestImplementation('com.android.support.test:runner:1.0.2')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -68,6 +83,8 @@ dependencies {
     implementation("org.jetbrains.anko:anko-common:$anko_version") {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
 
     //Android library
     implementation("com.android.support:appcompat-v7:$android_version")
@@ -95,4 +112,8 @@ kotlin {
     experimental {
         coroutines "enable"
     }
+}
+
+jacoco {
+    toolVersion = "0.7.7.201606060606"
 }

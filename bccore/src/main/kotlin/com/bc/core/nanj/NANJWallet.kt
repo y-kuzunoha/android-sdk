@@ -15,7 +15,6 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.datatypes.*
 import org.web3j.abi.datatypes.Function
@@ -92,29 +91,11 @@ class NANJWallet {
         )
     }
 
-    fun getAmountEth(): BigInteger {
-        return try {
-            _web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST)
-                    .send()
-                    .balance
-        } catch (e: Exception) {
-            e.printStackTrace()
-            BigInteger.ZERO
-        }
-    }
-
-    fun getNANJCoinObservable() = nanjSmartContract?.balanceOf(address)?.observable()
-
     fun getAmountNanj(): BigInteger {
-        return try {
-            val nanjAddress = getNANJWallet()
-            val value = nanjSmartContract?.balanceOf(nanjAddress)?.send()
-                    ?: BigInteger.ZERO
-            value
-        } catch (e: Exception) {
-            e.printStackTrace()
-            BigInteger.ZERO
-        }
+        val nanjAddress = getNANJWallet()
+        val value = nanjSmartContract?.balanceOf(nanjAddress)?.send()
+                ?: BigInteger.ZERO
+        return value
     }
 
     fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
@@ -141,11 +122,11 @@ class NANJWallet {
                             .subscribe(
                                     {
                                         val transactionList: TransactionResponse? = Gson().fromJson(it.string(), TransactionResponse::class.java)
-                                        com.bc.core.util.uiThread { listener.onTransferSuccess(transactionList?.transactions) }
+                                        listener.onTransferSuccess(transactionList?.transactions)
                                     },
                                     {
                                         it.printStackTrace()
-                                        com.bc.core.util.uiThread { listener.onTransferFailure() }
+                                         listener.onTransferFailure()
                                     }
                             )
                 }
@@ -155,10 +136,10 @@ class NANJWallet {
 
     fun getNANJWalletAsync(listener: GetNANJWalletListener) {
         doAsync(
-                { uiThread { listener.onError() } },
+                {   listener.onError()  },
                 {
                     val address = getNANJWallet()
-                    uiThread { listener.onSuccess(address) }
+                      listener.onSuccess(address)
                 }
         )
     }
@@ -177,7 +158,7 @@ class NANJWallet {
         doAsync(
                 {
                     it.printStackTrace()
-                    uiThread { listener?.onError() }
+                    listener?.onError()
                 },
                 {
                     val param = arrayListOf<Type<*>>(Address(address))
@@ -195,7 +176,7 @@ class NANJWallet {
         doAsync(
                 {
                     it.printStackTrace()
-                    uiThread { listener?.onError() }
+                    listener?.onError()
                 },
                 {
                     val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
@@ -242,19 +223,23 @@ class NANJWallet {
         )
         val jsonParamApi = Gson().toJson(restData)
         val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonParamApi)
+        println("313123123131312313")
         NetworkUtil.retofit.create(Api::class.java)
                 .postCreateNANJWallet(
                         NANJConfig.NANJ_SERVER_ADDRESS,
                         requestBody
                 )
-                .subscribeOn(Schedulers.computation())
                 .subscribe(
                         {
-                            uiThread { success.invoke() }
+                            println("send success")
+                            success.invoke()
+//                            async(UI) { success.invoke() }
                         },
                         {
+                            println("send fail")
                             it.printStackTrace()
-                            uiThread { error.invoke() }
+                            error.invoke()
+//                            async(UI) { error.invoke() }
                         }
                 )
     }
@@ -263,22 +248,13 @@ class NANJWallet {
         doAsync(
                 {
                     it.printStackTrace()
-                    uiThread { transferListener.onTransferFailure() }
+                    transferListener.onTransferFailure()
                 },
                 {
                     nanjSmartContract?.transfer(toAddress, BigInteger(amount))?.send()
-                    uiThread { transferListener.onTransferSuccess() }
+                    transferListener.onTransferSuccess()
                 }
         )
-    }
-
-    @Throws(InterruptedException::class, ExecutionException::class)
-    private fun getNonce(address: String): BigInteger {
-        web3j?.let {
-            val ethGetTransactionCount = it.ethGetTransactionCount(address, DefaultBlockParameterName.PENDING).sendAsync().get()
-            return ethGetTransactionCount.transactionCount
-        }
-        return BigInteger.ZERO
     }
 
     fun sendNANJCoinByQrCode(activity: Activity) {

@@ -58,12 +58,16 @@ public class SendCoinActivity extends AppCompatActivity {
                     new SendNANJCoinListener() {
                         @Override
                         public void onError() {
-                            status.setText("Failure!");
+                            runOnUiThread(() -> {
+                                status.setText("Failure!");
+                            });
                         }
 
                         @Override
                         public void onSuccess() {
-                            status.setText("Sending!");
+                            runOnUiThread(() -> {
+                                    status.setText("Sending!");
+                            });
                         }
                     }
             );

@@ -81,17 +81,21 @@ public class WalletsActivity extends AppCompatActivity {
 			new NANJCreateWalletListener() {
 				@Override
 				public void onCreateProcess(@NonNull String backup, @NonNull NANJWallet wallet) {
-					_progressDialog.dismiss();
-					backupWallet(backup);
+					runOnUiThread(() -> {
+						_progressDialog.dismiss();
+						backupWallet(backup);
 //					_sharedPreferences.edit()
 //						.putString(Const.STORAGE_CURRENT_WALLET, new Gson().toJson(wallet))
 //						.apply();
-					_walletsFragment.setData(nanjWalletManager.getWalletList());
+						_walletsFragment.setData(nanjWalletManager.getWalletList());
+					});
 				}
 				@Override
 				public void onCreateWalletFailure() {
-					_progressDialog.dismiss();
-					Toast.makeText(WalletsActivity.this, "Create wallet failure.", Toast.LENGTH_LONG).show();
+					runOnUiThread(() -> {
+						_progressDialog.dismiss();
+						Toast.makeText(WalletsActivity.this, "Create wallet failure.", Toast.LENGTH_LONG).show();
+					});
 				}
 			}
 		);
@@ -129,14 +133,18 @@ public class WalletsActivity extends AppCompatActivity {
 	private NANJImportWalletListener nanjImportWalletListener = new NANJImportWalletListener() {
 		@Override
 		public void onImportWalletSuccess() {
-			_progressDialog.dismiss();
-			_walletsFragment.setData(nanjWalletManager.getWalletList());
+			runOnUiThread(() -> {
+				_progressDialog.dismiss();
+				_walletsFragment.setData(nanjWalletManager.getWalletList());
+			});
 		}
 
 		@Override
 		public void onImportWalletFailure() {
-			_progressDialog.dismiss();
-			Toast.makeText(WalletsActivity.this, "Import wallet failure.", Toast.LENGTH_LONG).show();
+			runOnUiThread(() -> {
+				_progressDialog.dismiss();
+				Toast.makeText(WalletsActivity.this, "Import wallet failure.", Toast.LENGTH_LONG).show();
+			});
 		}
 	};
 }

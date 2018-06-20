@@ -1,36 +1,21 @@
 package com.bc.core
 
-import android.os.Looper
-import android.support.annotation.NonNull
+import com.bc.core.nanj.NANJConfig
 import com.bc.core.nanj.NANJWallet
 import com.bc.core.nanj.NANJWalletManager
-import com.bc.core.nanj.listener.CreateNANJWalletListener
 import com.bc.core.nanj.listener.NANJCreateWalletListener
 import com.bc.core.nanj.listener.NANJImportWalletListener
-import io.reactivex.Scheduler
+import com.bc.core.nanj.listener.NANJRateListener
 import org.junit.Test
-
 import org.junit.Assert.*
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import io.reactivex.disposables.Disposable
-import io.reactivex.internal.schedulers.ExecutorScheduler
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.plugins.RxJavaPlugins.setInitSingleSchedulerHandler
-import io.reactivex.plugins.RxJavaPlugins.setInitNewThreadSchedulerHandler
-import io.reactivex.plugins.RxJavaPlugins.setInitComputationSchedulerHandler
-import io.reactivex.plugins.RxJavaPlugins.setInitIoSchedulerHandler
-import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import java.util.concurrent.Executor
-import org.mockito.internal.util.reflection.Whitebox
-
-
+import org.web3j.crypto.Credentials
+import org.web3j.protocol.Web3jFactory
+import org.web3j.protocol.http.HttpService
+import java.math.BigDecimal
 
 
 /**
@@ -111,4 +96,45 @@ class ExampleUnitTest {
 
         signal.await(60, TimeUnit.SECONDS)
     }
+
+    @Test
+    fun getNANJRate() {
+        val nanjWalletManager = NANJWalletManager.Builder()
+                .build()
+        val signal = CountDownLatch(1)
+        nanjWalletManager?.getNANJRate(object : NANJRateListener {
+            override fun onSuccess(values: BigDecimal) {
+                println("nanj rate ---- $values")
+                assertEquals("$values", "0.1588263664540200")
+                signal.countDown()
+            }
+
+            override fun onFailure(e: String) {
+                println("nanj rate ---- failure")
+                assertEquals("a", "b")
+                signal.countDown()
+            }
+        })
+
+        signal.await(60, TimeUnit.SECONDS)
+    }
+
+
+    @Test
+    fun getNANJAddress() {
+        val nanjWalletManager = NANJWalletManager.Builder()
+                .build()
+        val wallet = NANJWallet().apply {
+            privatekey = "d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+            address = "0xb66e92f4713de200bc9cb61269a746aa005cbec3"
+            cridentals = Credentials.create("d8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
+            web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
+        }
+        nanjWalletManager?.enableWallet(wallet)
+//        val signal = CountDownLatch(1)
+        val a = nanjWalletManager?.getNANJWallet(wallet.address)
+//        signal.await(60, TimeUnit.SECONDS)
+        assertEquals(a, "0x00b74472f1b4c12a752bb6cfbf13955383e13634")
+    }
+
 }

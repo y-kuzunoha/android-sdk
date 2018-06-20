@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bc.core.nanj.NANJConfig;
+import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.NANJWallet;
 import com.bc.core.nanj.NANJWalletManager;
 import com.bc.core.nanj.listener.GetNANJWalletListener;
@@ -21,7 +23,6 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.bc.core.util.ConstantKt.UNKNOWN_NANJ_WALLET;
 
 /**
  * ____________________________________
@@ -96,7 +97,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 
 						@Override
 						public void onSuccess(String address) {
-							if(!Objects.equals(UNKNOWN_NANJ_WALLET, address)) {
+							if(!Objects.equals(NANJConfig.UNKNOWN_NANJ_WALLET, address)) {
 								timer.cancel();
 								holder.address.setText(address);
 							}

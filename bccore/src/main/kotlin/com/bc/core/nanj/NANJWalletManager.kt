@@ -58,7 +58,7 @@ open class NANJWalletManager {
                 { listener.onError()  },
                 {
                     val address = metaNANJCOINManager!!.getWallet(owner).send()
-                    if(UNKNOWN_NANJ_WALLET != address) {
+                    if(NANJConfig.UNKNOWN_NANJ_WALLET != address) {
                         _nanjDatabase?.updateWallet(owner, address)
                     }
                     listener.onSuccess(address)
@@ -93,7 +93,7 @@ open class NANJWalletManager {
                     importWalletFromCredentials(credentials, "")
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     println("wtf  $nanjAddress")
-                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
+                    if (NANJConfig.UNKNOWN_NANJ_WALLET != nanjAddress) {
                         importWalletFromCredentials(credentials, nanjAddress)
                         nanjWalletListener.onImportWalletSuccess()
                     } else {
@@ -134,7 +134,7 @@ open class NANJWalletManager {
                     importWalletFromCredentials(credentials, "")
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     println("wtf  $nanjAddress")
-                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
+                    if (NANJConfig.UNKNOWN_NANJ_WALLET != nanjAddress) {
                         importWalletFromCredentials(credentials, nanjAddress)
                         nanjWalletListener.onImportWalletSuccess()
                     } else {
@@ -172,7 +172,7 @@ open class NANJWalletManager {
                     importWalletFromCredentials(credentials, "")
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     println("wtf  $nanjAddress")
-                    if (UNKNOWN_NANJ_WALLET != nanjAddress) {
+                    if (NANJConfig.UNKNOWN_NANJ_WALLET != nanjAddress) {
                         importWalletFromCredentials(credentials, nanjAddress)
                         nanjWalletListener.onImportWalletSuccess()
                     } else {
@@ -206,8 +206,8 @@ open class NANJWalletManager {
         return nanjWallet
     }
 
-
     fun removeWallet(position: Int) {
+        if(position >= wallets.keys.toMutableList().size) return
         val key = wallets.keys.toMutableList()[position]
         wallets.remove(key)
         this.wallet?.let {

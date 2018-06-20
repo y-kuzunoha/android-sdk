@@ -149,45 +149,6 @@ public class MyWalletFragment extends Fragment {
         });
     }
 
-    @SuppressLint("InflateParams")
-    private void sendNANJCoinDialog() {
-        Context context = getContext();
-        if (context == null) return;
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_send_nanj_coin, null);
-        AppCompatEditText edAddress = view.findViewById(R.id.address);
-        AppCompatEditText amountEth = view.findViewById(R.id.amountEth);
-        view.findViewById(R.id.qrcode).setOnClickListener(view1 -> {
-            if (_nanjWalletManager.getWallet() != null) {
-                _nanjWalletManager.getWallet().sendNANJCoinByQrCode(MyWalletFragment.this);
-            }
-        });
-        new AlertDialog.Builder(context)
-                .setTitle("Send NANJ Coin")
-                .setView(view)
-                .setOnDismissListener(dialogInterface -> {
-                    walletHandle.setWalletAddressListener(null);
-                })
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Send", (dialogInterface, i) ->
-                        Objects.requireNonNull(_nanjWalletManager.getWallet()).sentNANJCoin(
-                                edAddress.getText().toString(),
-                                amountEth.getText().toString(),
-                                new NANJTransactionListener() {
-                                    @Override
-                                    public void onTransferSuccess() {
-                                        intView();
-                                    }
-
-                                    @Override
-                                    public void onTransferFailure() {
-
-                                    }
-                                }
-                        ))
-                .show();
-        walletHandle.setWalletAddressListener(edAddress::setText);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

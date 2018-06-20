@@ -1,7 +1,5 @@
 package com.bc.core.nanj
 
-import com.bc.core.util.META_NANJCOIN_MANAGER
-import com.bc.core.util.TX_RELAY_ADDRESS
 import java.math.BigInteger
 import java.util.Arrays
 import org.web3j.abi.FunctionEncoder
@@ -91,21 +89,21 @@ class MetaNANJCOINManager : Contract {
 
         val FUNC_ISOWNER = "isOwner"
 
-        fun deploy(web3j: Web3j, credentials: Credentials, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT, _relayAddress: String = TX_RELAY_ADDRESS): RemoteCall<MetaNANJCOINManager> {
+        fun deploy(web3j: Web3j, credentials: Credentials, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT, _relayAddress: String = NANJConfig.TX_RELAY_ADDRESS): RemoteCall<MetaNANJCOINManager> {
             val encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.asList<Type<*>>(org.web3j.abi.datatypes.Address(_relayAddress)))
             return Contract.deployRemoteCall(MetaNANJCOINManager::class.java, web3j, credentials, gasPrice, gasLimit, BINARY, encodedConstructor)
         }
 
-        fun deploy(web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT, _relayAddress: String  = TX_RELAY_ADDRESS): RemoteCall<MetaNANJCOINManager> {
+        fun deploy(web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT, _relayAddress: String  =  NANJConfig.TX_RELAY_ADDRESS): RemoteCall<MetaNANJCOINManager> {
             val encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.asList<Type<*>>(org.web3j.abi.datatypes.Address(_relayAddress)))
             return Contract.deployRemoteCall(MetaNANJCOINManager::class.java, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor)
         }
 
-        fun load(contractAddress: String = META_NANJCOIN_MANAGER, web3j: Web3j, credentials: Credentials?, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT): MetaNANJCOINManager {
+        fun load(contractAddress: String = NANJConfig.META_NANJCOIN_MANAGER, web3j: Web3j, credentials: Credentials?, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT): MetaNANJCOINManager {
             return MetaNANJCOINManager(contractAddress, web3j, credentials, gasPrice, gasLimit)
         }
 
-        fun load(contractAddress: String = META_NANJCOIN_MANAGER, web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT): MetaNANJCOINManager {
+        fun load(contractAddress: String = NANJConfig.META_NANJCOIN_MANAGER, web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT): MetaNANJCOINManager {
             return MetaNANJCOINManager(contractAddress, web3j, transactionManager, gasPrice, gasLimit)
         }
     }

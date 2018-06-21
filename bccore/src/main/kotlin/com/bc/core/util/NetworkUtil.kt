@@ -1,8 +1,10 @@
 package com.bc.core.util
 
 import com.bc.core.nanj.NANJConfig
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.http.Body
@@ -37,6 +39,13 @@ object NetworkUtil {
     val retofit : Retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS + "/")
+                .client(
+                        OkHttpClient.Builder().addInterceptor(
+                                HttpLoggingInterceptor().apply {
+                                    level = HttpLoggingInterceptor.Level.BODY
+                                }
+                        ).build()
+                )
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }

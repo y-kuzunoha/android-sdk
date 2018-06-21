@@ -73,7 +73,6 @@ open class NANJNfcActivity : AppCompatActivity() {
 	}
 
 	override fun onNewIntent(intent : Intent?) {
-		println("nfc start parser")
 		intent?.let {
 			val tag = it.getParcelableExtra(NfcAdapter.EXTRA_TAG) as Tag
 			val ndef = Ndef.get(tag)
@@ -94,7 +93,6 @@ open class NANJNfcActivity : AppCompatActivity() {
 					try {
 						val payload = ndefRecord.payload
 						val s = String(payload)
-						println("nfc string -> $s")
 						if(WalletUtils.isValidAddress(s)) {
 							val intent = Intent()
 							intent.putExtra(NANJWallet.WALLET_ADDRESS, s)
@@ -107,7 +105,6 @@ open class NANJNfcActivity : AppCompatActivity() {
 					}
 			}
 		}
-		println("nfc end parser")
 	}
 
 	private fun dispatch(enable : Boolean) {

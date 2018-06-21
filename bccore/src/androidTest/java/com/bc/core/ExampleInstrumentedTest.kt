@@ -36,13 +36,11 @@ class ExampleInstrumentedTest {
         val signal = CountDownLatch(1)
         nanjWalletManager?.createWallet("a", object : NANJCreateWalletListener {
             override fun onCreateProcess(backup: String, wallet: NANJWallet) {
-                println("end success")
                 signal.countDown()
 
             }
 
             override fun onCreateWalletFailure() {
-                println("end fail")
                 signal.countDown()
 
             }
@@ -112,13 +110,11 @@ class ExampleInstrumentedTest {
         val signal = CountDownLatch(1)
         nanjWalletManager?.getNANJRate(object : NANJRateListener {
             override fun onSuccess(values: BigDecimal) {
-                println("nanj rate ---- $values")
                 assertEquals("a", "b")
                 signal.countDown()
             }
 
             override fun onFailure(e: String) {
-                println("nanj rate ---- failure")
                 assertEquals("a", "b")
                 signal.countDown()
             }

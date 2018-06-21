@@ -90,7 +90,6 @@ class NANJQrCodeActivity : AppCompatActivity() {
 			override fun release() {}
 			override fun receiveDetections(detections : Detector.Detections<Barcode>) {
 				val barcodes = detections.detectedItems
-				println("barcode detect size -->  ${barcodes.size()}")
 				if (barcodes.size() > 0 && isDetector.not()) {
 					isDetector = true
 					val address = barcodes.valueAt(0).displayValue

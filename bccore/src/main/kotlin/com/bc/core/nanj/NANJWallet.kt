@@ -91,7 +91,6 @@ class NANJWallet {
 
     fun getAmountNanj(): BigInteger {
         val nanjAddress = getNANJWallet()
-        println("getAmountNanj    $nanjAddress")
         if(nanjAddress == NANJConfig.UNKNOWN_NANJ_WALLET) return BigInteger.ZERO
         return nanjSmartContract?.balanceOf(nanjAddress)?.send()
                 ?: BigInteger.ZERO
@@ -222,7 +221,6 @@ class NANJWallet {
         )
         val jsonParamApi = Gson().toJson(restData)
         val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonParamApi)
-        println("313123123131312313")
         NetworkUtil.retofit.create(Api::class.java)
                 .postCreateNANJWallet(
                         NANJConfig.NANJ_SERVER_ADDRESS,
@@ -230,12 +228,9 @@ class NANJWallet {
                 )
                 .subscribe(
                         {
-                            println("send success")
-                            print("send success   " + Gson().toJson(it))
                             success.invoke()
                         },
                         {
-                            println("send fail")
                             it.printStackTrace()
                             error.invoke()
                         }

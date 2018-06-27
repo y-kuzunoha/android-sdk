@@ -77,7 +77,6 @@ public class WalletsActivity extends AppCompatActivity {
 	private void createWallet() {
 		_progressDialog.show();
 		nanjWalletManager.createWallet(
-			_password,
 			new NANJCreateWalletListener() {
 				@Override
 				public void onCreateProcess(@NonNull String backup, @NonNull NANJWallet wallet) {

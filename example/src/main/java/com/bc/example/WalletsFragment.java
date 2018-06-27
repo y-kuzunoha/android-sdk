@@ -61,7 +61,7 @@ public class WalletsFragment extends Fragment {
             walletAdapter.setData(nanjWalletManager.getWalletList());
         });
         walletAdapter.setOnBackupWalletListener(wallet ->
-                backupWallet(wallet.getPrivatekey())
+                backupWallet(wallet.getPrivateKey())
         );
         walletList.setAdapter(walletAdapter);
     }

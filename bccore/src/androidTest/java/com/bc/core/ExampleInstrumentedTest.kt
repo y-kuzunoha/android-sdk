@@ -34,7 +34,7 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val signal = CountDownLatch(1)
-        nanjWalletManager?.createWallet("a", object : NANJCreateWalletListener {
+        nanjWalletManager?.createWallet( object : NANJCreateWalletListener {
             override fun onCreateProcess(backup: String, wallet: NANJWallet) {
                 signal.countDown()
 
@@ -130,9 +130,9 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val wallet = NANJWallet().apply {
-            privatekey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+            privateKey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
             address = "0xb66e92f4713de200bc9cb61269a746aa005cbec3"
-            cridentals = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
+            credentials = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
             web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
             init()
         }
@@ -150,9 +150,9 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val wallet = NANJWallet().apply {
-            privatekey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+            privateKey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
             address = "0xb66e92f4713de200bc9cb61269a746aa005cbec3"
-            cridentals = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
+            credentials = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
             web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
             init()
         }
@@ -177,9 +177,9 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val wallet = NANJWallet().apply {
-            privatekey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+            privateKey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
             address = "0xb66e92f4713de200bc9cb61269a746aa005cbec3"
-            cridentals = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
+            credentials = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
             web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
             init()
         }
@@ -204,9 +204,9 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val wallet = NANJWallet().apply {
-            privatekey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
+            privateKey = "0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020"
             address = "0xb66e92f4713de200bc9cb61269a746aa005cbec3"
-            cridentals = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
+            credentials = Credentials.create("0xd8816e6d65b327575cdfe58dbe3ed83ade7079dc4885ef51cf38e795a6d71020")
             web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
             init()
         }

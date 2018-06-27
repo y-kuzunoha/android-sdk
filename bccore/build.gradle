@@ -83,8 +83,8 @@ dependencies {
     implementation("org.jetbrains.anko:anko-common:$anko_version") {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
 
     //Android library
     implementation("com.android.support:appcompat-v7:$android_version")

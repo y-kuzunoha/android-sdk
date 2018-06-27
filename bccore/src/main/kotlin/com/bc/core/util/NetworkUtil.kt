@@ -36,7 +36,7 @@ object NetworkUtil {
     }
 
 
-    val retofit : Retrofit by lazy {
+    val retrofit : Retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS + "/")
                 .client(

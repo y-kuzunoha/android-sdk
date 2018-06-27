@@ -115,9 +115,9 @@ public class MyWalletFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            String coin = "";
+            String coin = "0";
             try{
-                coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+                //coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
             } catch (Exception e) {e.printStackTrace();}
             Log.d("MyWalletFragment", "  coin  " + coin);
             if (getActivity() != null) {

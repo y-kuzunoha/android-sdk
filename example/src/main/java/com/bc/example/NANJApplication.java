@@ -1,6 +1,7 @@
 package com.bc.example;
 
 import com.bc.core.BaseNANJApplication;
+import com.bc.core.nanj.NANJConfig;
 import com.bc.core.nanj.NANJWalletManager;
 import com.facebook.stetho.Stetho;
 
@@ -21,6 +22,8 @@ public class NANJApplication extends BaseNANJApplication {
         Stetho.initializeWithDefaults(this);
         nanjWalletManager = NANJWalletManager.Builder()
                 .setContext(getApplicationContext())
+                .setNANJAppId("575958089608922877")
+                .setNANJSecret("fF5MSugBFsUEoTiFIiRdUa1rFc5Y8119JVzyWUzJ")
                 .build();
     }
 

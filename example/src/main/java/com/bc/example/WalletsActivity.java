@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +17,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 import com.bc.core.nanj.listener.NANJCreateWalletListener;
 import com.bc.core.nanj.listener.NANJImportWalletListener;
-import com.bc.core.nanj.NANJWallet;
 import com.bc.core.nanj.NANJWalletManager;
-import com.google.gson.Gson;
 
 /**
  * ____________________________________
@@ -44,7 +41,7 @@ public class WalletsActivity extends AppCompatActivity {
 		_sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 		_progressDialog = new Loading(this);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
-		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
+		nanjWalletManager = NANJWalletManager.instance;
 		_walletsFragment = (WalletsFragment) getSupportFragmentManager().findFragmentById(R.id.walletsFragment);
 		_walletsFragment.setPassword(_password);
 		_walletsFragment.setNanjWalletManager(nanjWalletManager);
@@ -79,7 +76,7 @@ public class WalletsActivity extends AppCompatActivity {
 		nanjWalletManager.createWallet(
 			new NANJCreateWalletListener() {
 				@Override
-				public void onCreateProcess(@NonNull String backup, @NonNull NANJWallet wallet) {
+				public void onCreateProcess(@Nullable String backup) {
 					runOnUiThread(() -> {
 						_progressDialog.dismiss();
 						backupWallet(backup);

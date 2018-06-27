@@ -46,7 +46,7 @@ class ExampleUnitTest {
         val nanjWalletManager = NANJWalletManager.Builder().build()
         val signal = CountDownLatch(1)
         nanjWalletManager?.createWallet( object : NANJCreateWalletListener {
-            override fun onCreateProcess(backup: String, wallet: NANJWallet) {
+            override fun onCreateProcess(backup: String) {
                 println("end success")
                 signal.countDown()
 

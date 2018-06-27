@@ -36,7 +36,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 	private NANJWalletManager nanjWalletManager;
 
 	WalletAdapter(Context context) {
-		nanjWalletManager = ((NANJApplication) context.getApplicationContext()).getNanjWalletManager();
+		nanjWalletManager = NANJWalletManager.instance;
 	}
 
 	public interface OnItemClickListener {

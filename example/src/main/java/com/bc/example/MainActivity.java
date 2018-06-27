@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setTitle("NANJ Wallet");
-		nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
+		nanjWalletManager = NANJWalletManager.instance;
 		initView();
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {

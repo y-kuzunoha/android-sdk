@@ -45,7 +45,7 @@ public class TransactionsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = (RecyclerView) view;
 
-        _nanjWalletManager = ((NANJApplication) Objects.requireNonNull(getActivity()).getApplication()).getNanjWalletManager();
+        _nanjWalletManager = NANJWalletManager.instance;
         String address = "";
         if (_nanjWalletManager.getWallet() != null) {
             address = _nanjWalletManager.getWallet().getNanjAddress();

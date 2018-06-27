@@ -39,7 +39,7 @@ public class SendCoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_nanj_coin);
         setupActionBar();
-        _nanjWalletManager = ((NANJApplication) getApplication()).getNanjWalletManager();
+        _nanjWalletManager = NANJWalletManager.instance;
         AppCompatTextView status = findViewById(R.id.status);
         findViewById(R.id.qr).setOnClickListener(v -> {
             if (_nanjWalletManager.getWallet() != null) {

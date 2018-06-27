@@ -54,7 +54,7 @@ public class MyWalletFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        _nanjWalletManager = ((NANJApplication) Objects.requireNonNull(getActivity()).getApplication()).getNanjWalletManager();
+        _nanjWalletManager = NANJWalletManager.instance;
         tvaddress = view.findViewById(R.id.address);
         amountUsd = view.findViewById(R.id.amountUsd);
         ivAddressWallet = view.findViewById(R.id.imAddressWallet);

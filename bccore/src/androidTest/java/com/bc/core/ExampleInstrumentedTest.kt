@@ -34,8 +34,8 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val signal = CountDownLatch(1)
-        nanjWalletManager?.createWallet( object : NANJCreateWalletListener {
-            override fun onCreateProcess(backup: String, wallet: NANJWallet) {
+        nanjWalletManager?.createWallet(object : NANJCreateWalletListener {
+            override fun onCreateProcess(backup: String?) {
                 signal.countDown()
 
             }
@@ -58,7 +58,7 @@ class ExampleInstrumentedTest {
                 .setContext(appContext)
                 .build()
         val signal = CountDownLatch(1)
-        nanjWalletManager?.importWallet("b", object  : NANJImportWalletListener {
+        nanjWalletManager?.importWallet("b", object : NANJImportWalletListener {
             override fun onImportWalletSuccess() {
                 signal.countDown()
             }
@@ -79,7 +79,7 @@ class ExampleInstrumentedTest {
                 .build()
         val signal = CountDownLatch(1)
         val jsonKeystore = "{\"address\":\"b66e92f4713de200bc9cb61269a746aa005cbec3\",\"id\":\"722bb9c8-3912-464e-a8b4-2145c6d76934\",\"version\":3,\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"97de2fb0b4ecd5533368dd9cc82ee7b9\"},\"ciphertext\":\"a408ec0d18b80fae4c94f86f221b8e035c5381a181bff8b60a5d729af31625da\",\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":4096,\"p\":6,\"r\":8,\"salt\":\"72e2e63d5e070a90f99dc11d71827d250a0896bff3d169ecf217dbbcd0ec6cd2\"},\"mac\":\"8396982f108b64bdf93a7bd6f5850ca3ba50c6047d8f9973b2c46d83eba6b61e\"}}"
-        nanjWalletManager?.importWallet("qwerty2018", jsonKeystore,object  : NANJImportWalletListener {
+        nanjWalletManager?.importWallet("qwerty2018", jsonKeystore, object : NANJImportWalletListener {
             override fun onImportWalletSuccess() {
                 signal.countDown()
             }
@@ -185,7 +185,7 @@ class ExampleInstrumentedTest {
         }
         nanjWalletManager?.enableWallet(wallet)
         val signal = CountDownLatch(1)
-        nanjWalletManager?.wallet?.sendNANJCoin("0xb66e92f4713de200bc9cb61269a746aa005cbec3", "1", object: SendNANJCoinListener{
+        nanjWalletManager?.wallet?.sendNANJCoin("0xb66e92f4713de200bc9cb61269a746aa005cbec3", "1", object : SendNANJCoinListener {
             override fun onError() {
                 signal.countDown()
             }

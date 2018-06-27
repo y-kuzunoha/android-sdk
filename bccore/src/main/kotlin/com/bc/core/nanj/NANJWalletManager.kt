@@ -27,9 +27,35 @@ import java.math.RoundingMode
 open class NANJWalletManager {
 
     companion object {
-        @Suppress("FunctionName")
-        @JvmStatic fun Builder(): NANJWalletManager {
-            return NANJWalletManager()
+        lateinit var instance: NANJWalletManager
+    }
+
+    class Builder {
+        private var db: NANJDatabase? = null
+        fun setContext(context: Context): Builder {
+            db = NANJDatabase(context)
+            return this
+        }
+
+        fun setNANJAppId(appId: String): Builder {
+            NANJConfig.NANJWALLET_APP_ID = appId
+            return this
+        }
+
+        fun setNANJSecret(secret: String): Builder {
+            NANJConfig.NANJWALLET_SECRET_KEY = secret
+            return this
+        }
+
+        fun build(): NANJWalletManager? {
+            instance = NANJWalletManager().apply {
+                _nanjDatabase = db
+                wallets = _nanjDatabase?.loadWallets() ?: mutableMapOf()
+                if (wallets.isNotEmpty()) {
+                    enableWallet(0)
+                }
+            }
+            return instance
         }
     }
 
@@ -41,28 +67,6 @@ open class NANJWalletManager {
             web3j = _web3j,
             credentials = Credentials.create(Keys.createEcKeyPair()))
 
-    fun setContext(context: Context): NANJWalletManager {
-        _nanjDatabase = NANJDatabase(context)
-        return this
-    }
-
-    fun setNANJAppId(appId: String): NANJWalletManager {
-        NANJConfig.NANJWALLET_APP_ID = appId
-        return this
-    }
-
-    fun setNANJSecret(secret: String): NANJWalletManager {
-        NANJConfig.NANJWALLET_SECRET_KEY = secret
-        return this
-    }
-
-    fun build(): NANJWalletManager? {
-        wallets = _nanjDatabase?.loadWallets() ?: return this
-        if (wallets.isNotEmpty()) {
-            enableWallet(0)
-        }
-        return this
-    }
 
     fun getNANJWalletAsync(owner: String, listener: GetNANJWalletListener) {
         doAsync(
@@ -265,7 +269,7 @@ open class NANJWalletManager {
 
                         override fun onCreateProcess() {
                             val wallet = importWalletFromCredentials(credentials, "")
-                            createWalletListener.onCreateProcess("strWallet", wallet)
+                            createWalletListener.onCreateProcess(wallet.privateKey)
                         }
                     })
 

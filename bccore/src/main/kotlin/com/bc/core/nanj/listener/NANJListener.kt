@@ -1,7 +1,5 @@
 package com.bc.core.nanj.listener
 
-import com.bc.core.nanj.NANJWallet
-
 /**
  * ____________________________________
  *
@@ -11,7 +9,7 @@ import com.bc.core.nanj.NANJWallet
  */
 
 interface NANJCreateWalletListener {
-	fun onCreateProcess(backup: String, wallet: NANJWallet)
+	fun onCreateProcess(backup: String?)
 	fun onCreateWalletFailure()
 }
 

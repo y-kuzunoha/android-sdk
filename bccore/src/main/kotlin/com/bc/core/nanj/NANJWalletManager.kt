@@ -249,11 +249,6 @@ open class NANJWalletManager {
                     val ecKeyPair = Keys.createEcKeyPair()
                     val credentials = Credentials.create(ecKeyPair)
 
-//                    val walletKeystore = "{\"version\":3,\"id\":\"d572dab6-b0de-407f-aae9-f0985a9730e5\",\"address\":\"e2e817342f159bb35de07d5e8babd72f0ce6c2a4\",\"crypto\":{\"ciphertext\":\"f4b0e64a7a87d18add616a359bce38a4b7f4de837b6eabecc1f7a52280c656df\",\"cipherparams\":{\"iv\":\"eed6c1e24a51bb5461aa46047d12ae7a\"},\"cipher\":\"aes-128-ctr\",\"kdf\":\"pbkdf2\",\"kdfparams\":{\"dklen\":32,\"salt\":\"0c77ec9f0a873e2b21c73d66568f91b5bc832272302a9010840b0737c73a1342\",\"c\":10240,\"prf\":\"hmac-sha256\"},\"mac\":\"b646e74a41254f17fe47e69191469696683447f09a9d1f6bc0d3f56de41e26ce\"}}"
-//                    val objectMapper = ObjectMapper()
-//                    val walletFile = objectMapper.readValue(walletKeystore, WalletFile::class.java)
-//                    val credentials = Credentials.create(Wallet.decrypt("123456", walletFile))
-
                     val nanjWalletTmp = NANJWallet().apply {
                         this.address = credentials.address
                         this.credentials = credentials

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintRight_toLeftOf="@+id/qr"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="0x05ffea888ccea805e33a01f01462f770d27be951"
+        android:text="0xaf6858fe51c35a4f54fca897fbb8a8e4eb2a6706"
         android:hint="address"/>
 
     <android.support.v7.widget.AppCompatTextView

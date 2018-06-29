@@ -55,6 +55,7 @@ public class SendCoinActivity extends AppCompatActivity {
             _nanjWalletManager.getWallet().sendNANJCoin(
                     address,
                     edAmount.getText().toString(),
+                    "tiếng việt",
                     new SendNANJCoinListener() {
                         @Override
                         public void onError() {

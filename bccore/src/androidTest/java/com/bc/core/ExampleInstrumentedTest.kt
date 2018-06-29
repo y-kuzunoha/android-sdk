@@ -46,8 +46,6 @@ class ExampleInstrumentedTest {
             }
         })
 
-
-
         signal.await(60, TimeUnit.SECONDS)
     }
 

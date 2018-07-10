@@ -4,10 +4,9 @@ import android.app.Activity
 import android.support.v4.app.Fragment
 import android.text.TextUtils
 import com.bc.core.database.NANJDatabase
+import com.bc.core.model.NANJConfigModel
 import com.bc.core.model.TransactionResponse
 import com.bc.core.model.TxRelayData
-import com.bc.core.nanj.NANJConfig.NANJWALLET_APP_ID
-import com.bc.core.nanj.NANJConfig.NANJWALLET_SECRET_KEY
 import com.bc.core.nanj.listener.*
 import com.bc.core.ui.barcodereader.NANJQrCodeActivity
 import com.bc.core.ui.nfc.NANJNfcActivity
@@ -24,8 +23,9 @@ import org.web3j.abi.datatypes.generated.Bytes32
 import org.web3j.abi.datatypes.generated.Uint256
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3j
+import org.web3j.protocol.core.DefaultBlockParameter
+import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.utils.Numeric
-import java.math.BigDecimal
 import java.math.BigInteger
 
 //web3j solidity generate MetaNANJCOINManager.bin MetaNANJCOINManager.abi -o . -p org.your.package
@@ -49,7 +49,7 @@ class NANJWallet {
     }
 
     var nanjDatabase: NANJDatabase? = null
-
+    var config: NANJConfigModel?= null
     var nanjAddress: String? = ""
     var address: String = ""
     var name: String = "No name"
@@ -97,6 +97,7 @@ class NANJWallet {
         val nanjAddress = getNANJWallet()
         if (nanjAddress == NANJConfig.UNKNOWN_NANJ_WALLET) return BigInteger.ZERO
         println("wallet   ---- -  $nanjAddress")
+//        return _web3j.ethGetBalance(nanjAddress, DefaultBlockParameterName.LATEST).send().balance
         return nanjSmartContract?.balanceOf(nanjAddress)?.send()
                 ?: BigInteger.ZERO
     }
@@ -176,13 +177,16 @@ class NANJWallet {
         )
     }
 
-    fun sendNANJCoin(toAddress: String, amount: String, message: String = "", listener: SendNANJCoinListener? = null) {
+    fun sendNANJCoin(toAddress: String, amount: String, message: String = "test", listener: SendNANJCoinListener? = null) {
         doAsync(
                 {
                     it.printStackTrace()
                     listener?.onError()
                 },
                 {
+                    if(config == null){
+                        throw Exception("Please get config of nanj coin via NetworkUtil.getRetrofit().create(Api.class).getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)")
+                    }
                     val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
                     val nanjAmount = BigInteger(amount).multiply(BigInteger.TEN.pow(8))
                     val param = arrayListOf<Type<*>>(
@@ -193,7 +197,7 @@ class NANJWallet {
                     val f = Function("transfer", param, arrayListOf())
                     val data = FunctionEncoder.encode(f)
                     val hexData = Numeric.hexStringToByteArray(data)
-                    val appHash = "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"//Hash.sha3String(NANJWALLET_APP_ID + NANJWALLET_SECRET_KEY)
+                    val appHash = config!!.data?.appHash
                     val params = arrayListOf<Type<*>>(
                             Address(address),
                             Address(nanjAddress),

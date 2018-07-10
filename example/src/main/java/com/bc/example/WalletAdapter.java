@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bc.core.nanj.NANJConfig;
-import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.NANJWallet;
 import com.bc.core.nanj.NANJWalletManager;
 import com.bc.core.nanj.listener.GetNANJWalletListener;

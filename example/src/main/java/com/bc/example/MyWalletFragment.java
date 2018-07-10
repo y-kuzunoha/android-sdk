@@ -77,7 +77,6 @@ public class MyWalletFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void intView() {
         if (_nanjWalletManager != null && _nanjWalletManager.getWallet() != null) {
-
             _nanjWalletManager.getWallet().getNANJWalletAsync(new GetNANJWalletListener() {
                 @Override
                 public void onError() {
@@ -117,7 +116,7 @@ public class MyWalletFragment extends Fragment {
 
             String coin = "0";
             try{
-                //coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+                coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
             } catch (Exception e) {e.printStackTrace();}
             Log.d("MyWalletFragment", "  coin  " + coin);
             if (getActivity() != null) {

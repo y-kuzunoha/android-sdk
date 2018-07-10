@@ -2,6 +2,7 @@ package com.bc.core.nanj
 
 import android.content.Context
 import com.bc.core.database.NANJDatabase
+import com.bc.core.model.NANJConfigModel
 import com.bc.core.model.NANJRateData
 import com.bc.core.model.YenRate
 import com.bc.core.nanj.listener.*
@@ -15,6 +16,9 @@ import org.web3j.protocol.http.HttpService
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
+import org.web3j.crypto.Wallet
+import org.web3j.crypto.WalletFile
+
 
 /**
  * ____________________________________
@@ -59,10 +63,17 @@ open class NANJWalletManager {
         }
     }
 
+    var config: NANJConfigModel?= null
     private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
     private var _nanjDatabase: NANJDatabase? = null
     private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
     var wallet: NANJWallet? = null
+    get() {
+        if(field != null) {
+            field!!.config = config
+        }
+        return field
+    }
     private var metaNANJCOINManager: MetaNANJCOINManager? = MetaNANJCOINManager.load(
             web3j = _web3j,
             credentials = Credentials.create(Keys.createEcKeyPair()))
@@ -272,6 +283,24 @@ open class NANJWalletManager {
                 }
         )
     }
+
+    fun convertPrivateKeyToKeystore(privateKey: String, password: String): String {
+        val credentials = Credentials.create(privateKey)
+        val ecKeyPair = credentials.ecKeyPair
+        val aWallet = Wallet.createLight(password, ecKeyPair)
+        val objectMapper = ObjectMapper()
+        return objectMapper.writeValueAsString(aWallet)
+    }
+
+    fun exportPrivateKey(): String? = wallet?.privateKey ?: null
+    fun exportKeystore(password: String): String? {
+        return if(wallet?.privateKey.isNullOrBlank()) {
+            null
+        } else {
+            convertPrivateKeyToKeystore(password, wallet!!.privateKey!!)
+        }
+    }
+
 
     fun enableWallet(wallet: NANJWallet) {
         val c = if (wallet.credentials == null) Credentials.create(wallet.privateKey) else wallet.credentials

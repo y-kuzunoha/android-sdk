@@ -183,7 +183,7 @@ class ExampleInstrumentedTest {
         }
         nanjWalletManager?.enableWallet(wallet)
         val signal = CountDownLatch(1)
-        nanjWalletManager?.wallet?.sendNANJCoin("0xb66e92f4713de200bc9cb61269a746aa005cbec3", "1", object : SendNANJCoinListener {
+        nanjWalletManager?.wallet?.sendNANJCoin("0xb66e92f4713de200bc9cb61269a746aa005cbec3", "1", "hello world", object : SendNANJCoinListener {
             override fun onError() {
                 signal.countDown()
             }

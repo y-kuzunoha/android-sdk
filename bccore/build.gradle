@@ -1,7 +1,7 @@
 buildscript {
 
     ext.android_version = '27.1.1'
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
     ext.anko_version = '0.10.4'
 
     repositories {
@@ -77,26 +77,28 @@ dependencies {
     })
 
     //Kotlin library
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version") {
+    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version") {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
-    implementation("org.jetbrains.anko:anko-common:$anko_version") {
+    api("org.jetbrains.anko:anko-common:$anko_version") {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
 
     //Android library
-    implementation("com.android.support:appcompat-v7:$android_version")
-    implementation('com.google.android.gms:play-services-vision:15.0.1')
-    implementation('com.android.support.constraint:constraint-layout:1.1.0')
+    api("com.android.support:appcompat-v7:$android_version")
+    api('com.google.android.gms:play-services-vision:15.0.1')
+    api('com.android.support.constraint:constraint-layout:1.1.0')
 
     // Document at https://github.com/web3j/web3j
-    implementation('org.web3j:core:3.3.1-android')
-    implementation('com.squareup.retrofit2:retrofit:2.4.0')
-    implementation('com.squareup.retrofit2:adapter-rxjava2:2.4.0')
+    api('org.web3j:core:3.3.1-android')
+    api('com.squareup.retrofit2:retrofit:2.4.0')
+    api('com.squareup.retrofit2:adapter-rxjava2:2.4.0')
+    api('com.squareup.retrofit2:converter-gson:2.3.0')
 
-    implementation('com.google.code.gson:gson:2.8.4') { force = true }
+
+    api('com.google.code.gson:gson:2.8.4') { force = true }
 }
 
 kotlin {

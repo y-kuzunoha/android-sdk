@@ -7,7 +7,7 @@ object NANJConfig  {
     const val WHITE_LIST_OWNER          = "0x0000000000000000000000000000000000000000"
     const val UNKNOWN_NANJ_WALLET       = "0x0000000000000000000000000000000000000000"
 
-    const val NANJ_SERVER_ADDRESS = "https://nanj-demo.herokuapp.com/api/relayTx"
+    const val NANJ_SERVER_ADDRESS = "https://staging.nanjcoin.com/api/relayTx"
     const val NANJ_SERVER_CONFIG = "https://staging.nanjcoin.com/api/authorise"
     const val URL_NANJ_RATE = "https://api.coinmarketcap.com/v2/ticker/1/?convert=NANJ"
     const val URL_YEN_RATE = "http://free.currencyconverterapi.com/api/v5/convert?q=USD_JPY&compact=y"

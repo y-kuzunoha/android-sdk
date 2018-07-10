@@ -34,11 +34,33 @@ object NetworkUtil {
         listener.invoke(stringBuilder.toString())
     }
 
+    @JvmStatic private val okHttp : OkHttpClient by lazy {
+        val httpClient = OkHttpClient.Builder()
+        httpClient.addNetworkInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.HEADERS
+                }
+        )
+
+        httpClient.addInterceptor { chain ->
+            val original = chain.request()
+            val requestBuilder = original.newBuilder()
+                    .header("Client-ID",  NANJConfig.NANJWALLET_APP_ID)
+                    .header("Secret-Key",  NANJConfig.NANJWALLET_SECRET_KEY)
+
+            val request = requestBuilder.build()
+            chain.proceed(request)
+        }
+
+        httpClient.build()
+    }
+
 
     @JvmStatic
     open val retrofit: Retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS + "/")
+                .client(okHttp)
                 .client(
                         OkHttpClient.Builder().addInterceptor(
                                 HttpLoggingInterceptor().apply {

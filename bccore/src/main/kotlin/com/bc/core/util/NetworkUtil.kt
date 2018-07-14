@@ -2,6 +2,7 @@ package com.bc.core.util
 
 import com.bc.core.model.NANJConfigModel
 import com.bc.core.nanj.NANJConfig
+import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -34,25 +35,23 @@ object NetworkUtil {
         listener.invoke(stringBuilder.toString())
     }
 
-    @JvmStatic private val okHttp : OkHttpClient by lazy {
-        val httpClient = OkHttpClient.Builder()
-        httpClient.addNetworkInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.HEADERS
-                }
-        )
-
-        httpClient.addInterceptor { chain ->
-            val original = chain.request()
-            val requestBuilder = original.newBuilder()
-                    .header("Client-ID",  NANJConfig.NANJWALLET_APP_ID)
-                    .header("Secret-Key",  NANJConfig.NANJWALLET_SECRET_KEY)
-
-            val request = requestBuilder.build()
-            chain.proceed(request)
-        }
-
-        httpClient.build()
+    @JvmStatic
+    private val okHttp: OkHttpClient by lazy {
+        OkHttpClient.Builder().apply {
+            addNetworkInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }
+            )
+            addInterceptor { chain ->
+                val original = chain.request()
+                val requestBuilder = original.newBuilder()
+                        .addHeader("Client-ID", NANJConfig.NANJWALLET_APP_ID)
+                        .addHeader("Secret-Key", NANJConfig.NANJWALLET_SECRET_KEY)
+                val request = requestBuilder.build()
+                chain.proceed(request)
+            }
+        }.build()
     }
 
 
@@ -61,13 +60,6 @@ object NetworkUtil {
         Retrofit.Builder()
                 .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS + "/")
                 .client(okHttp)
-                .client(
-                        OkHttpClient.Builder().addInterceptor(
-                                HttpLoggingInterceptor().apply {
-                                    level = HttpLoggingInterceptor.Level.BODY
-                                }
-                        ).build()
-                )
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
@@ -75,12 +67,6 @@ object NetworkUtil {
 }
 
 interface Api {
-    @GET
-    fun getNANJRate(@Url url: String): io.reactivex.Observable<ResponseBody>
-
-    @GET
-    fun getYenRate(@Url url: String): io.reactivex.Observable<ResponseBody>
-
     @POST
     fun postCreateNANJWallet(@Url url: String, @Body txRelay: RequestBody): io.reactivex.Observable<ResponseBody>
 
@@ -88,9 +74,6 @@ interface Api {
     fun getNANJTransactions(@Url url: String): io.reactivex.Observable<ResponseBody>
 
     @POST
-    fun getNANJCoinConfig(@Url url: String,
-                          @Header("Client-ID") clientId: String,
-                          @Header("Secret-Key") secretKey: String
-    ): io.reactivex.Observable<NANJConfigModel>
+    fun getNANJCoinConfig(@Url url: String): io.reactivex.Observable<NANJConfigModel>
 }
 

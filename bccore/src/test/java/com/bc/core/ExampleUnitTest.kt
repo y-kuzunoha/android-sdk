@@ -26,12 +26,12 @@ import java.math.BigDecimal
 
 class ExampleUnitTest {
 
-   companion object {
-       @BeforeClass
-       fun `init variable before run test` () {
-           MockitoAnnotations.initMocks(this)
-       }
-   }
+    companion object {
+        @BeforeClass
+        fun `init variable before run test`() {
+            MockitoAnnotations.initMocks(this)
+        }
+    }
 
 //    @Test
 //    @Throws(Exception::class)
@@ -45,8 +45,8 @@ class ExampleUnitTest {
     fun `create nanj wallet`() {
         val nanjWalletManager = NANJWalletManager.Builder().build()
         val signal = CountDownLatch(1)
-        nanjWalletManager?.createWallet( object : NANJCreateWalletListener {
-            override fun onCreateProcess(backup: String) {
+        nanjWalletManager?.createWallet(object : NANJCreateWalletListener {
+            override fun onCreateProcess(backup: String?) {
                 println("end success")
                 signal.countDown()
 
@@ -68,7 +68,7 @@ class ExampleUnitTest {
     fun `import wallet from private key`() {
         val nanjWalletManager = NANJWalletManager()
         val signal = CountDownLatch(1)
-        nanjWalletManager.importWallet("b", object  : NANJImportWalletListener {
+        nanjWalletManager.importWallet("b", object : NANJImportWalletListener {
             override fun onImportWalletSuccess() {
                 signal.countDown()
             }
@@ -84,7 +84,7 @@ class ExampleUnitTest {
     fun `import wallet from json keystore`() {
         val nanjWalletManager = NANJWalletManager()
         val signal = CountDownLatch(1)
-        nanjWalletManager.importWallet("b", "json keystore",object  : NANJImportWalletListener {
+        nanjWalletManager.importWallet("b", "json keystore", object : NANJImportWalletListener {
             override fun onImportWalletSuccess() {
                 signal.countDown()
             }
@@ -104,13 +104,11 @@ class ExampleUnitTest {
         val signal = CountDownLatch(1)
         nanjWalletManager?.getNANJRate(object : NANJRateListener {
             override fun onSuccess(values: BigDecimal) {
-                println("nanj rate ---- $values")
                 assertEquals("$values", "0.1588263664540200")
                 signal.countDown()
             }
 
             override fun onFailure(e: String) {
-                println("nanj rate ---- failure")
                 assertEquals("a", "b")
                 signal.countDown()
             }

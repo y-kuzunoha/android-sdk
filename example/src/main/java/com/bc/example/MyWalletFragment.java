@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bc.core.model.NANJConfigModel;
+import com.bc.core.nanj.NANJConfig;
 import com.bc.core.nanj.listener.GetNANJWalletListener;
 import com.bc.core.nanj.NANJConvert;
 import com.bc.core.nanj.listener.NANJRateListener;
@@ -47,6 +49,7 @@ public class MyWalletFragment extends Fragment {
     private NANJWalletManager _nanjWalletManager;
     private WalletHandle walletHandle = new WalletHandle();
     private String prevAddress;
+    private String coinName = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my_wallet, container, false);
@@ -55,6 +58,7 @@ public class MyWalletFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         _nanjWalletManager = NANJWalletManager.instance;
+        coinName = NANJConfig.getNANJWALLET_NAME();
         tvaddress = view.findViewById(R.id.address);
         amountUsd = view.findViewById(R.id.amountUsd);
         ivAddressWallet = view.findViewById(R.id.imAddressWallet);
@@ -92,38 +96,41 @@ public class MyWalletFragment extends Fragment {
             });
 
 
-
         }
     }
 
     private void initView(String address) {
-        if(!Objects.equals(prevAddress, address)) {
+        if (!Objects.equals(prevAddress, address)
+                || !Objects.equals(coinName, NANJConfig.getNANJWALLET_NAME())) {
             prevAddress = address;
             ivAddressWallet.setImageDrawable(null);
             tvaddress.setText("");
             amountUsd.setText("");
             nanjRate.setText("");
+            coinName = NANJConfig.getNANJWALLET_NAME();
         }
         tvaddress.setText(String.format("Address: %s", address));
         Executors.newCachedThreadPool().execute(() -> {
             Bitmap mIcon_val = null;
             try {
-                URL newurl = new URL("http://api.qrserver.com/v1/create-qr-code/?data=" +address);
+                URL newurl = new URL("http://api.qrserver.com/v1/create-qr-code/?data=" + address);
                 mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             String coin = "0";
-            try{
+            try {
                 coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
-            } catch (Exception e) {e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Log.d("MyWalletFragment", "  coin  " + coin);
             if (getActivity() != null) {
                 BigDecimal realCoin = NANJConvert.fromWei(coin, NANJConvert.Unit.NANJ);
                 Bitmap finalMIcon_val = mIcon_val;
                 getActivity().runOnUiThread(() -> {
-                    amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), realCoin));
+                    amountUsd.setText(String.format(getString(R.string.txt_amount_nanj), coinName, realCoin));
                     if (finalMIcon_val != null) {
                         ivAddressWallet.setImageBitmap(finalMIcon_val);
                     }

@@ -49,7 +49,7 @@ class NANJWallet {
     }
 
     var nanjDatabase: NANJDatabase? = null
-    var config: NANJConfigModel?= null
+    var config: NANJConfigModel? = null
     var nanjAddress: String? = ""
     var address: String = ""
     var name: String = "No name"
@@ -96,16 +96,11 @@ class NANJWallet {
     fun getAmountNanj(): BigInteger {
         val nanjAddress = getNANJWallet()
         if (nanjAddress == NANJConfig.UNKNOWN_NANJ_WALLET) return BigInteger.ZERO
-        println("wallet   ---- -  $nanjAddress")
-//        return _web3j.ethGetBalance(nanjAddress, DefaultBlockParameterName.LATEST).send().balance
         return nanjSmartContract?.balanceOf(nanjAddress)?.send()
                 ?: BigInteger.ZERO
     }
 
     fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
-        //getNANJWallet()
-        //testEncodeFunction(context)
-        //testSign()
         doAsync(
                 {
                     listener.onTransferFailure()
@@ -115,7 +110,7 @@ class NANJWallet {
                     val nanjAddress = getNANJWallet()
                     val url = String.format(
                             NANJConfig.URL_TRANSACTION,
-                            "0xf7afb89bef39905ba47f3877e588815004f7c861"/*nanjSmartContract?.contractAddress*/,
+                            NANJConfig.SMART_CONTRACT_ADDRESS,
                             nanjAddress,
                             page,
                             offset
@@ -165,7 +160,6 @@ class NANJWallet {
                     listener?.onError()
                 },
                 {
-                    println("wallet credential1  fuck $address")
                     val param = arrayListOf<Type<*>>(Address(address))
                     val createNanjWalletFunction = Function("createWallet", param, arrayListOf())
                     sendFunctionToServer(
@@ -184,7 +178,7 @@ class NANJWallet {
                     listener?.onError()
                 },
                 {
-                    if(config == null){
+                    if (config == null) {
                         throw Exception("Please get config of nanj coin via NetworkUtil.getRetrofit().create(Api.class).getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)")
                     }
                     val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
@@ -198,10 +192,11 @@ class NANJWallet {
                     val data = FunctionEncoder.encode(f)
                     val hexData = Numeric.hexStringToByteArray(data)
                     val appHash = config!!.data?.appHash
+                    println("appHash   : $appHash")
                     val params = arrayListOf<Type<*>>(
                             Address(address),
                             Address(nanjAddress),
-                            Address(NANJConfig.NANJCOIN_ADDRESS),
+                            Address(NANJConfig.SMART_CONTRACT_ADDRESS),
                             Uint256.DEFAULT,
                             DynamicBytes(hexData),
                             Bytes32(Numeric.hexStringToByteArray(appHash))
@@ -216,18 +211,16 @@ class NANJWallet {
         )
     }
 
-    @Suppress("RemoveSingleExpressionStringTemplate")
     private fun sendFunctionToServer(function: Function, error: () -> Unit, success: () -> Unit) {
         val encodeFunction = FunctionEncoder.encode(function)
-//        val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
         val nonceString = txRelay!!.getNonce(address).send().toString(16)
         val pad = nonceString.padStart(64, '0')
         val hashInput = "0x1900" +
-                "${NANJConfig.TX_RELAY_ADDRESS.cleanHexPrefix()}" +
-                "${NANJConfig.WHITE_LIST_OWNER.cleanHexPrefix()}" +
-                "$pad" +
-                "${NANJConfig.META_NANJCOIN_MANAGER.cleanHexPrefix()}" +
-                "${encodeFunction.cleanHexPrefix()}"
+                NANJConfig.TX_RELAY_ADDRESS.cleanHexPrefix() +
+                NANJConfig.WHITE_LIST_OWNER.cleanHexPrefix() +
+                pad +
+                NANJConfig.META_NANJCOIN_MANAGER.cleanHexPrefix() +
+                encodeFunction.cleanHexPrefix()
         val sign = Sign.signMessage(Numeric.hexStringToByteArray(hashInput), credentials!!.ecKeyPair)
         val hash = Hash.sha3(hashInput)
         val restData = TxRelayData(
@@ -239,9 +232,7 @@ class NANJWallet {
                 dest = NANJConfig.META_NANJCOIN_MANAGER,
                 hash = hash
         )
-        //{"data":"0xb054a9e8000000000000000000000000acb9808c16fe8a4e450b002a1857afb768d6d9b3","dest":"0x8801307aec8ed852ea23d3d4e69f475f4f2dcb6e","hash":"0x7664cc535641c649b82419e75419fe4197143affc006427404022a6f08c9dd6e","nonce":"0","r":"0xe122e5f31ebf41c694f9ae2f97cca4e04c5f2b85498cf70d19c9e09834d8a685","s":"0x3f5220107cd9aed210e6487967f7d29915c03a1a05b94dfd2480056f900bbdda","v":27}
 
-        println("data to server $restData")
         val requestBody = RequestBody.create(MediaType.parse("application/json"), restData.toString())
         NetworkUtil.retrofit.create(Api::class.java)
                 .postCreateNANJWallet(

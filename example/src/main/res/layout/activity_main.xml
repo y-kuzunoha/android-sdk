@@ -39,10 +39,17 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionBarSize"
+        app:tabIndicatorHeight="@dimen/actionBarSize"
+        android:background="@android:color/darker_gray"
+        app:tabIndicatorColor="#80ffffff"
         app:tabTextAppearance="@style/TabLayoutStyle"
         app:tabSelectedTextColor="@android:color/black"
-        app:tabTextColor="@android:color/darker_gray"
-        android:background="@drawable/border_view"
+        app:tabTextColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"/>
 
 </android.support.constraint.ConstraintLayout>

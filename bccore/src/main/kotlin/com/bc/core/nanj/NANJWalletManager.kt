@@ -2,6 +2,7 @@ package com.bc.core.nanj
 
 import android.content.Context
 import com.bc.core.database.NANJDatabase
+import com.bc.core.model.Erc20
 import com.bc.core.model.NANJConfigModel
 import com.bc.core.model.NANJRateData
 import com.bc.core.model.YenRate
@@ -63,21 +64,34 @@ open class NANJWalletManager {
         }
     }
 
-    var config: NANJConfigModel?= null
+    var config: NANJConfigModel? = null
     private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
     private var _nanjDatabase: NANJDatabase? = null
-    private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
+    private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER).apply {
+
+    })
     var wallet: NANJWallet? = null
-    get() {
-        if(field != null) {
-            field!!.config = config
+        get() {
+            if (field != null) {
+                field!!.config = config
+            }
+            return field
         }
-        return field
-    }
     private var metaNANJCOINManager: MetaNANJCOINManager? = MetaNANJCOINManager.load(
             web3j = _web3j,
             credentials = Credentials.create(Keys.createEcKeyPair()))
 
+    fun setErc20(position: Int) {
+        if (config?.data?.erc20s?.size ?: 0 > 0) {
+            NANJConfig.SMART_CONTRACT_ADDRESS = config?.data?.erc20s?.get(position)?.address ?: ""
+            NANJConfig.NANJWALLET_NAME = config?.data?.erc20s?.get(position)?.name ?: ""
+            wallet?.init()
+        }
+    }
+
+    fun setSmartContract() {
+        NANJConfig.META_NANJCOIN_MANAGER = config?.data?.smartContracts?.get("metaNanjManager") ?: ""
+    }
 
     fun getNANJWalletAsync(owner: String, listener: GetNANJWalletListener) {
         doAsync(
@@ -294,7 +308,7 @@ open class NANJWalletManager {
 
     fun exportPrivateKey(): String? = wallet?.privateKey ?: null
     fun exportKeystore(password: String): String? {
-        return if(wallet?.privateKey.isNullOrBlank()) {
+        return if (wallet?.privateKey.isNullOrBlank()) {
             null
         } else {
             convertPrivateKeyToKeystore(password, wallet!!.privateKey!!)

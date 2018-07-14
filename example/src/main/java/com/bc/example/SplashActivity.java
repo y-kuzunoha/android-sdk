@@ -78,9 +78,7 @@ public class SplashActivity extends AppCompatActivity {
     private void getNANJConfig() {
         NetworkUtil.getRetrofit().create(Api.class)
                 .getNANJCoinConfig(
-                        NANJConfig.NANJ_SERVER_CONFIG,
-                        NANJConfig.getNANJWALLET_APP_ID(),
-                        NANJConfig.getNANJWALLET_SECRET_KEY()
+                        NANJConfig.NANJ_SERVER_CONFIG
                 )
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -94,6 +92,8 @@ public class SplashActivity extends AppCompatActivity {
                     public void onNext(NANJConfigModel responseBody) {
                         if (responseBody.getStatus() == 200) {
                             NANJWalletManager.instance.setConfig(responseBody);
+                            NANJWalletManager.instance.setSmartContract();
+                            NANJWalletManager.instance.setErc20(0);
                             String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
                             login(psw);
                         } else {

@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menuNewWallet"
-        android:title="New wallet"
+        android:title="@null"
         app:iconTint="@android:color/white"
         android:icon="@drawable/ic_add_white_24px"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/chooseCoinType"
+        android:title="@null"
+        app:iconTint="@android:color/white"
+        android:icon="@drawable/ic_coin"
         app:showAsAction="ifRoom"/>
 </menu>

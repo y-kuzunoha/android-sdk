@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bc.core.nanj.NANJConvert;
@@ -48,6 +49,7 @@ public class SendCoinActivity extends AppCompatActivity {
         });
         AppCompatEditText edAddress = findViewById(R.id.address);
         AppCompatEditText edAmount = findViewById(R.id.amount);
+        EditText edMsg = findViewById(R.id.edMsg);
         walletHandle.setWalletAddressListener(edAddress::setText);
         findViewById(R.id.send).setOnClickListener((View v2) -> {
             String address = edAddress.getText().toString();
@@ -55,7 +57,7 @@ public class SendCoinActivity extends AppCompatActivity {
             _nanjWalletManager.getWallet().sendNANJCoin(
                     address,
                     edAmount.getText().toString(),
-                    "tiếng việt",
+                    edMsg.getText().toString(),
                     new SendNANJCoinListener() {
                         @Override
                         public void onError() {

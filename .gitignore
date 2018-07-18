@@ -1,4 +1,6 @@
 /build
+example/build
+bccore/build
 .idea
 .gradle
 *.iml

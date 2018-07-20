@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class NANJConfigModel
 (
-        @SerializedName("status_code")
+        @SerializedName("statusCode")
         val status: Int = 0,
         @SerializedName("message")
         val message: String = "",

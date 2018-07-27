@@ -1,6 +1,6 @@
 package com.bc.core.nanj.listener
 
-import com.bc.core.model.Transaction
+import com.bc.core.model.DataTransaction
 
 
 /**
@@ -11,6 +11,6 @@ import com.bc.core.model.Transaction
  * ____________________________________
  */
 interface NANJTransactionsListener {
-	fun onTransferSuccess(transactions: MutableList<Transaction>?)
+	fun onTransferSuccess(transactions: DataTransaction?)
 	fun onTransferFailure()
 }

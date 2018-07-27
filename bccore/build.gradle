@@ -24,6 +24,10 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'jacoco'
 
+androidExtensions {
+    experimental = true
+}
+
 ext {
     PUBLISH_GROUP_ID = 'com.nanj.coin'
     PUBLISH_ARTIFACT_ID = 'sdk'

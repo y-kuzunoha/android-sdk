@@ -1,6 +1,5 @@
 package com.bc.core.nanj
 
-import com.fasterxml.jackson.annotation.JsonValue
 
 object NANJConfig  {
     const val TX_RELAY_ADDRESS          = "0x7e861e36332693f271c66bdab40cda255a50d005"
@@ -14,7 +13,7 @@ object NANJConfig  {
     const val URL_YEN_RATE = "http://free.currencyconverterapi.com/api/v5/convert?q=USD_JPY&compact=y"
 
     const val URL_SERVER = "https://ropsten.infura.io/faF0xSQUt0ezsDFYglOe"
-    const val URL_TRANSACTION = "https://api-ropsten.etherscan.io/api?module=account&action=tokentx&contractaddress=%s&address=%s&page=%s&offset=%s&sort=asc&apikey=YourApiKeyToken"
+    const val URL_TRANSACTION = "https://staging.developer.nanjcoin.com/api/tx/list/%s?limit=%s&page=%s&order_by=desc"
 
     @JvmStatic var SMART_CONTRACT_ADDRESS = "0xf7afb89bef39905ba47f3877e588815004f7c861"
     @JvmStatic var NANJWALLET_APP_ID = ""

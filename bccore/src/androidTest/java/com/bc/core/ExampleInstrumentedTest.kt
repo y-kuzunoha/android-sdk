@@ -156,15 +156,15 @@ class ExampleInstrumentedTest {
         }
         nanjWalletManager?.enableWallet(wallet)
         val signal = CountDownLatch(1)
-        nanjWalletManager?.wallet?.getTransactions(page = 0, listener = object : NANJTransactionsListener {
-            override fun onTransferSuccess(transactions: MutableList<Transaction>?) {
-                signal.countDown()
-            }
-
-            override fun onTransferFailure() {
-                signal.countDown()
-            }
-        })
+//        nanjWalletManager?.wallet?.getTransactions(page = 0, listener = object : NANJTransactionsListener {
+//            override fun onTransferSuccess(transactions: MutableList<Transaction>?) {
+//                signal.countDown()
+//            }
+//
+//            override fun onTransferFailure() {
+//                signal.countDown()
+//            }
+//        })
         signal.await(60, TimeUnit.SECONDS)
     }
 

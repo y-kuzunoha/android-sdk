@@ -12,11 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.bc.core.model.DataTransaction;
 import com.bc.core.nanj.listener.NANJTransactionsListener;
 import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.model.Transaction;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * ____________________________________
@@ -27,12 +26,12 @@ import java.util.Objects;
  */
 public class TransactionsFragment extends Fragment {
 
-    private static final int ITEMS_PAGE = 20;
+    private static final int ITEMS_PAGE = 10;
 
     private TransactionAdapter transactionAdapter;
     private NANJWalletManager _nanjWalletManager;
     private Boolean isLoading = true;
-    private int page = 0;
+    private int page = 1;
 
     @Nullable
     @Override
@@ -61,10 +60,10 @@ public class TransactionsFragment extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(!isLoading && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                    int visiblesItemCount = layoutManager.getChildCount();
+                    int visibleItemCount = layoutManager.getChildCount();
                     int totalItemCount = layoutManager.getItemCount();
-                    int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                    if(visiblesItemCount + pastVisiblesItems + 2 >= totalItemCount) {
+                    int pastVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                    if(visibleItemCount + pastVisibleItem + 2 >= totalItemCount) {
                         page = page + 1;
                         getTransactions();
                     }
@@ -86,7 +85,7 @@ public class TransactionsFragment extends Fragment {
     }
 
     private void resetTransaction() {
-        page = 0;
+        page = 1;
         transactionAdapter.clearData();
     }
 
@@ -97,9 +96,9 @@ public class TransactionsFragment extends Fragment {
             isLoading = true;
             _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override
-                public void onTransferSuccess(List<Transaction> transactions) {
+                public void onTransferSuccess(DataTransaction data) {
                     isLoading = false;
-                    getActivity().runOnUiThread(() -> transactionAdapter.setData(transactions));
+                    getActivity().runOnUiThread(() -> transactionAdapter.setData(data.getTransactions()));
                 }
 
                 @Override

@@ -14,19 +14,22 @@ import android.view.ViewGroup;
 import com.bc.core.nanj.NANJConvert;
 import com.bc.core.model.Transaction;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
     class TransactionViewHolder extends RecyclerView.ViewHolder {
-        public AppCompatTextView title, address, coin;
+        public AppCompatTextView title, address, coin, time, fee;
 
         TransactionViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             address = itemView.findViewById(R.id.address);
             coin = itemView.findViewById(R.id.coin);
+            time = itemView.findViewById(R.id.time);
+            fee = itemView.findViewById(R.id.fee);
         }
     }
 
@@ -43,7 +46,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     public void setData(List<Transaction> transactions) {
-        this.transactions .addAll(transactions);
+        this.transactions.addAll(transactions);
         notifyDataSetChanged();
     }
 
@@ -51,6 +54,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.transactions.clear();
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -67,15 +71,19 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         if (data == null) return;
         boolean isSend = Objects.equals(address, data.getFrom());
         Log.d("ahehe", "onBindViewHolder: " + address);
-        holder.title.setText(data.getTokenName());
+        holder.title.setText(data.getMessage());
+        holder.time.setText(android.text.format.DateFormat.format("dd MMM yyyy kk:mm:ss", data.getTimeStamp() * 1000L));
+        holder.fee.setText("-" + NANJConvert.fromWei(data.getTxFee(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
         if (isSend) {
+            holder.fee.setVisibility(View.VISIBLE);
             holder.address.setText("To: " + data.getTo());
             holder.coin.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
-            holder.coin.setText("-" + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString());
+            holder.coin.setText("-" + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
         } else {
+            holder.fee.setVisibility(View.GONE);
             holder.address.setText("From: " + data.getFrom());
             holder.coin.setTextColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
-            holder.coin.setText(NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString());
+            holder.coin.setText(NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
         }
     }
 

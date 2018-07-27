@@ -31,7 +31,7 @@
         android:padding="8dp"
         android:layout_margin="8dp"
         android:gravity="top"
-        android:text="d2699cd47e3f8e0f31f8ac752404eb501b2539e9abd5a9fc49bcc2b24fb4ee80"
+        android:text="8e72caa09a0266506d149f3a26c5304af1a50e627deaed0ed81686e4959d842c"
         android:background="@drawable/border_view"/>
 
 </LinearLayout>

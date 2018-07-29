@@ -37,5 +37,8 @@
 
         <activity android:name=".ChooseCoinTypeActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".MoreDetailActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

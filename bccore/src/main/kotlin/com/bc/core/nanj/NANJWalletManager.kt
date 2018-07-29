@@ -93,6 +93,10 @@ open class NANJWalletManager {
         NANJConfig.META_NANJCOIN_MANAGER = config?.data?.smartContracts?.get("metaNanjManager") ?: ""
     }
 
+    fun setTxReplay() {
+        NANJConfig.TX_RELAY_ADDRESS = config?.data?.smartContracts?.get("txRelay") ?: ""
+    }
+
     fun getNANJWalletAsync(owner: String, listener: GetNANJWalletListener) {
         doAsync(
                 { listener.onError() },

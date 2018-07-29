@@ -2,6 +2,7 @@ package com.bc.example;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
@@ -85,6 +86,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.coin.setTextColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
             holder.coin.setText(NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), MoreDetailActivity.class);
+            intent.putExtra("Transaction", data);
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

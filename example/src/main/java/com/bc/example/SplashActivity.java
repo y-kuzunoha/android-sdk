@@ -93,6 +93,7 @@ public class SplashActivity extends AppCompatActivity {
                         if (responseBody.getStatus() == 200) {
                             NANJWalletManager.instance.setConfig(responseBody);
                             NANJWalletManager.instance.setSmartContract();
+                            NANJWalletManager.instance.setTxReplay();
                             NANJWalletManager.instance.setErc20(0);
                             String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
                             login(psw);

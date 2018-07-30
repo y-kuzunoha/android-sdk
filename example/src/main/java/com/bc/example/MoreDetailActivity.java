@@ -10,7 +10,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.format.DateFormat;
 import android.view.View;
 
-import com.nanjcoin.sdk.model.Transaction;
+import com.nanjcoin.sdk.model.NANJTransaction;
 import com.nanjcoin.sdk.nanj.NANJConvert;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
@@ -26,7 +26,7 @@ public class MoreDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_detail);
 
-        Transaction data = getIntent().getParcelableExtra("Transaction");
+        NANJTransaction data = getIntent().getParcelableExtra("NANJTransaction");
         boolean isSent = Objects.equals(data.getFrom(), nanjWalletManager.getWallet().getNanjAddress());
         String add = isSent ? "-" : "";
         ((AppCompatTextView) findViewById(R.id.coin)).setText(add + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());

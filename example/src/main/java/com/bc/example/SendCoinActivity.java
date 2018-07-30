@@ -12,11 +12,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.nanjcoin.sdk.nanj.NANJConvert;
-import com.nanjcoin.sdk.nanj.listener.CreateNANJWalletListener;
-import com.nanjcoin.sdk.nanj.listener.NANJTransactionListener;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 import com.nanjcoin.sdk.nanj.listener.SendNANJCoinListener;
 
@@ -61,16 +56,12 @@ public class SendCoinActivity extends AppCompatActivity {
                     new SendNANJCoinListener() {
                         @Override
                         public void onError() {
-                            runOnUiThread(() -> {
-                                status.setText("Failure!");
-                            });
+                            runOnUiThread(() -> status.setText("Failure!"));
                         }
 
                         @Override
                         public void onSuccess() {
-                            runOnUiThread(() -> {
-                                    status.setText("Sending!");
-                            });
+                            runOnUiThread(() -> status.setText("Sending!"));
                         }
                     }
             );

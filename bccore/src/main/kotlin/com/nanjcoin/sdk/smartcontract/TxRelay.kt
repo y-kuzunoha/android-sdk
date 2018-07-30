@@ -1,10 +1,9 @@
-package com.nanjcoin.sdk.nanj
+package com.nanjcoin.sdk.smartcontract
 
 
 import java.math.BigInteger
 import java.util.ArrayList
 import java.util.Arrays
-import java.util.Collections
 import org.web3j.abi.EventEncoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Address
@@ -26,7 +25,6 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.tx.Contract
 import org.web3j.tx.TransactionManager
 import rx.Observable
-import rx.functions.Func1
 
 /**
  *

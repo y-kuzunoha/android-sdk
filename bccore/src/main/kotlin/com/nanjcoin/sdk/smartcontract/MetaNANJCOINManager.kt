@@ -1,5 +1,6 @@
-package com.nanjcoin.sdk.nanj
+package com.nanjcoin.sdk.smartcontract
 
+import com.nanjcoin.sdk.nanj.NANJConfig
 import java.math.BigInteger
 import java.util.Arrays
 import org.web3j.abi.FunctionEncoder
@@ -94,7 +95,7 @@ class MetaNANJCOINManager : Contract {
             return Contract.deployRemoteCall(MetaNANJCOINManager::class.java, web3j, credentials, gasPrice, gasLimit, BINARY, encodedConstructor)
         }
 
-        fun deploy(web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT, _relayAddress: String  =  NANJConfig.TX_RELAY_ADDRESS): RemoteCall<MetaNANJCOINManager> {
+        fun deploy(web3j: Web3j, transactionManager: TransactionManager, gasPrice: BigInteger = GAS_PRICE, gasLimit: BigInteger = GAS_LIMIT, _relayAddress: String  = NANJConfig.TX_RELAY_ADDRESS): RemoteCall<MetaNANJCOINManager> {
             val encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.asList<Type<*>>(org.web3j.abi.datatypes.Address(_relayAddress)))
             return Contract.deployRemoteCall(MetaNANJCOINManager::class.java, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor)
         }

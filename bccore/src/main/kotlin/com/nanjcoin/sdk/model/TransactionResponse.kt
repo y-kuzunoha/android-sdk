@@ -25,5 +25,5 @@ class DataTransaction : Parcelable {
     @SerializedName("max_page")
     var maxPage: Int = 0
     @SerializedName("items")
-    var transactions: MutableList<Transaction> = mutableListOf()
+    var transactions: MutableList<NANJTransaction> = mutableListOf()
 }

@@ -18,12 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nanjcoin.sdk.model.NANJConfigModel;
 import com.nanjcoin.sdk.nanj.NANJConfig;
 import com.nanjcoin.sdk.nanj.listener.GetNANJWalletListener;
 import com.nanjcoin.sdk.nanj.NANJConvert;
 import com.nanjcoin.sdk.nanj.listener.NANJRateListener;
-import com.nanjcoin.sdk.nanj.listener.NANJTransactionListener;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 import java.io.IOException;

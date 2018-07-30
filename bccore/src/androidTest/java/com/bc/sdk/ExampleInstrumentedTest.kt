@@ -2,7 +2,6 @@ package com.nanjcoin.sdk
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.nanjcoin.sdk.model.Transaction
 import com.nanjcoin.sdk.nanj.NANJConfig
 import com.nanjcoin.sdk.nanj.NANJWallet
 import com.nanjcoin.sdk.nanj.NANJWalletManager
@@ -157,7 +156,7 @@ class ExampleInstrumentedTest {
         nanjWalletManager?.enableWallet(wallet)
         val signal = CountDownLatch(1)
 //        nanjWalletManager?.wallet?.getTransactions(page = 0, listener = object : NANJTransactionsListener {
-//            override fun onTransferSuccess(transactions: MutableList<Transaction>?) {
+//            override fun onTransferSuccess(transactions: MutableList<NANJTransaction>?) {
 //                signal.countDown()
 //            }
 //

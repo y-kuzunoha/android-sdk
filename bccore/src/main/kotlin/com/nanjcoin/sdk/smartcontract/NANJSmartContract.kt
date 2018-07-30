@@ -1,4 +1,4 @@
-package com.nanjcoin.sdk.nanj
+package com.nanjcoin.sdk.smartcontract
 
 import org.web3j.abi.EventEncoder
 import org.web3j.abi.TypeReference

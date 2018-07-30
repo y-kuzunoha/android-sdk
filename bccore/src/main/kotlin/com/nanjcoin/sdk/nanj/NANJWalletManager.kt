@@ -1,15 +1,13 @@
 package com.nanjcoin.sdk.nanj
 
 import android.content.Context
-import com.nanjcoin.sdk.database.NANJDatabase
-import com.nanjcoin.sdk.model.Erc20
-import com.nanjcoin.sdk.model.NANJConfigModel
 import com.nanjcoin.sdk.model.NANJRateData
 import com.nanjcoin.sdk.model.YenRate
 import com.nanjcoin.sdk.nanj.listener.*
 import com.nanjcoin.sdk.util.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
+import com.nanjcoin.sdk.smartcontract.MetaNANJCOINManager
 import org.jetbrains.anko.doAsync
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3jFactory

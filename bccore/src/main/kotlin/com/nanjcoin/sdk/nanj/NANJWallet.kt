@@ -3,8 +3,6 @@ package com.nanjcoin.sdk.nanj
 import android.app.Activity
 import android.support.v4.app.Fragment
 import android.text.TextUtils
-import com.nanjcoin.sdk.database.NANJDatabase
-import com.nanjcoin.sdk.model.NANJConfigModel
 import com.nanjcoin.sdk.model.TransactionResponse
 import com.nanjcoin.sdk.model.TxRelayData
 import com.nanjcoin.sdk.nanj.listener.*
@@ -12,6 +10,9 @@ import com.nanjcoin.sdk.ui.barcodereader.NANJQrCodeActivity
 import com.nanjcoin.sdk.ui.nfc.NANJNfcActivity
 import com.nanjcoin.sdk.util.*
 import com.google.gson.Gson
+import com.nanjcoin.sdk.smartcontract.MetaNANJCOINManager
+import com.nanjcoin.sdk.smartcontract.NANJSmartContract
+import com.nanjcoin.sdk.smartcontract.TxRelay
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -23,8 +24,6 @@ import org.web3j.abi.datatypes.generated.Bytes32
 import org.web3j.abi.datatypes.generated.Uint256
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3j
-import org.web3j.protocol.core.DefaultBlockParameter
-import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 

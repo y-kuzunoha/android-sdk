@@ -13,9 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nanjcoin.sdk.nanj.NANJConvert;
-import com.nanjcoin.sdk.model.Transaction;
+import com.nanjcoin.sdk.model.NANJTransaction;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +35,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 
     private String address;
-    private List<Transaction> transactions = new ArrayList<>();
+    private List<NANJTransaction> transactions = new ArrayList<>();
 
     TransactionAdapter(String address) {
         this.address = address;
@@ -46,7 +45,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.address = address;
     }
 
-    public void setData(List<Transaction> transactions) {
+    public void setData(List<NANJTransaction> transactions) {
         this.transactions.addAll(transactions);
         notifyDataSetChanged();
     }
@@ -68,7 +67,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
-        Transaction data = transactions.get(position);
+        NANJTransaction data = transactions.get(position);
         if (data == null) return;
         boolean isSend = Objects.equals(address, data.getFrom());
         Log.d("ahehe", "onBindViewHolder: " + address);
@@ -89,7 +88,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), MoreDetailActivity.class);
-            intent.putExtra("Transaction", data);
+            intent.putExtra("NANJTransaction", data);
             v.getContext().startActivity(intent);
         });
     }

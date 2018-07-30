@@ -2,11 +2,11 @@ package com.nanjcoin.sdk.ui.barcodereader
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import com.nanjcoin.sdk.R
 import com.nanjcoin.sdk.nanj.NANJWallet
@@ -28,7 +28,7 @@ import org.web3j.crypto.WalletUtils
  * ____________________________________
  */
 
-class NANJQrCodeActivity : AppCompatActivity() {
+class NANJQrCodeActivity : Activity() {
 
 	private lateinit var mBarcodeDetector : BarcodeDetector
 

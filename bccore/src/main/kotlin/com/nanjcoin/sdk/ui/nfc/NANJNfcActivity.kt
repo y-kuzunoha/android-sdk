@@ -6,19 +6,11 @@ import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.nanjcoin.sdk.R
-import kotlinx.android.synthetic.main.activity_nfc.*
-import android.R.attr.tag
+import android.app.Activity
 import android.nfc.tech.Ndef
-import android.nfc.NdefMessage
-import android.nfc.NdefRecord
 import com.nanjcoin.sdk.nanj.NANJWallet
 import org.web3j.crypto.WalletUtils
-import java.io.UnsupportedEncodingException
-import java.nio.charset.Charset
-import java.util.*
-import kotlin.experimental.and
 
 
 /**
@@ -29,7 +21,7 @@ import kotlin.experimental.and
  * ____________________________________
  */
 
-open class NANJNfcActivity : AppCompatActivity() {
+open class NANJNfcActivity : Activity() {
 
 	companion object {
 		const val REQUEST_CODE = 0
@@ -120,7 +112,7 @@ open class NANJNfcActivity : AppCompatActivity() {
 		}
 	}
 
-	private fun isSupport() = (nfcAdapter != null)
-	private fun isEnabled() = nfcAdapter?.isEnabled ?: false
+//	private fun isSupport() = (nfcAdapter != null)
+//	private fun isEnabled() = nfcAdapter?.isEnabled ?: false
 
 }

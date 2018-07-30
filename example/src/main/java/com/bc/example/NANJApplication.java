@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.nanjcoin.sdk.model.NANJConfigModel;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
-import com.facebook.stetho.Stetho;
 
 /**
  * ____________________________________
@@ -18,7 +17,6 @@ public class NANJApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
         new NANJWalletManager.Builder()
                 .setContext(getApplicationContext())
                 .setNANJAppId("575958089608922877")

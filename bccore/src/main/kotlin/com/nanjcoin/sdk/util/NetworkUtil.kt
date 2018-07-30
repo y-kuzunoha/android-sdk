@@ -1,8 +1,6 @@
 package com.nanjcoin.sdk.util
 
-import com.nanjcoin.sdk.model.NANJConfigModel
 import com.nanjcoin.sdk.nanj.NANJConfig
-import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

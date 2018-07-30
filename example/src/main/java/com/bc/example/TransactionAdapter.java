@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bc.core.nanj.NANJConvert;
-import com.bc.core.model.Transaction;
+import com.nanjcoin.sdk.nanj.NANJConvert;
+import com.nanjcoin.sdk.model.Transaction;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.bc.core.model.NANJConfigModel;
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.model.NANJConfigModel;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 public class ChooseCoinTypeActivity extends AppCompatActivity {
 

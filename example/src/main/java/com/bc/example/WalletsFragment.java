@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bc.core.nanj.NANJWallet;
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.nanj.NANJWallet;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 import java.util.List;
 

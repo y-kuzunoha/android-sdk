@@ -14,11 +14,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bc.core.nanj.NANJConvert;
-import com.bc.core.nanj.listener.CreateNANJWalletListener;
-import com.bc.core.nanj.listener.NANJTransactionListener;
-import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.nanj.listener.SendNANJCoinListener;
+import com.nanjcoin.sdk.nanj.NANJConvert;
+import com.nanjcoin.sdk.nanj.listener.CreateNANJWalletListener;
+import com.nanjcoin.sdk.nanj.listener.NANJTransactionListener;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.nanj.listener.SendNANJCoinListener;
 
 
 /**

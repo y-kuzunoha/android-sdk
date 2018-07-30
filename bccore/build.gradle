@@ -29,7 +29,7 @@ androidExtensions {
 }
 
 ext {
-    PUBLISH_GROUP_ID = 'com.nanj.coin'
+    PUBLISH_GROUP_ID = 'com.nanjcoin.sdk'
     PUBLISH_ARTIFACT_ID = 'sdk'
     PUBLISH_VERSION = '1.0'
 }

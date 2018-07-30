@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bc.core.nanj.NANJConfig;
-import com.bc.core.nanj.NANJWallet;
-import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.nanj.listener.GetNANJWalletListener;
+import com.nanjcoin.sdk.nanj.NANJConfig;
+import com.nanjcoin.sdk.nanj.NANJWallet;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.nanj.listener.GetNANJWalletListener;
 
 import java.util.ArrayList;
 import java.util.List;

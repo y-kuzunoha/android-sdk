@@ -15,9 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import com.bc.core.nanj.listener.NANJCreateWalletListener;
-import com.bc.core.nanj.listener.NANJImportWalletListener;
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.nanj.listener.NANJCreateWalletListener;
+import com.nanjcoin.sdk.nanj.listener.NANJImportWalletListener;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 /**
  * ____________________________________

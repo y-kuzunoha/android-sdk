@@ -3,7 +3,7 @@ package com.bc.example;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bc.core.nanj.NANJWallet;
+import com.nanjcoin.sdk.nanj.NANJWallet;
 
 /**
  ____________________________________

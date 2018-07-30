@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.bc.core.model.DataTransaction;
-import com.bc.core.nanj.listener.NANJTransactionsListener;
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.model.DataTransaction;
+import com.nanjcoin.sdk.nanj.listener.NANJTransactionsListener;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 /**
  * ____________________________________

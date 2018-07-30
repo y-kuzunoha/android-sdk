@@ -10,11 +10,11 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.bc.core.model.NANJConfigModel;
-import com.bc.core.nanj.NANJConfig;
-import com.bc.core.nanj.NANJWalletManager;
-import com.bc.core.util.Api;
-import com.bc.core.util.NetworkUtil;
+import com.nanjcoin.sdk.model.NANJConfigModel;
+import com.nanjcoin.sdk.nanj.NANJConfig;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.util.Api;
+import com.nanjcoin.sdk.util.NetworkUtil;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;

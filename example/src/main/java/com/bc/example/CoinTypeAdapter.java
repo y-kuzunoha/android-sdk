@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bc.core.model.Erc20;
+import com.nanjcoin.sdk.model.Erc20;
 
 import java.util.ArrayList;
 import java.util.List;

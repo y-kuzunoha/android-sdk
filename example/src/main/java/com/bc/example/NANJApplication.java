@@ -2,8 +2,8 @@ package com.bc.example;
 
 import android.app.Application;
 
-import com.bc.core.model.NANJConfigModel;
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.model.NANJConfigModel;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 import com.facebook.stetho.Stetho;
 
 /**

@@ -10,9 +10,9 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.format.DateFormat;
 import android.view.View;
 
-import com.bc.core.model.Transaction;
-import com.bc.core.nanj.NANJConvert;
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.model.Transaction;
+import com.nanjcoin.sdk.nanj.NANJConvert;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 import java.util.Objects;
 

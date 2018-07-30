@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.design.widget.TabLayout;
 
-import com.bc.core.nanj.NANJWalletManager;
+import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 public class MainActivity extends AppCompatActivity {
 

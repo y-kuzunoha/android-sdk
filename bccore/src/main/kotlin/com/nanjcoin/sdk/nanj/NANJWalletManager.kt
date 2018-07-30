@@ -8,6 +8,8 @@ import com.nanjcoin.sdk.util.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import com.nanjcoin.sdk.smartcontract.MetaNANJCOINManager
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3jFactory
@@ -53,12 +55,15 @@ open class NANJWalletManager {
         fun build(): NANJWalletManager? {
             instance = NANJWalletManager().apply {
                 _nanjDatabase = db
-                wallets = _nanjDatabase?.loadWallets() ?: mutableMapOf()
-                if (wallets.isNotEmpty()) {
-                    enableWallet(0)
-                }
             }
             return instance
+        }
+    }
+
+    fun loadNANJWallets() {
+        wallets = _nanjDatabase?.loadWallets() ?: mutableMapOf()
+        if (wallets.isNotEmpty()) {
+            enableWallet(0)
         }
     }
 
@@ -75,9 +80,7 @@ open class NANJWalletManager {
             }
             return field
         }
-    private var metaNANJCOINManager: MetaNANJCOINManager? = MetaNANJCOINManager.load(
-            web3j = _web3j,
-            credentials = Credentials.create(Keys.createEcKeyPair()))
+    private var metaNANJCOINManager: MetaNANJCOINManager? = null
 
     fun setErc20(position: Int) {
         if (config?.data?.erc20s?.size ?: 0 > 0) {
@@ -85,6 +88,12 @@ open class NANJWalletManager {
             NANJConfig.NANJWALLET_NAME = config?.data?.erc20s?.get(position)?.name ?: ""
             wallet?.init()
         }
+    }
+
+    fun setMetaNANJCOINManager() {
+        metaNANJCOINManager = MetaNANJCOINManager.load(
+                web3j = _web3j,
+                credentials = Credentials.create(Keys.createEcKeyPair()))
     }
 
     fun setSmartContract() {
@@ -237,7 +246,7 @@ open class NANJWalletManager {
         }
         wallets[nanjWallet.address] = nanjWallet
         _nanjDatabase?.saveWallet(nanjWallet)
-        enableWallet(nanjWallet)
+//        enableWallet(nanjWallet)
         return nanjWallet
     }
 
@@ -339,28 +348,19 @@ open class NANJWalletManager {
     }
 
     fun getNANJRate(listener: NANJRateListener) {
-        doAsync(
-                {
-                    it.printStackTrace()
-                    listener.onFailure("error")
-                },
-                {
-                    var nanjRate: BigDecimal = 0.toBigDecimal()
-                    var yenRate: BigDecimal = 0.toBigDecimal()
-                    NetworkUtil.GET(NANJConfig.URL_NANJ_RATE) {
-                        val nanjRateData = Gson().fromJson(it, NANJRateData::class.java)
-                        val quotes = nanjRateData.data.quotes
-                        nanjRate = quotes.USD.price.divide(quotes.NANJ.price, 10, RoundingMode.HALF_UP)
-                    }
-
-                    NetworkUtil.GET(NANJConfig.URL_YEN_RATE) {
-                        val yenData = Gson().fromJson(it, YenRate::class.java)
-                        yenRate = yenData.Usd2Yen.value
-                    }
-
-                    listener.onSuccess(nanjRate.multiply(yenRate))
-                }
-        )
+        NetworkUtil.retrofit.create(Api::class.java)
+                .getNANJRate(NANJConfig.URL_YEN_RATE)
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            listener.onSuccess(it.data.currentPrice)
+                        },
+                        {
+                            it.printStackTrace()
+                            listener.onFailure("error")
+                        }
+                )
     }
 
 }

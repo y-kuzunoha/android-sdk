@@ -2,9 +2,7 @@ package com.bc.example;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -32,13 +30,11 @@ public class WalletsActivity extends AppCompatActivity {
 	private NANJWalletManager nanjWalletManager;
 	private WalletsFragment _walletsFragment;
 	private String _password;
-	private SharedPreferences _sharedPreferences;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
-		_sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 		_progressDialog = new Loading(this);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
 		nanjWalletManager = NANJWalletManager.instance;

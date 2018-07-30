@@ -98,6 +98,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 						public void onSuccess(String address) {
 							if(!Objects.equals(NANJConfig.UNKNOWN_NANJ_WALLET, address)) {
 								timer.cancel();
+								wallet.setNanjAddress(address);
 								holder.address.setText(address);
 							}
 						}

@@ -100,26 +100,33 @@ class NANJWallet {
     }
 
     fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
-        val nanjAddress = getNANJWallet()
-        val url = String.format(
-                NANJConfig.URL_TRANSACTION,
-                nanjAddress,
-                offset,
-                page
+        doAsync(
+                {
+                    listener.onTransferFailure()
+                },
+                {
+                    val nanjAddress = getNANJWallet()
+                    val url = String.format(
+                            NANJConfig.URL_TRANSACTION,
+                            nanjAddress,
+                            offset,
+                            page
+                    )
+                    NetworkUtil.retrofit.create(Api::class.java)
+                            .getNANJTransactions(url)
+                            .subscribeOn(Schedulers.single())
+                            .subscribe(
+                                    {
+                                        val transactionList: TransactionResponse? = Gson().fromJson(it.string(), TransactionResponse::class.java)
+                                        listener.onTransferSuccess(transactionList?.data)
+                                    },
+                                    {
+                                        it.printStackTrace()
+                                        listener.onTransferFailure()
+                                    }
+                            )
+                }
         )
-        NetworkUtil.retrofit.create(Api::class.java)
-                .getNANJTransactions(url)
-                .subscribeOn(Schedulers.computation())
-                .subscribe(
-                        {
-                            val transactionList: TransactionResponse? = Gson().fromJson(it.string(), TransactionResponse::class.java)
-                            listener.onTransferSuccess(transactionList?.data)
-                        },
-                        {
-                            it.printStackTrace()
-                            listener.onTransferFailure()
-                        }
-                )
     }
 
     fun getNANJWalletAsync(listener: GetNANJWalletListener) {

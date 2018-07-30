@@ -95,6 +95,9 @@ public class SplashActivity extends AppCompatActivity {
                             NANJWalletManager.instance.setSmartContract();
                             NANJWalletManager.instance.setTxReplay();
                             NANJWalletManager.instance.setErc20(0);
+                            NANJWalletManager.instance.loadNANJWallets();
+                            NANJWalletManager.instance.setMetaNANJCOINManager();
+
                             String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
                             login(psw);
                         } else {
@@ -113,4 +116,12 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 });
     }
+
+//    void builder() {
+//        new NANJWalletManager.Builder()
+//                .setContext(this)
+//                .setNANJAppId("575958089608922877")
+//                .setNANJSecret("fF5MSugBFsUEoTiFIiRdUa1rFc5Y8119JVzyWUzJ")
+//                .build();
+//    }
 }

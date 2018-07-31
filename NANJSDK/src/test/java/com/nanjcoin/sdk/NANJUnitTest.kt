@@ -24,7 +24,7 @@ import java.math.BigDecimal
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
 
-class ExampleUnitTest {
+class NANJUnitTest {
 
     companion object {
         @BeforeClass

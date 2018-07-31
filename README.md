@@ -11,7 +11,7 @@
 
 ## Requirements
 - Tool: [Android studio 3](https://developer.android.com/studio/)
-- Minimum sdk support: 18
+- Minimum Android SDK support: 18
 
 ## Communication
 - If you **need help** or **ask a general question**, use [Discord](https://discord.gg/xa94m8F). (Channel  'nanj-sdk')
@@ -20,6 +20,10 @@
 - If you **want to contribute**, submit a pull request.
 
 ## Usage
+
+### Installation
+Download AAR file at Release page [NANJCOIN SDK Version 1.0](https://github.com/NANJ-COIN/android-sdk/releases). Please do step by step by following intructions. 
+
 ### Initialization
 - In Application class, add following lines of code to onCreate() method
 

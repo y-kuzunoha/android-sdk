@@ -16,10 +16,25 @@
 ```
 new NANJWalletManager.Builder()
       .setContext(getApplicationContext())
+      .setDevelopmentMode(true) // default mainnet
       .setNANJAppId("AppId")
       .setNANJSecret("SecretKey")
       .build();
 ```
+
+### Load config
+Load config after login action
+```
+NetworkUtil.getRetrofit().create(Api.class)
+                .getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)
+                .subscribe(new Observer<NANJConfigModel>() {}
+```
+If load success
+```
+NANJWalletManager.instance.setNANJConfig(config, positionErc20, password);
+```
+
+
 ### Create New NANJ Wallet
 In order to create a wallet, call createWallet in NANJWalletManager shared instance.
 ```

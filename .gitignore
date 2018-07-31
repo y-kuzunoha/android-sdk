@@ -1,6 +1,6 @@
 /build
-example/build
-bccore/build
+NANJSDK/build
+NANJ/build
 .idea
 .gradle
 *.iml

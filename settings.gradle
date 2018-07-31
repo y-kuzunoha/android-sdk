@@ -1,1 +1,1 @@
-include ':example', ':bccore'
+include ':NANJ', ':NANJSDK'

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/copyAddress"
+        android:title="Copy address"/>
+
+    <item android:id="@+id/backupKeystore"
+        android:title="Export keystore"/>
+
+    <item android:id="@+id/backupWallet"
+        android:title="Export private key"/>
+
+    <item android:id="@+id/removeWallet"
+        android:title="Remove wallet"/>
+
+</menu>

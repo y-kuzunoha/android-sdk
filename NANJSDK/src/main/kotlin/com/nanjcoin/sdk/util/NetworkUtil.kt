@@ -1,6 +1,7 @@
 package com.nanjcoin.sdk.util
 
 import com.nanjcoin.sdk.model.NANJNonce
+import com.nanjcoin.sdk.model.NANJTxRelayResponse
 import com.nanjcoin.sdk.model.RateResponse
 import com.nanjcoin.sdk.nanj.NANJConfig
 import okhttp3.OkHttpClient
@@ -47,7 +48,7 @@ object NetworkUtil {
 
 interface Api {
     @POST
-    fun postCreateNANJWallet(@Url url: String, @Body txRelay: RequestBody): io.reactivex.Observable<ResponseBody>
+    fun postCreateNANJWallet(@Url url: String, @Body txRelay: RequestBody): io.reactivex.Observable<NANJTxRelayResponse>
 
     @GET
     fun getNANJTransactions(@Url url: String): io.reactivex.Observable<ResponseBody>

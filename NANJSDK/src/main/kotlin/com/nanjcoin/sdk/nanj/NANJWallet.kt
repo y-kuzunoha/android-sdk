@@ -1,7 +1,6 @@
 package com.nanjcoin.sdk.nanj
 
-import android.app.Activity
-import android.support.v4.app.Fragment
+import android.content.Context
 import android.text.TextUtils
 import com.nanjcoin.sdk.model.TransactionResponse
 import com.nanjcoin.sdk.model.TxRelayData
@@ -174,53 +173,52 @@ class NANJWallet {
                 {
                     it.printStackTrace()
                     listener?.onError()
-                },
-                {
-                    if (config == null) {
-                        throw Exception("Please get config of nanj coin via NetworkUtil.getRetrofit().create(Api.class).getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)")
-                    }
-                    val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
-                    val nanjAmount = BigDecimal(amount).multiply(BigDecimal.TEN.pow(8)).toBigInteger()
-                    val param = arrayListOf<Type<*>>(
-                            Address(toAddress),
-                            Uint256(nanjAmount),
-                            DynamicBytes(message.toByteArray())
-                    )
-                    val f = Function("transfer", param, arrayListOf())
-                    val data = FunctionEncoder.encode(f)
-                    val hexData = Numeric.hexStringToByteArray(data)
-                    val appHash = config!!.data?.appHash
-                    println("appHash   : $appHash")
-                    val params = arrayListOf<Type<*>>(
-                            Address(address),
-                            Address(nanjAddress),
-                            Address(NANJConfig.SMART_CONTRACT_ADDRESS),
-                            Uint256.DEFAULT,
-                            DynamicBytes(hexData),
-                            Bytes32(Numeric.hexStringToByteArray(appHash))
-                    )
-                    val forwardToFunction = Function("forwardTo", params, arrayListOf())
-                    NetworkUtil.retrofit.create(Api::class.java).getNANJNonce("${NANJConfig.NANJCOIN_URL}/api/relayNonce?sender=${getNANJWallet()}")
-                            .subscribe(
-                                    {
-                                        if(it.statusCode == 200) {
-                                            sendFunctionToServer(
-                                                    nonce = it.data,
-                                                    function = forwardToFunction,
-                                                    error = { listener?.onError() },
-                                                    success = { listener?.onSuccess() }
-                                            )
-                                        } else {
-                                            listener?.onError()
-                                        }
-                                    },
-                                    {
-                                        it.printStackTrace()
-                                        listener?.onError()
-                                    }
-                            )
                 }
-        )
+        ) {
+            if (config == null) {
+                throw Exception("Please get config of nanj coin via NetworkUtil.getRetrofit().create(Api.class).getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)")
+            }
+            val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
+            val nanjAmount = BigDecimal(amount).multiply(BigDecimal.TEN.pow(8)).toBigInteger()
+            val param = arrayListOf<Type<*>>(
+                    Address(toAddress),
+                    Uint256(nanjAmount),
+                    DynamicBytes(message.toByteArray())
+            )
+            val f = Function("transfer", param, arrayListOf())
+            val data = FunctionEncoder.encode(f)
+            val hexData = Numeric.hexStringToByteArray(data)
+            val appHash = config!!.data?.appHash
+            println("appHash   : $appHash")
+            val params = arrayListOf<Type<*>>(
+                    Address(address),
+                    Address(nanjAddress),
+                    Address(NANJConfig.SMART_CONTRACT_ADDRESS),
+                    Uint256.DEFAULT,
+                    DynamicBytes(hexData),
+                    Bytes32(Numeric.hexStringToByteArray(appHash))
+            )
+            val forwardToFunction = Function("forwardTo", params, arrayListOf())
+            NetworkUtil.retrofit.create(Api::class.java).getNANJNonce("${NANJConfig.NANJCOIN_URL}/api/relayNonce?sender=$address")
+                    .subscribe(
+                            {
+                                if(it.statusCode == 200) {
+                                    sendFunctionToServer(
+                                            nonce = it.data,
+                                            function = forwardToFunction,
+                                            error = { listener?.onError() },
+                                            success = { listener?.onSuccess() }
+                                    )
+                                } else {
+                                    listener?.onError()
+                                }
+                            },
+                            {
+                                it.printStackTrace()
+                                listener?.onError()
+                            }
+                    )
+        }
     }
 
     private fun sendFunctionToServer(nonce : Int = 0, function: Function, error: () -> Unit, success: () -> Unit) {
@@ -253,7 +251,11 @@ class NANJWallet {
         )
                 .subscribe(
                         {
-                            success.invoke()
+                            if(it.statusCode == 200) {
+                                success.invoke()
+                            } else {
+                                error.invoke()
+                            }
                         },
                         {
                             it.printStackTrace()
@@ -262,20 +264,13 @@ class NANJWallet {
                 )
     }
 
-    fun sendNANJCoinByQrCode(activity: Activity) {
-        activity.launchActivity<NANJQrCodeActivity>(QRCODE_REQUEST_CODE)
+
+    fun sendNANJCoinByQrCode(context: Context) {
+        context.launchActivity<NANJQrCodeActivity>(QRCODE_REQUEST_CODE)
     }
 
-    fun sendNANJCoinByQrCode(fragment: Fragment) {
-        fragment.launchActivity<NANJQrCodeActivity>(QRCODE_REQUEST_CODE)
-    }
-
-    fun sendNANJCoinByNfcCode(activity: Activity) {
-        activity.launchActivity<NANJNfcActivity>(NFC_REQUEST_CODE)
-    }
-
-    fun sendNANJCoinByNfcCode(fragment: Fragment) {
-        fragment.launchActivity<NANJNfcActivity>(NFC_REQUEST_CODE)
+    fun sendNANJCoinByNfcCode(context: Context) {
+        context.launchActivity<NANJNfcActivity>(NFC_REQUEST_CODE)
     }
 }
 

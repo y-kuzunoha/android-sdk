@@ -1,5 +1,6 @@
 package com.nanjcoin.sdk.util
 
+import com.nanjcoin.sdk.model.NANJNonce
 import com.nanjcoin.sdk.model.RateResponse
 import com.nanjcoin.sdk.nanj.NANJConfig
 import okhttp3.OkHttpClient
@@ -36,7 +37,7 @@ object NetworkUtil {
     @JvmStatic
     open val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-                .baseUrl(NANJConfig.NANJ_SERVER_ADDRESS + "/")
+                .baseUrl(NANJConfig.NANJCOIN_URL + "/")
                 .client(okHttp)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -56,5 +57,8 @@ interface Api {
 
     @GET
     fun getNANJRate(@Url url: String) : io.reactivex.Observable<RateResponse>
+
+    @GET
+    fun getNANJNonce(@Url url: String) : io.reactivex.Observable<NANJNonce>
 }
 

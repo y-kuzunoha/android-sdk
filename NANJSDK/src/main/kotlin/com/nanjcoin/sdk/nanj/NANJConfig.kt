@@ -12,7 +12,7 @@ object NANJConfig {
 
 
 
-    @JvmStatic var NANJCOIN_URL = "https://api.nanjcoin.com"
+    @JvmStatic var NANJCOIN_URL = NANJCOIN_URL_MAINNET
     @JvmStatic var NANJ_SERVER_ADDRESS = "$NANJCOIN_URL/api/relayTx"
     @JvmStatic var NANJ_SERVER_CONFIG = "$NANJCOIN_URL/api/authorise"
     @JvmStatic var URL_YEN_RATE = "$NANJCOIN_URL/api/coins/markets"

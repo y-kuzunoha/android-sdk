@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.format.DateFormat;
@@ -29,7 +30,9 @@ public class MoreDetailActivity extends AppCompatActivity {
         NANJTransaction data = getIntent().getParcelableExtra("NANJTransaction");
         boolean isSent = Objects.equals(data.getFrom(), nanjWalletManager.getWallet().getNanjAddress());
         String add = isSent ? "-" : "";
-        ((AppCompatTextView) findViewById(R.id.coin)).setText(add + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
+        AppCompatTextView sender = findViewById(R.id.coin);
+        sender.setText(add + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
+        sender.setTextColor(ContextCompat.getColor(this, isSent ? android.R.color.holo_red_dark : android.R.color.holo_green_dark));
         ((AppCompatTextView) findViewById(R.id.fee)).setText(data.getTxHash());
         ((AppCompatTextView) findViewById(R.id.transfer)).setText(data.getFrom());
         ((AppCompatTextView) findViewById(R.id.recipient)).setText(data.getTo());

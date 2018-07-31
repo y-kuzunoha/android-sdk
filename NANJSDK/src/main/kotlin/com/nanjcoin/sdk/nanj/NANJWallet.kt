@@ -200,19 +200,33 @@ class NANJWallet {
                             Bytes32(Numeric.hexStringToByteArray(appHash))
                     )
                     val forwardToFunction = Function("forwardTo", params, arrayListOf())
-                    sendFunctionToServer(
-                            forwardToFunction,
-                            error = { listener?.onError() },
-                            success = { listener?.onSuccess() }
-                    )
+                    NetworkUtil.retrofit.create(Api::class.java).getNANJNonce("${NANJConfig.NANJCOIN_URL}/api/relayNonce?sender=${getNANJWallet()}")
+                            .subscribe(
+                                    {
+                                        if(it.statusCode == 200) {
+                                            sendFunctionToServer(
+                                                    nonce = it.data,
+                                                    function = forwardToFunction,
+                                                    error = { listener?.onError() },
+                                                    success = { listener?.onSuccess() }
+                                            )
+                                        } else {
+                                            listener?.onError()
+                                        }
+                                    },
+                                    {
+                                        it.printStackTrace()
+                                        listener?.onError()
+                                    }
+                            )
                 }
         )
     }
 
-    private fun sendFunctionToServer(function: Function, error: () -> Unit, success: () -> Unit) {
+    private fun sendFunctionToServer(nonce : Int = 0, function: Function, error: () -> Unit, success: () -> Unit) {
+
         val encodeFunction = FunctionEncoder.encode(function)
-        val nonceString = txRelay!!.getNonce(address).send().toString(16)
-        val pad = nonceString.padStart(64, '0')
+        val pad = nonce.toString(16).padStart(64, '0')
         val hashInput = "0x1900" +
                 NANJConfig.TX_RELAY_ADDRESS.cleanHexPrefix() +
                 NANJConfig.WHITE_LIST_OWNER.cleanHexPrefix() +
@@ -226,17 +240,17 @@ class NANJWallet {
                 s = Numeric.toHexString(sign.s),
                 v = sign.v.toInt(),
                 data = encodeFunction,
-                nonce = nonceString,
+                nonce = nonce.toString(),
                 dest = NANJConfig.META_NANJCOIN_MANAGER,
                 hash = hash
         )
 
         val requestBody = RequestBody.create(MediaType.parse("application/json"), restData.toString())
-        NetworkUtil.retrofit.create(Api::class.java)
-                .postCreateNANJWallet(
-                        NANJConfig.NANJ_SERVER_ADDRESS,
-                        requestBody
-                )
+
+        NetworkUtil.retrofit.create(Api::class.java).postCreateNANJWallet(
+                NANJConfig.NANJ_SERVER_ADDRESS,
+                requestBody
+        )
                 .subscribe(
                         {
                             success.invoke()

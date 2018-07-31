@@ -17,7 +17,6 @@ import com.nanjcoin.sdk.util.Api;
 import com.nanjcoin.sdk.util.NetworkUtil;
 
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -79,9 +78,7 @@ public class SplashActivity extends AppCompatActivity {
     private void getNANJConfig() {
         loading.show();
         NetworkUtil.getRetrofit().create(Api.class)
-                .getNANJCoinConfig(
-                        NANJConfig.NANJ_SERVER_CONFIG
-                )
+                .getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
                 .subscribe(new Observer<NANJConfigModel>() {
@@ -94,13 +91,7 @@ public class SplashActivity extends AppCompatActivity {
                     public void onNext(NANJConfigModel responseBody) {
                         if (responseBody.getStatus() == 200) {
                             String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
-                            NANJWalletManager.instance.setConfig(responseBody);
-                            NANJWalletManager.instance.setSmartContract();
-                            NANJWalletManager.instance.setTxReplay();
-                            NANJWalletManager.instance.setErc20(0);
-                            NANJWalletManager.instance.setMetaNANJCOINManager();
-                            NANJWalletManager.instance.setNANJPassword(psw);
-                            NANJWalletManager.instance.loadNANJWallets();
+                            NANJWalletManager.instance.setNANJConfig(responseBody, 0, psw);
                             loading.dismiss();
                             login(psw);
                         } else {

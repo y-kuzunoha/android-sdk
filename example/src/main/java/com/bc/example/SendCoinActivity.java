@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 import com.nanjcoin.sdk.nanj.listener.SendNANJCoinListener;
 
@@ -27,6 +28,7 @@ public class SendCoinActivity extends AppCompatActivity {
 
     private NANJWalletManager _nanjWalletManager;
     private WalletHandle walletHandle = new WalletHandle();
+    private Loading loading;
 
     @SuppressLint("SetTextI18n")
     @SuppressWarnings("ConstantConditions")
@@ -35,6 +37,7 @@ public class SendCoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_nanj_coin);
         setupActionBar();
+        loading = new Loading(this);
         _nanjWalletManager = NANJWalletManager.instance;
         AppCompatTextView status = findViewById(R.id.status);
         findViewById(R.id.qr).setOnClickListener(v -> {
@@ -49,6 +52,7 @@ public class SendCoinActivity extends AppCompatActivity {
         findViewById(R.id.send).setOnClickListener((View v2) -> {
             String address = edAddress.getText().toString();
             status.setText("Nanj coin sending to address: " + address);
+            loading.show();
             _nanjWalletManager.getWallet().sendNANJCoin(
                     address,
                     edAmount.getText().toString(),
@@ -56,12 +60,19 @@ public class SendCoinActivity extends AppCompatActivity {
                     new SendNANJCoinListener() {
                         @Override
                         public void onError() {
-                            runOnUiThread(() -> status.setText("Failure!"));
+                            runOnUiThread(() -> {
+                                        loading.dismiss();
+                                        status.setText("Failure!");
+                                    }
+                            );
                         }
 
                         @Override
                         public void onSuccess() {
-                            runOnUiThread(() -> status.setText("Sending!"));
+                            runOnUiThread(() -> {
+                                status.setText("Sent success!");
+                                loading.dismiss();
+                            });
                         }
                     }
             );

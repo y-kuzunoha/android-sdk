@@ -35,13 +35,25 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         TabLayout tableLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.pagerTabLayout);
+        TabViewPagerAdapter viewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
+        tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPagerAdapter.onResume(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         tableLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(
-                new TabViewPagerAdapter(
-                        getSupportFragmentManager(),
-                        nanjWalletManager
-                )
-        );
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
     @Override

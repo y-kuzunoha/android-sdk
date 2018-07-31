@@ -1,12 +1,10 @@
 package com.nanjcoin.sdk.nanj
 
 import android.content.Context
-import com.nanjcoin.sdk.model.NANJRateData
-import com.nanjcoin.sdk.model.YenRate
 import com.nanjcoin.sdk.nanj.listener.*
 import com.nanjcoin.sdk.util.*
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.Gson
+import com.nanjcoin.sdk.model.NANJConfigModel
 import com.nanjcoin.sdk.smartcontract.MetaNANJCOINManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -15,12 +13,8 @@ import org.web3j.crypto.*
 import org.web3j.protocol.Web3jFactory
 import org.web3j.protocol.http.HttpService
 import java.io.File
-import java.math.BigDecimal
-import java.math.RoundingMode
 import org.web3j.crypto.Wallet
 import org.web3j.crypto.WalletFile
-import org.web3j.protocol.core.Ethereum
-
 
 /**
  * ____________________________________
@@ -40,6 +34,11 @@ open class NANJWalletManager {
         private var db: com.nanjcoin.sdk.database.NANJDatabase? = null
         fun setContext(context: Context): Builder {
             db = com.nanjcoin.sdk.database.NANJDatabase(context)
+            return this
+        }
+
+        fun setDevelopmentMode(isDevelopment: Boolean): Builder {
+            NANJConfig.URL_SERVER = if (isDevelopment) NANJConfig.NANJCOIN_TESTNET else NANJConfig.NANJCOIN_MAINNET
             return this
         }
 
@@ -70,12 +69,11 @@ open class NANJWalletManager {
         }
     }
 
-    var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
+    var config: NANJConfigModel? = null
+
     private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
     private var _nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
-    private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER).apply {
-
-    })
+    private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
     var wallet: NANJWallet? = null
         get() {
             if (field != null) {
@@ -84,6 +82,16 @@ open class NANJWalletManager {
             return field
         }
     private var metaNANJCOINManager: MetaNANJCOINManager? = null
+
+    fun setNANJConfig(config: NANJConfigModel, erc20: Int, password: String) {
+        this.config = config
+        setSmartContract()
+        setTxReplay()
+        setErc20(erc20)
+        setMetaNANJCOINManager()
+        NANJPassword = password
+        loadNANJWallets()
+    }
 
     fun setErc20(position: Int) {
         if (config?.data?.erc20s?.size ?: 0 > 0) {
@@ -326,7 +334,7 @@ open class NANJWalletManager {
         return if (wallet?.privateKey.isNullOrBlank()) {
             null
         } else {
-            convertPrivateKeyToKeystore( wallet!!.privateKey!!, password)
+            convertPrivateKeyToKeystore(wallet!!.privateKey!!, password)
         }
     }
 
@@ -369,7 +377,7 @@ open class NANJWalletManager {
                 )
     }
 
-    private fun convertKeystoreToPrivateKey(jsonKeystore : String) : String {
+    private fun convertKeystoreToPrivateKey(jsonKeystore: String): String {
         val objectMapper = ObjectMapper()
         val walletFile = objectMapper.readValue(jsonKeystore, WalletFile::class.java)
         return Wallet.decrypt(NANJPassword, walletFile).privateKey.toString(16)

@@ -25,6 +25,7 @@ import org.web3j.abi.datatypes.generated.Uint256
 import org.web3j.crypto.*
 import org.web3j.protocol.Web3j
 import org.web3j.utils.Numeric
+import java.math.BigDecimal
 import java.math.BigInteger
 
 //web3j solidity generate MetaNANJCOINManager.bin MetaNANJCOINManager.abi -o . -p org.your.package
@@ -179,7 +180,7 @@ class NANJWallet {
                         throw Exception("Please get config of nanj coin via NetworkUtil.getRetrofit().create(Api.class).getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)")
                     }
                     val nanjAddress = metaNANJCOINManager!!.getWallet(address).send()
-                    val nanjAmount = BigInteger(amount).multiply(BigInteger.TEN.pow(8))
+                    val nanjAmount = BigDecimal(amount).multiply(BigDecimal.TEN.pow(8)).toBigInteger()
                     val param = arrayListOf<Type<*>>(
                             Address(toAddress),
                             Uint256(nanjAmount),

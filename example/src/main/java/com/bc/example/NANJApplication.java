@@ -21,6 +21,7 @@ public class NANJApplication extends Application {
         //Stetho.initializeWithDefaults(this);
         new NANJWalletManager.Builder()
                 .setContext(getApplicationContext())
+                .setDevelopmentMode(true)
                 .setNANJAppId("575958089608922877")
                 .setNANJSecret("fF5MSugBFsUEoTiFIiRdUa1rFc5Y8119JVzyWUzJ")
                 .build();

@@ -4,43 +4,42 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 /**
  * ____________________________________
- *
+ * <p>
  * Generator: Hieu.TV - tvhieuit@gmail.com
  * CreatedAt: 4/23/18
  * ____________________________________
  */
 public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
 
-	private NANJWalletManager nanjWalletManager;
-	
-	public TabViewPagerAdapter(FragmentManager fm, NANJWalletManager nanjWalletManager) {
-		super(fm);
-		this.nanjWalletManager = nanjWalletManager;
-	}
+    private Fragment[] fragments = {new MyWalletFragment(), new TransactionsFragment()};
 
-	@Nullable
-	@Override
-	public CharSequence getPageTitle(int position) {
-		if(position == 0) {
-			return "Wallet";
-		}
-		return "Transactions";
-	}
+    TabViewPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
 
-	@Override
-	public Fragment getItem(int position) {
-		if(position == 0) {
-			return new MyWalletFragment();
-		}
-		return new TransactionsFragment();
-	}
+    public void onResume(int position) {
+        fragments[position].onResume();
+    }
 
-	@Override
-	public int getCount() {
-		return 2;
-	}
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        if (position == 0) {
+            return "Wallet";
+        }
+        return "Transactions";
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        return fragments[position];
+    }
+
+    @Override
+    public int getCount() {
+        return 2;
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.nanjcoin.sdk.nanj.listener.*
 import com.nanjcoin.sdk.util.*
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nanjcoin.sdk.model.Erc20
 import com.nanjcoin.sdk.model.NANJConfigModel
 import com.nanjcoin.sdk.smartcontract.MetaNANJCOINManager
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -99,6 +100,13 @@ open class NANJWalletManager {
             NANJConfig.NANJWALLET_NAME = config?.data?.erc20s?.get(position)?.name ?: ""
             wallet?.init()
         }
+    }
+
+    fun getErc20List() : List<Erc20> {
+        if (config?.data?.erc20s?.size ?: 0 > 0) {
+            return config?.data?.erc20s!!
+        }
+        return emptyList()
     }
 
     fun setMetaNANJCOINManager() {

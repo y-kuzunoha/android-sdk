@@ -88,6 +88,8 @@ inline fun <reified T : Any> Context.launchActivity(
         val intent = newIntent<T>(this)
         intent.init()
         this.startActivityForResult(intent, requestCode, options)
+    } else {
+        throw Exception("Context should be an instance of Activity.")
     }
 }
 

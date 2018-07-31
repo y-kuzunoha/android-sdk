@@ -31,12 +31,13 @@ import io.reactivex.schedulers.Schedulers;
 public class SplashActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
+    private Loading loading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        loading = new Loading(this);
         sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 
         findViewById(R.id.btnLogin)
@@ -61,7 +62,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(this, "Password is not correct.", Toast.LENGTH_LONG).show();
+                    runOnUiThread(() -> Toast.makeText(this, "Password is not correct.", Toast.LENGTH_LONG).show());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -76,12 +77,13 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getNANJConfig() {
+        loading.show();
         NetworkUtil.getRetrofit().create(Api.class)
                 .getNANJCoinConfig(
                         NANJConfig.NANJ_SERVER_CONFIG
                 )
                 .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.single())
                 .subscribe(new Observer<NANJConfigModel>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -91,23 +93,31 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onNext(NANJConfigModel responseBody) {
                         if (responseBody.getStatus() == 200) {
+                            String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
                             NANJWalletManager.instance.setConfig(responseBody);
                             NANJWalletManager.instance.setSmartContract();
                             NANJWalletManager.instance.setTxReplay();
                             NANJWalletManager.instance.setErc20(0);
-                            NANJWalletManager.instance.loadNANJWallets();
                             NANJWalletManager.instance.setMetaNANJCOINManager();
-
-                            String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
+                            NANJWalletManager.instance.setNANJPassword(psw);
+                            NANJWalletManager.instance.loadNANJWallets();
+                            loading.dismiss();
                             login(psw);
                         } else {
-                            Toast.makeText(SplashActivity.this, "Load config fail", Toast.LENGTH_LONG).show();
+                            runOnUiThread(() ->{
+                                Toast.makeText(SplashActivity.this, "Load config fail", Toast.LENGTH_LONG).show();
+                                loading.dismiss();
+                            });
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(SplashActivity.this, "Load config fail", Toast.LENGTH_LONG).show();
+                        runOnUiThread(() -> {
+                                    Toast.makeText(SplashActivity.this, "Load config fail", Toast.LENGTH_LONG).show();
+                                    loading.dismiss();
+                                }
+                        );
                         e.printStackTrace();
                     }
 

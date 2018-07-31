@@ -2,6 +2,8 @@ package com.bc.example;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +33,7 @@ public class WalletsFragment extends Fragment {
 
     private NANJWalletManager nanjWalletManager;
     private WalletAdapter walletAdapter;
-    private String _password;
+    private Loading loading;
 
     @Nullable
     @Override
@@ -41,6 +44,7 @@ public class WalletsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loading = new Loading(view.getContext());
         walletAdapter = new WalletAdapter(view.getContext());
         RecyclerView walletList = view.findViewById(R.id.walletList);
         walletList.addItemDecoration(
@@ -51,7 +55,14 @@ public class WalletsFragment extends Fragment {
         );
         walletAdapter.setOnItemClickListener((position, wallet) -> {
             if (!TextUtils.isEmpty(wallet.getNanjAddress())) {
-                nanjWalletManager.enableWallet(wallet);
+                loading.show();
+                new Thread(() -> {
+                    Log.d("wtf", "onViewCreated: 123");
+                    nanjWalletManager.enableWallet(wallet);
+                    Log.d("wtf", "onViewCreated: 321");
+                    getActivity().runOnUiThread(() -> loading.dismiss());
+                    getActivity().finish();
+                }).start();
             } else {
                 Toast.makeText(getContext(), "Initializing nanj wallet, please wait", Toast.LENGTH_LONG).show();
             }
@@ -84,6 +95,5 @@ public class WalletsFragment extends Fragment {
     }
 
     public void setPassword(String _password) {
-        this._password = _password;
     }
 }

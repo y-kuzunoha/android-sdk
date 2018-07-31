@@ -53,6 +53,7 @@ class NANJWallet {
     var address: String = ""
     var name: String = "No name"
     var privateKey: String? = null
+    var keystore: String? = null
     var credentials: Credentials? = null
     private lateinit var _web3j: Web3j
     var web3j: Web3j? = null
@@ -141,12 +142,12 @@ class NANJWallet {
 
     fun getNANJWallet(): String {
         if (!TextUtils.isEmpty(nanjAddress)) return nanjAddress!!
-        val address = metaNANJCOINManager!!.getWallet(address).send()
-        if (NANJConfig.UNKNOWN_NANJ_WALLET != address) {
-            nanjAddress = address
-            nanjDatabase?.saveWallet(this)
+        val ad = metaNANJCOINManager!!.getWallet(address).send()
+        if (NANJConfig.UNKNOWN_NANJ_WALLET != ad) {
+            nanjAddress = ad
+            nanjDatabase?.updateWallet(address, ad)
         }
-        return address
+        return ad
     }
 
     fun createNANJWallet(listener: CreateNANJWalletListener? = null) {

@@ -49,7 +49,6 @@ public class TransactionsFragment extends Fragment {
         if (_nanjWalletManager.getWallet() != null) {
             address = _nanjWalletManager.getWallet().getNanjAddress();
         }
-        Log.d("wtf", "onViewCreated: " + address);
         transactionAdapter = new TransactionAdapter(address);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayout.VERTICAL));

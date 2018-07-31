@@ -138,9 +138,7 @@ public class MyWalletFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onSuccess(@NonNull BigDecimal value) {
-                        getActivity().runOnUiThread(() -> {
                             nanjRate.setText("Yen: " + realCoin.multiply(value).toBigInteger());
-                        });
                     }
 
                     @Override

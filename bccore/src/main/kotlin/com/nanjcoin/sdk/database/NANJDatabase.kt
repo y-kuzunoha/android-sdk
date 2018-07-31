@@ -44,7 +44,7 @@ class NANJDatabase(context: Context) {
                     nanjAddress = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_nanj_address"))
                     address = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_eth_address"))
                     name = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_name"))
-                    privateKey = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_private_key"))
+                    keystore = walletsCursor.getString(walletsCursor.getColumnIndexOrThrow("_private_key"))
                 }
                 wallets[wallet.address] = wallet
             } while (walletsCursor.moveToNext())
@@ -59,7 +59,7 @@ class NANJDatabase(context: Context) {
             put("_eth_address", wallet.address)
             put("_nanj_address", wallet.nanjAddress)
             put("_name", wallet.name)
-            put("_private_key", wallet.privateKey)
+            put("_private_key", wallet.keystore)
         }
         dbWrite.insertWithOnConflict(SQL_WALLET_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
     }

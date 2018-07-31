@@ -19,6 +19,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import org.web3j.crypto.Wallet
 import org.web3j.crypto.WalletFile
+import org.web3j.protocol.core.Ethereum
 
 
 /**
@@ -59,6 +60,8 @@ open class NANJWalletManager {
             return instance
         }
     }
+
+    var NANJPassword = ""
 
     fun loadNANJWallets() {
         wallets = _nanjDatabase?.loadWallets() ?: mutableMapOf()
@@ -243,6 +246,7 @@ open class NANJWalletManager {
             this.credentials = credentials
             this.privateKey = credentials.ecKeyPair.privateKey.toString(16)
             this.nanjAddress = nanjAddress
+            this.keystore = convertPrivateKeyToKeystore(credentials.ecKeyPair.privateKey.toString(16), NANJPassword)
         }
         wallets[nanjWallet.address] = nanjWallet
         _nanjDatabase?.saveWallet(nanjWallet)
@@ -322,12 +326,13 @@ open class NANJWalletManager {
         return if (wallet?.privateKey.isNullOrBlank()) {
             null
         } else {
-            convertPrivateKeyToKeystore(password, wallet!!.privateKey!!)
+            convertPrivateKeyToKeystore( wallet!!.privateKey!!, password)
         }
     }
 
 
     fun enableWallet(wallet: NANJWallet) {
+        wallet.privateKey = convertKeystoreToPrivateKey(wallet.keystore!!)
         val c = if (wallet.credentials == null) Credentials.create(wallet.privateKey) else wallet.credentials
         this.wallet = wallet.apply {
             this.web3j = _web3j
@@ -342,6 +347,7 @@ open class NANJWalletManager {
         val list = wallets.keys.toMutableList()
         val key = list[position]
         val wallet = wallets[key]!!
+        wallet.privateKey = convertKeystoreToPrivateKey(wallet.keystore!!)
         if (!wallet.nanjAddress.isNullOrBlank()) {
             this.enableWallet(wallet)
         }
@@ -361,6 +367,12 @@ open class NANJWalletManager {
                             listener.onFailure("error")
                         }
                 )
+    }
+
+    private fun convertKeystoreToPrivateKey(jsonKeystore : String) : String {
+        val objectMapper = ObjectMapper()
+        val walletFile = objectMapper.readValue(jsonKeystore, WalletFile::class.java)
+        return Wallet.decrypt(NANJPassword, walletFile).privateKey.toString(16)
     }
 
 }

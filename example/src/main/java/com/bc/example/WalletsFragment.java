@@ -2,8 +2,6 @@ package com.bc.example;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -71,11 +69,17 @@ public class WalletsFragment extends Fragment {
             nanjWalletManager.removeWallet(wallet);
             walletAdapter.setData(nanjWalletManager.getWalletList());
         });
-        walletAdapter.setOnBackupWalletListener(wallet ->
-                backupWallet(wallet.getPrivateKey())
-        );
+        walletAdapter.setOnBackupWalletListener((wallet, isPrivateKey) -> {
+            String p = wallet.getPrivateKey();
+            if (!isPrivateKey) {
+                p = NANJWalletManager.instance.convertPrivateKeyToKeystore(p);
+            }
+            backupWallet(p);
+        });
         walletList.setAdapter(walletAdapter);
     }
+
+
 
     private void backupWallet(String privateKey) {
         Intent sendIntent = new Intent();

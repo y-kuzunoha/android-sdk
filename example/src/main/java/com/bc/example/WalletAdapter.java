@@ -1,5 +1,7 @@
 package com.bc.example;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
@@ -42,7 +44,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		void onItemClick(int position, NANJWallet wallet);
 	}
 	public interface OnBackupWalletListener {
-		void onBackupWalletClick(NANJWallet wallet);
+		void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey);
 	}
 
 	public interface OnRemoveWalletListener {
@@ -118,13 +120,24 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 				switch (item.getItemId()) {
 					case R.id.backupWallet:
 						if(onBackupWalletListener != null) {
-							onBackupWalletListener.onBackupWalletClick(wallet);
+							onBackupWalletListener.onBackupWalletClick(wallet, true);
 						}
 						break;
 					case R.id.removeWallet:
 						if(onRemoveWalletListener != null) {
 							onRemoveWalletListener.onRemoveWalletClick(wallet);
 						}
+						break;
+					case R.id.backupKeystore:
+						if(onRemoveWalletListener != null) {
+							onBackupWalletListener.onBackupWalletClick(wallet, false);
+						}
+						break;
+
+					case R.id.copyAddress:
+						ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+						ClipData clip = ClipData.newPlainText("address", wallet.getNanjAddress());
+						clipboard.setPrimaryClip(clip);
 						break;
 				}
 				return true;

@@ -38,7 +38,7 @@ open class NANJWalletManager {
         }
 
         fun setDevelopmentMode(isDevelopment: Boolean): Builder {
-            NANJConfig.URL_SERVER = if (isDevelopment) NANJConfig.NANJCOIN_TESTNET else NANJConfig.NANJCOIN_MAINNET
+            NANJConfig.setDevelopMode(isDevelopment)
             return this
         }
 
@@ -321,6 +321,9 @@ open class NANJWalletManager {
         )
     }
 
+    fun convertPrivateKeyToKeystore(privateKey: String): String {
+        return convertPrivateKeyToKeystore(privateKey, NANJPassword)
+    }
     fun convertPrivateKeyToKeystore(privateKey: String, password: String): String {
         val credentials = Credentials.create(privateKey)
         val ecKeyPair = credentials.ecKeyPair

@@ -39,8 +39,7 @@ public class SplashActivity extends AppCompatActivity {
         loading = new Loading(this);
         sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 
-        findViewById(R.id.btnLogin)
-                .setOnClickListener(v -> getNANJConfig());
+        findViewById(R.id.btnLogin).setOnClickListener(v -> getNANJConfig());
 
     }
 
@@ -78,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
     private void getNANJConfig() {
         loading.show();
         NetworkUtil.getRetrofit().create(Api.class)
-                .getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)
+                .getNANJCoinConfig(NANJConfig.getNANJ_SERVER_CONFIG())
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
                 .subscribe(new Observer<NANJConfigModel>() {
@@ -92,7 +91,7 @@ public class SplashActivity extends AppCompatActivity {
                         if (responseBody.getStatus() == 200) {
                             String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
                             NANJWalletManager.instance.setNANJConfig(responseBody, 0, psw);
-                            loading.dismiss();
+                            runOnUiThread(() -> loading.dismiss());
                             login(psw);
                         } else {
                             runOnUiThread(() ->{

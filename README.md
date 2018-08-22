@@ -241,5 +241,7 @@ At the moment of writing this document, NANJCOIN SDK only support NANJCOIN (ERC2
 
 ## Author
 NANJCOIN, support@nanjcoin.com
+
 ## License
-NANJ SDK is available under the MIT license. See the LICENSE file for more info.
+please read our license at this link. [LICENSE](https://nanjcoin.com/sdk)
+you can change Language JP/EN

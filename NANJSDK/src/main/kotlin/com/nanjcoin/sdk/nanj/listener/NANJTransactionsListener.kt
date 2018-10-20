@@ -6,7 +6,7 @@ import com.nanjcoin.sdk.model.DataTransaction
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/16/18
  * ____________________________________
  */

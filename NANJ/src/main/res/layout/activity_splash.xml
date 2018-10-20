@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:gravity="center"
-        android:text="MINAWORKS"
+        android:text="NANJ Demo"
         android:textColor="@android:color/black"
         android:textSize="40sp"
         app:layout_constraintBottom_toTopOf="@id/inputPassword" />
@@ -27,7 +27,7 @@
         android:id="@+id/inputPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Input password"
+        android:hint="Input master password"
         android:inputType="textPassword"
         android:lines="1"
         android:padding="8dp"

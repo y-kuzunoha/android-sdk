@@ -28,7 +28,7 @@ import java.util.TimerTask;
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/19/18
  * ____________________________________
  */

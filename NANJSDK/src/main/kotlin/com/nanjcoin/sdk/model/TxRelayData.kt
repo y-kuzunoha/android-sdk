@@ -3,7 +3,7 @@ package com.nanjcoin.sdk.model
 import com.google.gson.Gson
 import java.math.BigInteger
 
-data class TxRelayData (
+internal data class TxRelayData (
         val r : String,
         val s : String,
         val v : Int,

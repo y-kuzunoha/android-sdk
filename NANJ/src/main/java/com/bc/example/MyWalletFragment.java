@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 /**
  * ____________________________________
  * <p>
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/24/18
  * ____________________________________
  */

@@ -2,7 +2,7 @@ package com.nanjcoin.sdk.model
 
 import com.google.gson.annotations.SerializedName
 
-data class NANJConfigModel
+internal data class NANJConfigModel
 (
         @SerializedName("statusCode")
         val status: Int = 0,
@@ -12,7 +12,7 @@ data class NANJConfigModel
         val data: NANJDataConfig? = null
 )
 
-data class NANJDataConfig(
+internal data class NANJDataConfig(
         @SerializedName("client_id")
         val clientId: String  = "",
         @SerializedName("name")
@@ -41,5 +41,10 @@ data class Erc20(
         @SerializedName("name")
         val name: String = "",
         @SerializedName("address")
-        val address: String = ""
+        val address: String = "",
+        @SerializedName("minimumTransferAmount")
+        val minimumAmount: Int = 5000,
+
+        @SerializedName("maxFee")
+        val maxFee: Int = 5000
 )

@@ -20,7 +20,7 @@ import com.nanjcoin.sdk.nanj.listener.SendNANJCoinListener;
 /**
  * ____________________________________
  * <p>
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 5/4/18
  * ____________________________________
  */

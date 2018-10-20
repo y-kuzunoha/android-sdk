@@ -23,7 +23,7 @@ import org.web3j.crypto.WalletUtils
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 3/24/18
  * ____________________________________
  */
@@ -49,7 +49,10 @@ class NANJQrCodeActivity : Activity() {
 	}
 
 	override fun onDestroy() {
-		mCameraSource.release()
+		if (::mCameraSource.isInitialized) {
+			mCameraSource.release()
+		}
+
 		mBarcodeDetector.release()
 		super.onDestroy()
 	}
@@ -58,7 +61,10 @@ class NANJQrCodeActivity : Activity() {
 		surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
 			override fun surfaceChanged(p0 : SurfaceHolder?, p1 : Int, p2 : Int, p3 : Int) {}
 			override fun surfaceDestroyed(p0 : SurfaceHolder?) {
-				mCameraSource.stop()
+				if (::mCameraSource.isInitialized) {
+					mCameraSource.stop()
+				}
+
 			}
 			override fun surfaceCreated(p0 : SurfaceHolder?) {
 				checkCameraPermission()
@@ -77,6 +83,8 @@ class NANJQrCodeActivity : Activity() {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 			startCamera()
+		}else{
+			finish()
 		}
 	}
 

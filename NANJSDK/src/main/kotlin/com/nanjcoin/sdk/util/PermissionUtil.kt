@@ -10,13 +10,13 @@ import android.support.v4.app.ActivityCompat
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/15/18
  * ____________________________________
  */
 
 
-object PermissionUtil {
+internal object PermissionUtil {
 	private fun hasThisPermission(context : Context, permission : String) : Boolean {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED

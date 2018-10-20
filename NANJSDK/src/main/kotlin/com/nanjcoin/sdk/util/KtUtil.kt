@@ -22,7 +22,7 @@ import java.util.concurrent.Executors
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 3/24/18
  * ____________________________________
  */
@@ -43,7 +43,7 @@ fun poolThread(function: () -> Unit) {
     POOL_EXECUTOR.execute(function)
 }
 
-class AnkoAsyncContext<T>(val weakRef: WeakReference<T>)
+internal class AnkoAsyncContext<T>(val weakRef: WeakReference<T>)
 
 fun uiThread(f: () -> Unit): Boolean {
     if (mainThread == Thread.currentThread()) {

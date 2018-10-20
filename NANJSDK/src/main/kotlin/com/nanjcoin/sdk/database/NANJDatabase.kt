@@ -13,7 +13,7 @@ import com.nanjcoin.sdk.nanj.NANJWallet
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/20/18
  * ____________________________________
  */

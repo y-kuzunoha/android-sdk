@@ -12,12 +12,17 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.util.concurrent.TimeUnit
 
-object NetworkUtil {
+internal object NetworkUtil {
 
     @JvmStatic
     private val okHttp: OkHttpClient by lazy {
-        OkHttpClient.Builder().apply {
+        OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30,TimeUnit.SECONDS)
+                .apply {
             addNetworkInterceptor(
                     HttpLoggingInterceptor().apply {
                         level = HttpLoggingInterceptor.Level.BODY
@@ -46,7 +51,7 @@ object NetworkUtil {
     }
 }
 
-interface Api {
+internal interface Api {
     @POST
     fun postCreateNANJWallet(@Url url: String, @Body txRelay: RequestBody): io.reactivex.Observable<NANJTxRelayResponse>
 
@@ -61,5 +66,9 @@ interface Api {
 
     @GET
     fun getNANJNonce(@Url url: String) : io.reactivex.Observable<NANJNonce>
+
+    @GET
+    fun getNANJGetRate(@Url url: String) : io.reactivex.Observable<RateResponse>
+
 }
 

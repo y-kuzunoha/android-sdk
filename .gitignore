@@ -5,3 +5,5 @@ NANJ/build
 .gradle
 *.iml
 local.properties
+example/build
+bccore/build

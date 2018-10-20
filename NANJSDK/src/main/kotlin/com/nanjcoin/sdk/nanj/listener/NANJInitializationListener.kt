@@ -1,6 +1,6 @@
 package com.nanjcoin.sdk.nanj.listener
 
-interface SendNANJCoinListener {
+interface NANJInitializationListener {
     fun onError()
     fun onSuccess()
 }

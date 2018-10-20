@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class TransactionResponse : Parcelable {
+internal class TransactionResponse : Parcelable {
     @SerializedName("status")
     var status: String? = ""
     @SerializedName("message")

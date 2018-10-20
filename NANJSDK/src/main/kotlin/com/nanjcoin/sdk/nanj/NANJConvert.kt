@@ -7,12 +7,12 @@ import java.math.BigDecimal
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 5/4/18
  * ____________________________________
  */
 
-object NANJConvert {
+internal object NANJConvert {
 
 	@JvmStatic fun fromWei(number : String, unit : Unit) : BigDecimal {
 		return fromWei(BigDecimal(number), unit)
@@ -30,7 +30,7 @@ object NANJConvert {
 		return number.multiply(unit.weiFactor)
 	}
 
-	enum class Unit private constructor(name : String, factor : Int) {
+	 enum class Unit private constructor(name : String, factor : Int) {
 		WEI("wei", 0),
 		KWEI("kwei", 3),
 		MWEI("mwei", 6),

@@ -16,7 +16,7 @@ import org.web3j.crypto.WalletUtils
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 3/26/18
  * ____________________________________
  */

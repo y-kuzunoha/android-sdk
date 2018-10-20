@@ -1,1 +1,1 @@
-include ':NANJ', ':NANJSDK'
+include ':NANJ', ':NANJSDK', ':NANJSDK-release'

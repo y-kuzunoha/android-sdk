@@ -3,6 +3,7 @@ package com.nanjcoin.sdk.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.nanjcoin.sdk.nanj.NANJConfig
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -29,6 +30,13 @@ data class NANJTransaction(
         var txFee: String? = "",
         @SerializedName("time_stamp")
         var timeStamp: Long = 0
-) : Parcelable
+
+
+
+) : Parcelable{
+        public fun getURLOnEtherscan() : String {
+                return NANJConfig.URL_ETHERSCAN + txHash
+        }
+}
 
 

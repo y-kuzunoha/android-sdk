@@ -27,12 +27,10 @@ import org.web3j.utils.Numeric
 import java.math.BigDecimal
 import java.math.BigInteger
 
-//web3j solidity generate MetaNANJCOINManager.bin MetaNANJCOINManager.abi -o . -p org.your.package
-
 /**
  * ____________________________________
  *
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/15/18
  * ____________________________________
  */
@@ -48,7 +46,7 @@ class NANJWallet {
     }
 
     var nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
-    var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
+    private var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
     var nanjAddress: String? = ""
     var address: String = ""
     var name: String = "No name"
@@ -199,7 +197,7 @@ class NANJWallet {
                     Bytes32(Numeric.hexStringToByteArray(appHash))
             )
             val forwardToFunction = Function("forwardTo", params, arrayListOf())
-            NetworkUtil.retrofit.create(Api::class.java).getNANJNonce("${NANJConfig.NANJCOIN_URL}/api/relayNonce?sender=$address")
+            NetworkUtil.retrofit.create(Api::class.java).getNANJNonce("${NANJConfig.NANJCOIN_URL}/api/relayNonce?sender=$address&ts=${System.currentTimeMillis()}")
                     .subscribe(
                             {
                                 if(it.statusCode == 200) {
@@ -246,7 +244,7 @@ class NANJWallet {
         val requestBody = RequestBody.create(MediaType.parse("application/json"), restData.toString())
 
         NetworkUtil.retrofit.create(Api::class.java).postCreateNANJWallet(
-                NANJConfig.NANJ_SERVER_ADDRESS,
+                NANJConfig.NANJ_SERVER_ADDRESS + "?ts=${System.currentTimeMillis()}",
                 requestBody
         )
                 .subscribe(

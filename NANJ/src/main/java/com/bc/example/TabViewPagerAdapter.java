@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 /**
  * ____________________________________
  * <p>
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/23/18
  * ____________________________________
  */

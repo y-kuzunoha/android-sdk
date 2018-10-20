@@ -10,20 +10,13 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.nanjcoin.sdk.model.NANJConfigModel;
-import com.nanjcoin.sdk.nanj.NANJConfig;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
-import com.nanjcoin.sdk.util.Api;
-import com.nanjcoin.sdk.util.NetworkUtil;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import com.nanjcoin.sdk.nanj.listener.NANJInitializationListener;
 
 /**
  * ____________________________________
  * <p>
- * Generator: Hieu.TV - tvhieuit@gmail.com
+ * Generator: NANJ Team - support@nanjcoin.com
  * CreatedAt: 4/19/18
  * ____________________________________
  */
@@ -76,52 +69,23 @@ public class SplashActivity extends AppCompatActivity {
 
     private void getNANJConfig() {
         loading.show();
-        NetworkUtil.getRetrofit().create(Api.class)
-                .getNANJCoinConfig(NANJConfig.getNANJ_SERVER_CONFIG())
-                .subscribeOn(Schedulers.single())
-                .observeOn(Schedulers.single())
-                .subscribe(new Observer<NANJConfigModel>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(NANJConfigModel responseBody) {
-                        if (responseBody.getStatus() == 200) {
-                            String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
-                            NANJWalletManager.instance.setNANJConfig(responseBody, 0, psw);
-                            runOnUiThread(() -> loading.dismiss());
-                            login(psw);
-                        } else {
-                            runOnUiThread(() ->{
-                                Toast.makeText(SplashActivity.this, "Load config fail", Toast.LENGTH_LONG).show();
-                                loading.dismiss();
-                            });
+        String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
+        NANJWalletManager.instance.setMasterPassword(psw);
+        NANJWalletManager.instance.initialize(new NANJInitializationListener() {
+            @Override
+            public void onError() {
+                runOnUiThread(() -> {
+                            Toast.makeText(SplashActivity.this, "Load config fail or Wrong password input", Toast.LENGTH_LONG).show();
+                            loading.dismiss();
                         }
-                    }
+                );
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        runOnUiThread(() -> {
-                                    Toast.makeText(SplashActivity.this, "Load config fail", Toast.LENGTH_LONG).show();
-                                    loading.dismiss();
-                                }
-                        );
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+            @Override
+            public void onSuccess() {
+                runOnUiThread(() -> loading.dismiss());
+                login(psw);
+            }
+        });
     }
-
-//    void builder() {
-//        new NANJWalletManager.Builder()
-//                .setContext(this)
-//                .setNANJAppId("575958089608922877")
-//                .setNANJSecret("fF5MSugBFsUEoTiFIiRdUa1rFc5Y8119JVzyWUzJ")
-//                .build();
-//    }
 }

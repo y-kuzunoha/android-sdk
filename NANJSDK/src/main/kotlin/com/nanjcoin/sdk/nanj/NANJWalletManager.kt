@@ -377,14 +377,6 @@ open class NANJWalletManager {
         return objectMapper.writeValueAsString(aWallet)
     }
 
-    fun exportPrivateKey(): String? = wallet?.privateKey
-    fun exportKeystore(password: String): String? {
-        return if (wallet?.privateKey.isNullOrBlank()) {
-            null
-        } else {
-            convertPrivateKeyToKeystore(wallet!!.privateKey!!, password)
-        }
-    }
 
 
     fun enableWallet(wallet: NANJWallet) {

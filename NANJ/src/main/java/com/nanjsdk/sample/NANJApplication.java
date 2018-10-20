@@ -1,9 +1,7 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.app.Application;
 
-//import com.facebook.stetho.Stetho;
-import com.nanjcoin.sdk.model.NANJConfigModel;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 /**
@@ -18,7 +16,6 @@ public class NANJApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //Stetho.initializeWithDefaults(this);
         new NANJWalletManager.Builder()
                 .setContext(getApplicationContext())
                 .setDevelopmentMode(true)

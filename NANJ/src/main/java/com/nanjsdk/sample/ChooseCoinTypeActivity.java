@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

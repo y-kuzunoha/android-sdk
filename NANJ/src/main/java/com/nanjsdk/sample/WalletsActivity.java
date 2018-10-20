@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -77,9 +77,6 @@ public class WalletsActivity extends AppCompatActivity {
 					runOnUiThread(() -> {
 						_progressDialog.dismiss();
 						backupWallet(backup);
-//					_sharedPreferences.edit()
-//						.putString(Const.STORAGE_CURRENT_WALLET, new Gson().toJson(wallet))
-//						.apply();
 						_walletsFragment.setData(nanjWalletManager.getWalletList());
 					});
 				}

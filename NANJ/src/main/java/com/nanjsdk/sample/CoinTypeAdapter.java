@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

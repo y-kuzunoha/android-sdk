@@ -46,7 +46,7 @@ class NANJWallet {
     }
 
     var nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
-    private var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
+    internal var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
     var nanjAddress: String? = ""
     var address: String = ""
     var name: String = "No name"

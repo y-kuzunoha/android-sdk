@@ -73,7 +73,7 @@ open class NANJWalletManager {
         }
     }
 
-    var config: NANJConfigModel? = null
+    private var config: NANJConfigModel? = null
 
     private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
     private var _nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
@@ -122,7 +122,7 @@ open class NANJWalletManager {
                 })
     }
 
-    fun setNANJConfig(config: NANJConfigModel, erc20: Int) {
+    internal fun setNANJConfig(config: NANJConfigModel, erc20: Int) {
         this.config = config
         setSmartContract()
         setTxReplay()

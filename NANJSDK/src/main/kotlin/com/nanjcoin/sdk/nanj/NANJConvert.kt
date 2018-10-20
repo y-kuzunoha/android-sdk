@@ -12,7 +12,7 @@ import java.math.BigDecimal
  * ____________________________________
  */
 
-internal object NANJConvert {
+object NANJConvert {
 
 	@JvmStatic fun fromWei(number : String, unit : Unit) : BigDecimal {
 		return fromWei(BigDecimal(number), unit)

@@ -12,12 +12,11 @@ import com.nanjcoin.sdk.nanj.NANJWallet;
  CreatedAt: 4/28/18
  ____________________________________
  */
-public class WalletHandle {
+public class WalletHandler {
+	private WalletAddressListener walletAddressListener;
 	interface WalletAddressListener {
 		void onWalletAddress(String address);
 	}
-
-	private WalletAddressListener walletAddressListener;
 
 	public void setWalletAddressListener(WalletAddressListener walletAddressListener) {
 		this.walletAddressListener = walletAddressListener;

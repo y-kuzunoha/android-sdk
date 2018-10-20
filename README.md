@@ -138,17 +138,17 @@ Capture Wallet Address by QR and NFC
  
  Once, wallet address is captured 
  
- - Create handle `WalletHandle walletHandle = new WalletHandle();`
+ - Create `WalletHandler walletHandler = new WalletHandler();`
  
  - In `onActivityResult` method
  ```
- walletHandle.onActivityResult(requestCode, resultCode, data);
+ walletHandler.onActivityResult(requestCode, resultCode, data);
  ```
  
  - The captured wallet address will be returned via
  
  ```
- walletHandle.setWalletAddressListener(new WalletHandle.WalletAddressListener() {
+ walletHandler.setWalletAddressListener(new WalletHandler.WalletAddressListener() {
             @Override
             public void onWalletAddress(String address) {
             }

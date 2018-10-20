@@ -1,7 +1,6 @@
 package com.bc.example;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
@@ -45,7 +42,7 @@ public class MyWalletFragment extends Fragment {
     private AppCompatTextView nanjRate;
 
     private NANJWalletManager _nanjWalletManager;
-    private WalletHandle walletHandle = new WalletHandle();
+    private WalletHandler walletHandler = new WalletHandler();
     private String prevAddress;
     private String coinName = "";
 
@@ -82,7 +79,7 @@ public class MyWalletFragment extends Fragment {
             _nanjWalletManager.getWallet().getNANJWalletAsync(new GetNANJWalletListener() {
                 @Override
                 public void onError() {
-
+                    // Handle event here
                 }
 
                 @Override
@@ -143,7 +140,7 @@ public class MyWalletFragment extends Fragment {
 
                     @Override
                     public void onFailure(String e) {
-
+                        // Handle on get rate failed
                     }
                 });
             }
@@ -154,6 +151,6 @@ public class MyWalletFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        walletHandle.onActivityResult(requestCode, resultCode, data);
+        walletHandler.onActivityResult(requestCode, resultCode, data);
     }
 }

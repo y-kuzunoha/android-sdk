@@ -98,6 +98,4 @@ public class WalletsFragment extends Fragment {
         walletAdapter.setData(wallets);
     }
 
-    public void setPassword(String _password) {
-    }
 }

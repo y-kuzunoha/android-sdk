@@ -36,6 +36,11 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 
 	private NANJWalletManager nanjWalletManager;
 
+	private List<NANJWallet> nanjWalletList = new ArrayList<>();
+	private OnItemClickListener onClickListener;
+	private OnBackupWalletListener onBackupWalletListener;
+	private OnRemoveWalletListener onRemoveWalletListener;
+
 	WalletAdapter(Context context) {
 		nanjWalletManager = NANJWalletManager.instance;
 	}
@@ -50,11 +55,6 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 	public interface OnRemoveWalletListener {
 		void onRemoveWalletClick(NANJWallet wallet);
 	}
-
-	private List<NANJWallet> nanjWalletList = new ArrayList<>();
-	private OnItemClickListener onClickListener;
-	private OnBackupWalletListener onBackupWalletListener;
-	private OnRemoveWalletListener onRemoveWalletListener;
 
 	public void setData(List<NANJWallet> data) {
 		this.nanjWalletList = data;
@@ -138,6 +138,8 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 						ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
 						ClipData clip = ClipData.newPlainText("address", wallet.getNanjAddress());
 						clipboard.setPrimaryClip(clip);
+						break;
+					default:
 						break;
 				}
 				return true;

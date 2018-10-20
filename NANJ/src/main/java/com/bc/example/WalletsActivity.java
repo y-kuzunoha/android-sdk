@@ -39,7 +39,6 @@ public class WalletsActivity extends AppCompatActivity {
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
 		nanjWalletManager = NANJWalletManager.instance;
 		_walletsFragment = (WalletsFragment) getSupportFragmentManager().findFragmentById(R.id.walletsFragment);
-		_walletsFragment.setPassword(_password);
 		_walletsFragment.setNanjWalletManager(nanjWalletManager);
 		setupActionBar();
 		findViewById(R.id.btnCreateWallet).setOnClickListener(view -> createWallet());
@@ -62,6 +61,8 @@ public class WalletsActivity extends AppCompatActivity {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
+				break;
+			default:
 				break;
 		}
 		return super.onOptionsItemSelected(item);

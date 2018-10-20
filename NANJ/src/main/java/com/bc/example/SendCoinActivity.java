@@ -27,7 +27,7 @@ import com.nanjcoin.sdk.nanj.listener.SendNANJCoinListener;
 public class SendCoinActivity extends AppCompatActivity {
 
     private NANJWalletManager _nanjWalletManager;
-    private WalletHandle walletHandle = new WalletHandle();
+    private WalletHandler walletHandler = new WalletHandler();
     private Loading loading;
 
     @SuppressLint("SetTextI18n")
@@ -48,7 +48,7 @@ public class SendCoinActivity extends AppCompatActivity {
         AppCompatEditText edAddress = findViewById(R.id.address);
         AppCompatEditText edAmount = findViewById(R.id.amount);
         EditText edMsg = findViewById(R.id.edMsg);
-        walletHandle.setWalletAddressListener(edAddress::setText);
+        walletHandler.setWalletAddressListener(edAddress::setText);
         findViewById(R.id.send).setOnClickListener((View v2) -> {
             String address = edAddress.getText().toString();
             status.setText("Nanj coin sending to address: " + address);
@@ -102,6 +102,8 @@ public class SendCoinActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -109,6 +111,6 @@ public class SendCoinActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        walletHandle.onActivityResult(requestCode, resultCode, data);
+        walletHandler.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -95,7 +95,7 @@ open class NANJWalletManager {
                 .observeOn(Schedulers.single())
                 .subscribe(object : Observer<NANJConfigModel> {
                     override fun onSubscribe(d: Disposable) {
-
+                        // Handle on subscribe
                     }
 
                     override fun onNext(responseBody: NANJConfigModel) {
@@ -109,8 +109,6 @@ open class NANJWalletManager {
                                 exception.printStackTrace()
                                 listener.onError()
                             }
-                        } else {
-
                         }
                     }
 
@@ -379,7 +377,7 @@ open class NANJWalletManager {
         return objectMapper.writeValueAsString(aWallet)
     }
 
-    fun exportPrivateKey(): String? = wallet?.privateKey ?: null
+    fun exportPrivateKey(): String? = wallet?.privateKey
     fun exportKeystore(password: String): String? {
         return if (wallet?.privateKey.isNullOrBlank()) {
             null

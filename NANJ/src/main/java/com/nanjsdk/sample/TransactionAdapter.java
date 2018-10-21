@@ -53,7 +53,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         notifyDataSetChanged();
     }
 
-    public void clearData() {
+    void clearData() {
         this.transactions.clear();
         notifyDataSetChanged();
     }

@@ -40,7 +40,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 	private OnBackupWalletListener onBackupWalletListener;
 	private OnRemoveWalletListener onRemoveWalletListener;
 
-	WalletAdapter(Context context) {
+	WalletAdapter() {
 		nanjWalletManager = NANJWalletManager.instance;
 	}
 
@@ -60,15 +60,15 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		notifyDataSetChanged();
 	}
 
-	public void setOnItemClickListener(OnItemClickListener onClickListener) {
+	void setOnItemClickListener(OnItemClickListener onClickListener) {
 		this.onClickListener = onClickListener;
 	}
 
-	public void setOnBackupWalletListener(OnBackupWalletListener onBackupWalletListener) {
+	void setOnBackupWalletListener(OnBackupWalletListener onBackupWalletListener) {
 		this.onBackupWalletListener = onBackupWalletListener;
 	}
 
-	public void setOnRemoveWalletListener(OnRemoveWalletListener onRemoveWalletListener) {
+	void setOnRemoveWalletListener(OnRemoveWalletListener onRemoveWalletListener) {
 		this.onRemoveWalletListener = onRemoveWalletListener;
 	}
 
@@ -96,7 +96,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 						}
 
 						@Override
-						public void onSuccess(String address) {
+						public void onSuccess(@NonNull String address) {
 							if(!Objects.equals(Const.UNKNOWN_NANJ_WALLET, address)) {
 								timer.cancel();
 								wallet.setNanjAddress(address);
@@ -136,6 +136,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 					case R.id.copyAddress:
 						ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
 						ClipData clip = ClipData.newPlainText("address", wallet.getNanjAddress());
+						assert clipboard != null;
 						clipboard.setPrimaryClip(clip);
 						break;
 					default:

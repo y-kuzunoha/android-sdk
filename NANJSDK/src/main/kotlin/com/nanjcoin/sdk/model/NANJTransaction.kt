@@ -34,7 +34,7 @@ data class NANJTransaction(
 
 
 ) : Parcelable{
-        public fun getURLOnEtherscan() : String {
+        fun getURLOnEtherscan() : String {
                 return NANJConfig.URL_ETHERSCAN + txHash
         }
 }

@@ -1,5 +1,6 @@
 package com.nanjcoin.sdk.nanj
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.nanjcoin.sdk.nanj.listener.*
 import com.nanjcoin.sdk.util.*
@@ -30,6 +31,20 @@ import java.lang.Exception
 
 open class NANJWalletManager {
 
+    private var config: NANJConfigModel? = null
+
+    private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
+    private var _nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
+    private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
+    var wallet: NANJWallet? = null
+        get() {
+            if (field != null) {
+                field!!.config = config
+            }
+            return field
+        }
+    private var metaNANJCOINManager: MetaNANJCOINManager? = null
+    private var activeErc20Token: Erc20? = null
     var masterPassword = ""
 
     companion object {
@@ -66,29 +81,15 @@ open class NANJWalletManager {
         }
     }
 
-    fun loadNANJWallets() {
+    private fun loadNANJWallets() {
         wallets = _nanjDatabase?.loadWallets() ?: mutableMapOf()
         if (wallets.isNotEmpty()) {
             enableWallet(0)
         }
     }
 
-    private var config: NANJConfigModel? = null
-
-    private var wallets: MutableMap<String, NANJWallet> = mutableMapOf()
-    private var _nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
-    private val _web3j = Web3jFactory.build(HttpService(NANJConfig.URL_SERVER))
-    var wallet: NANJWallet? = null
-        get() {
-            if (field != null) {
-                field!!.config = config
-            }
-            return field
-        }
-    private var metaNANJCOINManager: MetaNANJCOINManager? = null
-
     fun initialize(listener: NANJInitializationListener){
-        var manager = this
+        val manager = this
         NetworkUtil.retrofit.create(Api::class.java)
                 .getNANJCoinConfig(NANJConfig.NANJ_SERVER_CONFIG)
                 .subscribeOn(Schedulers.single())
@@ -132,7 +133,7 @@ open class NANJWalletManager {
     fun setErc20(position: Int) {
         if (config?.data?.erc20s?.size ?: 0 > 0) {
             NANJConfig.SMART_CONTRACT_ADDRESS = config?.data?.erc20s?.get(position)?.address ?: ""
-            NANJConfig.NANJWALLET_NAME = config?.data?.erc20s?.get(position)?.name ?: ""
+            this.activeErc20Token = config?.data?.erc20s?.get(position)
             NANJConfig.MINIMUM_TRANSFER_AMOUNT = config?.data?.erc20s?.get(position)?.minimumAmount ?: 5000
             NANJConfig.MAX_FEE = config?.data?.erc20s?.get(position)?.maxFee ?: 5000
 
@@ -145,6 +146,10 @@ open class NANJWalletManager {
             return config?.data?.erc20s!!
         }
         return emptyList()
+    }
+
+    fun getCurrentErc20(): Erc20? {
+        return this.activeErc20Token
     }
 
     fun setMetaNANJCOINManager() {
@@ -401,6 +406,7 @@ open class NANJWalletManager {
         }
     }
 
+    @SuppressLint("CheckResult")
     fun getNANJRate(listener: NANJRateListener) {
         NetworkUtil.retrofit.create(Api::class.java)
                 .getNANJRate(NANJConfig.URL_YEN_RATE)
@@ -417,7 +423,8 @@ open class NANJWalletManager {
                 )
     }
 
-    fun getNANJGetRate(coinName : String, currencySymbol : String,listener: NANJRateListener) {
+    @SuppressLint("CheckResult")
+    fun getNANJGetRate(coinName : String, currencySymbol : String, listener: NANJRateListener) {
         val url = String.format(
                 NANJConfig.URL_GET_RATE,
                 coinName,

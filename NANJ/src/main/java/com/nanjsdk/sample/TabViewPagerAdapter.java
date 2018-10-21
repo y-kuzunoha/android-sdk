@@ -20,7 +20,7 @@ public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    public void onResume(int position) {
+    void onResume(int position) {
         fragments[position].onResume();
     }
 

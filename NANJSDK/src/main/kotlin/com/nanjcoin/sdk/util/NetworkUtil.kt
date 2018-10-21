@@ -41,7 +41,7 @@ internal object NetworkUtil {
 
 
     @JvmStatic
-    open val retrofit: Retrofit by lazy {
+    val retrofit: Retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(NANJConfig.NANJCOIN_URL + "/")
                 .client(okHttp)

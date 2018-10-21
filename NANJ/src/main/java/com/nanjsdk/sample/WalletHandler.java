@@ -18,11 +18,11 @@ public class WalletHandler {
 		void onWalletAddress(String address);
 	}
 
-	public void setWalletAddressListener(WalletAddressListener walletAddressListener) {
+	void setWalletAddressListener(WalletAddressListener walletAddressListener) {
 		this.walletAddressListener = walletAddressListener;
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.e("TAGS", "onActivityResult: " +requestCode+ " - " + resultCode);
 		if(walletAddressListener != null
 			&& (requestCode == NANJWallet.NFC_REQUEST_CODE || requestCode == NANJWallet.QRCODE_REQUEST_CODE)

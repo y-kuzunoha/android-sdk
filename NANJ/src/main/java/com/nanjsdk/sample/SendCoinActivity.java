@@ -28,7 +28,7 @@ public class SendCoinActivity extends AppCompatActivity {
 
     private NANJWalletManager _nanjWalletManager;
     private WalletHandler walletHandler = new WalletHandler();
-    private Loading loading;
+    private LoadingDialog loadingDialog;
 
     @SuppressLint("SetTextI18n")
     @SuppressWarnings("ConstantConditions")
@@ -37,7 +37,7 @@ public class SendCoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_nanj_coin);
         setupActionBar();
-        loading = new Loading(this);
+        loadingDialog = new LoadingDialog(this);
         _nanjWalletManager = NANJWalletManager.instance;
         AppCompatTextView status = findViewById(R.id.status);
         findViewById(R.id.qr).setOnClickListener(v -> {
@@ -52,7 +52,7 @@ public class SendCoinActivity extends AppCompatActivity {
         findViewById(R.id.send).setOnClickListener((View v2) -> {
             String address = edAddress.getText().toString();
             status.setText("Nanj coin sending to address: " + address);
-            loading.show();
+            loadingDialog.show();
             _nanjWalletManager.getWallet().sendNANJCoin(
                     address,
                     edAmount.getText().toString(),
@@ -61,7 +61,7 @@ public class SendCoinActivity extends AppCompatActivity {
                         @Override
                         public void onError() {
                             runOnUiThread(() -> {
-                                        loading.dismiss();
+                                        loadingDialog.dismiss();
                                         status.setText("Failure!");
                                     }
                             );
@@ -71,7 +71,7 @@ public class SendCoinActivity extends AppCompatActivity {
                         public void onSuccess() {
                             runOnUiThread(() -> {
                                 status.setText("Sent success!");
-                                loading.dismiss();
+                                loadingDialog.dismiss();
                             });
                         }
                     }

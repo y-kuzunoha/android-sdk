@@ -26,7 +26,7 @@ import com.nanjcoin.sdk.nanj.NANJWalletManager;
  */
 public class WalletsActivity extends AppCompatActivity {
 
-	private Loading _progressDialog;
+	private LoadingDialog _progressDialog;
 	private NANJWalletManager nanjWalletManager;
 	private WalletsFragment _walletsFragment;
 	private String _password;
@@ -35,7 +35,7 @@ public class WalletsActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
-		_progressDialog = new Loading(this);
+		_progressDialog = new LoadingDialog(this);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
 		nanjWalletManager = NANJWalletManager.instance;
 		_walletsFragment = (WalletsFragment) getSupportFragmentManager().findFragmentById(R.id.walletsFragment);

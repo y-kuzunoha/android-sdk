@@ -25,7 +25,7 @@ public class CoinTypeAdapter extends RecyclerView.Adapter<CoinTypeAdapter.CoinHo
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

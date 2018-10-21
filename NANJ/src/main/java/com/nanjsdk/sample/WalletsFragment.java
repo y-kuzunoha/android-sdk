@@ -19,6 +19,7 @@ import com.nanjcoin.sdk.nanj.NANJWallet;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ____________________________________
@@ -31,7 +32,7 @@ public class WalletsFragment extends Fragment {
 
     private NANJWalletManager nanjWalletManager;
     private WalletAdapter walletAdapter;
-    private Loading loading;
+    private LoadingDialog loadingDialog;
 
     @Nullable
     @Override
@@ -42,8 +43,8 @@ public class WalletsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loading = new Loading(view.getContext());
-        walletAdapter = new WalletAdapter(view.getContext());
+        loadingDialog = new LoadingDialog(view.getContext());
+        walletAdapter = new WalletAdapter();
         RecyclerView walletList = view.findViewById(R.id.walletList);
         walletList.addItemDecoration(
                 new DividerItemDecoration(
@@ -53,12 +54,12 @@ public class WalletsFragment extends Fragment {
         );
         walletAdapter.setOnItemClickListener((position, wallet) -> {
             if (!TextUtils.isEmpty(wallet.getNanjAddress())) {
-                loading.show();
+                loadingDialog.show();
                 new Thread(() -> {
                     Log.d("wtf", "onViewCreated: 123");
                     nanjWalletManager.enableWallet(wallet);
                     Log.d("wtf", "onViewCreated: 321");
-                    getActivity().runOnUiThread(() -> loading.dismiss());
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> loadingDialog.dismiss());
                     getActivity().finish();
                 }).start();
             } else {
@@ -69,13 +70,7 @@ public class WalletsFragment extends Fragment {
             nanjWalletManager.removeWallet(wallet);
             walletAdapter.setData(nanjWalletManager.getWalletList());
         });
-        walletAdapter.setOnBackupWalletListener((wallet, isPrivateKey) -> {
-            String p = wallet.getPrivateKey();
-            if (!isPrivateKey) {
-                p = NANJWalletManager.instance.convertPrivateKeyToKeystore(p);
-            }
-            backupWallet(p);
-        });
+        walletAdapter.setOnBackupWalletListener(this::onBackupWalletClick);
         walletList.setAdapter(walletAdapter);
     }
 
@@ -98,4 +93,11 @@ public class WalletsFragment extends Fragment {
         walletAdapter.setData(wallets);
     }
 
+    private void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey) {
+        String p = wallet.getPrivateKey();
+        if (!isPrivateKey && p != null) {
+            p = NANJWalletManager.instance.convertPrivateKeyToKeystore(p);
+        }
+        backupWallet(p);
+    }
 }

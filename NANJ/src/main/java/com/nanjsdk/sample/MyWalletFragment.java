@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nanjcoin.sdk.nanj.NANJConfig;
 import com.nanjcoin.sdk.nanj.listener.GetNANJWalletListener;
 import com.nanjcoin.sdk.nanj.NANJConvert;
 import com.nanjcoin.sdk.nanj.listener.NANJRateListener;
@@ -53,7 +52,7 @@ public class MyWalletFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         _nanjWalletManager = NANJWalletManager.instance;
-        coinName = NANJConfig.getNANJWALLET_NAME();
+        coinName = Objects.requireNonNull(NANJWalletManager.instance.getCurrentErc20()).getName();
         tvaddress = view.findViewById(R.id.address);
         amountUsd = view.findViewById(R.id.amountUsd);
         ivAddressWallet = view.findViewById(R.id.imAddressWallet);
@@ -84,9 +83,7 @@ public class MyWalletFragment extends Fragment {
 
                 @Override
                 public void onSuccess(@NonNull String address) {
-                    getActivity().runOnUiThread(() -> {
-                        initView(address);
-                    });
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> initView(address));
                 }
             });
 
@@ -96,13 +93,13 @@ public class MyWalletFragment extends Fragment {
 
     private void initView(String address) {
         if (!Objects.equals(prevAddress, address)
-                || !Objects.equals(coinName, NANJConfig.getNANJWALLET_NAME())) {
+                || !Objects.equals(coinName, Objects.requireNonNull(NANJWalletManager.instance.getCurrentErc20()).getName())) {
             prevAddress = address;
             ivAddressWallet.setImageDrawable(null);
             tvaddress.setText("");
             amountUsd.setText("");
             nanjRate.setText("");
-            coinName = NANJConfig.getNANJWALLET_NAME();
+            coinName = Objects.requireNonNull(NANJWalletManager.instance.getCurrentErc20()).getName();
         }
         tvaddress.setText(String.format("Address: %s", address));
         Executors.newCachedThreadPool().execute(() -> {
@@ -116,7 +113,7 @@ public class MyWalletFragment extends Fragment {
 
             String coin = "0";
             try {
-                coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+                coin = Objects.requireNonNull(_nanjWalletManager.getWallet()).getAmountNanj().toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -139,7 +136,7 @@ public class MyWalletFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(String e) {
+                    public void onFailure(@NonNull String e) {
                         // Handle on get rate failed
                     }
                 });

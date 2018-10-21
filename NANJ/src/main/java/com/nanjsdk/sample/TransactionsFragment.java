@@ -16,6 +16,8 @@ import com.nanjcoin.sdk.model.DataTransaction;
 import com.nanjcoin.sdk.nanj.listener.NANJTransactionsListener;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
+import java.util.Objects;
+
 /**
  * ____________________________________
  * <p>
@@ -96,7 +98,7 @@ public class TransactionsFragment extends Fragment {
                 @Override
                 public void onTransferSuccess(DataTransaction data) {
                     isLoading = false;
-                    getActivity().runOnUiThread(() -> transactionAdapter.setData(data.getTransactions()));
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> transactionAdapter.setData(data.getTransactions()));
                 }
 
                 @Override

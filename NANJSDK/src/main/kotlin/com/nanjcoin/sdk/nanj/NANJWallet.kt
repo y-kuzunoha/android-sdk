@@ -1,5 +1,6 @@
 package com.nanjcoin.sdk.nanj
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import com.nanjcoin.sdk.model.TransactionResponse
@@ -138,7 +139,7 @@ class NANJWallet {
         )
     }
 
-    fun getNANJWallet(): String {
+    private fun getNANJWallet(): String {
         if (!TextUtils.isEmpty(nanjAddress)) return nanjAddress!!
         val ad = metaNANJCOINManager!!.getWallet(address).send()
         if (NANJConfig.UNKNOWN_NANJ_WALLET != ad) {
@@ -219,6 +220,7 @@ class NANJWallet {
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun sendFunctionToServer(nonce : Int = 0, function: Function, error: () -> Unit, success: () -> Unit) {
 
         val encodeFunction = FunctionEncoder.encode(function)
@@ -272,5 +274,6 @@ class NANJWallet {
     }
 }
 
+@Suppress("NOTHING_TO_INLINE")
 inline fun String.cleanHexPrefix() = this.removePrefix("0x")
  

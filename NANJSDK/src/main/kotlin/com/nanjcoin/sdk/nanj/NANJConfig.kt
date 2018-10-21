@@ -36,8 +36,6 @@ internal object NANJConfig {
     var NANJWALLET_APP_ID = ""
     @JvmStatic
     var NANJWALLET_SECRET_KEY = ""
-    @JvmStatic
-    var NANJWALLET_NAME = ""
 
     @JvmStatic
     var MAX_FEE = 5000

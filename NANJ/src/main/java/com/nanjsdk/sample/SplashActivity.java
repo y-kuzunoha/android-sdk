@@ -23,13 +23,13 @@ import com.nanjcoin.sdk.nanj.listener.NANJInitializationListener;
 public class SplashActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
-    private Loading loading;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        loading = new Loading(this);
+        loadingDialog = new LoadingDialog(this);
         sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 
         findViewById(R.id.btnLogin).setOnClickListener(v -> getNANJConfig());
@@ -68,7 +68,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getNANJConfig() {
-        loading.show();
+        loadingDialog.show();
         String psw = ((AppCompatEditText) findViewById(R.id.inputPassword)).getText().toString();
         NANJWalletManager.instance.setMasterPassword(psw);
         NANJWalletManager.instance.initialize(new NANJInitializationListener() {
@@ -76,14 +76,14 @@ public class SplashActivity extends AppCompatActivity {
             public void onError() {
                 runOnUiThread(() -> {
                             Toast.makeText(SplashActivity.this, "Load config fail or Wrong password input", Toast.LENGTH_LONG).show();
-                            loading.dismiss();
+                            loadingDialog.dismiss();
                         }
                 );
             }
 
             @Override
             public void onSuccess() {
-                runOnUiThread(() -> loading.dismiss());
+                runOnUiThread(() -> loadingDialog.dismiss());
                 login(psw);
             }
         });

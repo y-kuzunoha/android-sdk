@@ -10,6 +10,5 @@ package com.nanjsdk.sample;
 public class Const {
 	public static final String DEFAULT = "DEFAULT-VALUE";
 	public static final String BUNDLE_KEY_PASSWORD = "PASSWORD";
-	public static final String STORAGE_CURRENT_WALLET = "STORAGE_CURRENT_WALLET";
 	public static final String UNKNOWN_NANJ_WALLET = "0x0000000000000000000000000000000000000000";
 }

@@ -134,8 +134,6 @@ open class NANJWalletManager {
         if (config?.data?.erc20s?.size ?: 0 > 0) {
             NANJConfig.SMART_CONTRACT_ADDRESS = config?.data?.erc20s?.get(position)?.address ?: ""
             this.activeErc20Token = config?.data?.erc20s?.get(position)
-            NANJConfig.MINIMUM_TRANSFER_AMOUNT = config?.data?.erc20s?.get(position)?.minimumAmount ?: 5000
-            NANJConfig.MAX_FEE = config?.data?.erc20s?.get(position)?.maxFee ?: 5000
 
             wallet?.init()
         }
@@ -148,9 +146,14 @@ open class NANJWalletManager {
         return emptyList()
     }
 
+    /**
+     * Get current ERC20 Token which one is chosen
+     * @return Erc20 Model
+     */
     fun getCurrentErc20(): Erc20? {
         return this.activeErc20Token
     }
+
 
     fun setMetaNANJCOINManager() {
         metaNANJCOINManager = MetaNANJCOINManager.load(

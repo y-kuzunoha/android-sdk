@@ -274,6 +274,10 @@ class NANJWallet {
     }
 }
 
+/**
+ * Remove 0x with ethereum address
+ * @return string without 0x
+ */
 @Suppress("NOTHING_TO_INLINE")
 inline fun String.cleanHexPrefix() = this.removePrefix("0x")
  

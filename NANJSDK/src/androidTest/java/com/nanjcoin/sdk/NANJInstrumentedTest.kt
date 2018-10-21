@@ -34,12 +34,12 @@ class NANJInstrumentedTest {
                 .build()
         val signal = CountDownLatch(1)
         nanjWalletManager?.createWallet(object : NANJCreateWalletListener {
-            override fun onCreateProcess(backup: String?) {
+            override fun onCreatedWalletSuccess(backup: String?) {
                 signal.countDown()
 
             }
 
-            override fun onCreateWalletFailure() {
+            override fun onWalletCreationError() {
                 signal.countDown()
 
             }
@@ -60,7 +60,7 @@ class NANJInstrumentedTest {
                 signal.countDown()
             }
 
-            override fun onImportWalletFailure() {
+            override fun onImportWalletError() {
                 signal.countDown()
             }
         })
@@ -81,7 +81,7 @@ class NANJInstrumentedTest {
                 signal.countDown()
             }
 
-            override fun onImportWalletFailure() {
+            override fun onImportWalletError() {
                 signal.countDown()
             }
         })
@@ -156,11 +156,11 @@ class NANJInstrumentedTest {
         nanjWalletManager?.enableWallet(wallet)
         val signal = CountDownLatch(1)
 //        nanjWalletManager?.wallet?.getTransactions(page = 0, listener = object : NANJTransactionsListener {
-//            override fun onTransferSuccess(transactions: MutableList<NANJTransaction>?) {
+//            override fun onLoadedTransactions(transactions: MutableList<NANJTransaction>?) {
 //                signal.countDown()
 //            }
 //
-//            override fun onTransferFailure() {
+//            override fun onFailure() {
 //                signal.countDown()
 //            }
 //        })

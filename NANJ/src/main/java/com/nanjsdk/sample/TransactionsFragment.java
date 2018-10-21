@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.nanjcoin.sdk.model.DataTransaction;
+import com.nanjcoin.sdk.model.TransactionPage;
 import com.nanjcoin.sdk.nanj.listener.NANJTransactionsListener;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 
@@ -96,13 +96,13 @@ public class TransactionsFragment extends Fragment {
             isLoading = true;
             _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override
-                public void onTransferSuccess(DataTransaction data) {
+                public void onLoadedTransactions(TransactionPage data) {
                     isLoading = false;
                     Objects.requireNonNull(getActivity()).runOnUiThread(() -> transactionAdapter.setData(data.getTransactions()));
                 }
 
                 @Override
-                public void onTransferFailure() {
+                public void onFailure() {
                     isLoading = false;
                 }
             });

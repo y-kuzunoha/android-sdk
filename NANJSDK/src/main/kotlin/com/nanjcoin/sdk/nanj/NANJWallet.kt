@@ -63,7 +63,10 @@ class NANJWallet {
     private var txRelay: TxRelay? = null
     private var metaNANJCOINManager: MetaNANJCOINManager? = null
 
-    fun init() {
+    /**
+     * Init smart contracts
+     */
+    internal fun init() {
         initNANJSmartContract()
         initMetaNANJCOINManager()
         initTxRelay()
@@ -102,7 +105,7 @@ class NANJWallet {
     fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
         doAsync(
                 {
-                    listener.onTransferFailure()
+                    listener.onFailure()
                 },
                 {
                     val nanjAddress = getNANJWallet()
@@ -118,11 +121,11 @@ class NANJWallet {
                             .subscribe(
                                     {
                                         val transactionList: TransactionResponse? = Gson().fromJson(it.string(), TransactionResponse::class.java)
-                                        listener.onTransferSuccess(transactionList?.data)
+                                        listener.onLoadedTransactions(transactionList?.data)
                                     },
                                     {
                                         it.printStackTrace()
-                                        listener.onTransferFailure()
+                                        listener.onFailure()
                                     }
                             )
                 }
@@ -149,7 +152,7 @@ class NANJWallet {
         return ad
     }
 
-    fun createNANJWallet(listener: CreateNANJWalletListener? = null) {
+    internal fun createNANJWallet(listener: CreateNANJWalletListener? = null) {
         doAsync(
                 {
                     it.printStackTrace()
@@ -161,7 +164,7 @@ class NANJWallet {
                     sendFunctionToServer(
                             function = createNanjWalletFunction,
                             error = { listener?.onError() },
-                            success = { listener?.onCreateProcess() }
+                            success = { listener?.onSuccess() }
                     )
                 }
         )

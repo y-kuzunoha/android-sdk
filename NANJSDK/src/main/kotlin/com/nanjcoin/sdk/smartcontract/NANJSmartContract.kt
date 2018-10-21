@@ -1,5 +1,6 @@
 package com.nanjcoin.sdk.smartcontract
 
+import android.annotation.SuppressLint
 import org.web3j.abi.EventEncoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Address
@@ -37,6 +38,8 @@ import java.util.*
  *
  * Generated with web3j version 3.3.1.
  */
+@SuppressLint
+
 class NANJSmartContract : Contract {
 
     protected constructor(contractAddress: String, web3j: Web3j, credentials: Credentials, gasPrice: BigInteger, gasLimit: BigInteger) : super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit) {}

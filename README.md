@@ -48,13 +48,13 @@ NANJWalletManager.instance.createWallet(NANJCreateWalletListener callback)
 Once error raise: 
 
 ```
-void onCreateWalletFailure()
+void onWalletCreationError()
 ```
 
 Once wallet created, `private key` will be passed to parametter, at this time, NANJ Address will be generated from remote API.
 
 ```
-void onCreateProcess(String privateKey)
+void onCreatedWalletSuccess(String privateKey)
 ```
 
 Get NANJWallet address from specific ETH Wallet Address,
@@ -78,7 +78,7 @@ NANJWalletManager.instance.importWallet(String password, String keystore, NANJIm
 
 + Error catch
 
-```onImportWalletFailure()```
+```onImportWalletError()```
 
 + On success
 
@@ -109,7 +109,7 @@ To receive an event after invoking `sendNANJCoin`. Below is an example of regist
 ```
 new SendNANJCoinListener() {
     @Override
-    public void onError() {
+    public void onWalletCreationError() {
         runOnUiThread(() -> {
                     loading.dismiss();
                     status.setText("Failure!");
@@ -191,8 +191,8 @@ To capture the data returned, implement a NANJTransactionsListener:
 
 ```
 interface NANJTransactionsListener {
-	fun onTransferSuccess(transactions: DataTransaction?)
-	fun onTransferFailure()
+	fun onLoadedTransactions(transactions: DataTransaction?)
+	fun onFailure()
 }
 ```
 

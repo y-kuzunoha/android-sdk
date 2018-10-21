@@ -73,7 +73,7 @@ public class WalletsActivity extends AppCompatActivity {
 		nanjWalletManager.createWallet(
 			new NANJCreateWalletListener() {
 				@Override
-				public void onCreateProcess(@Nullable String backup) {
+				public void onCreatedWalletSuccess(@Nullable String backup) {
 					runOnUiThread(() -> {
 						_progressDialog.dismiss();
 						backupWallet(backup);
@@ -81,7 +81,7 @@ public class WalletsActivity extends AppCompatActivity {
 					});
 				}
 				@Override
-				public void onCreateWalletFailure() {
+				public void onWalletCreationError() {
 					runOnUiThread(() -> {
 						_progressDialog.dismiss();
 						Toast.makeText(WalletsActivity.this, "Create wallet failure.", Toast.LENGTH_LONG).show();
@@ -130,7 +130,7 @@ public class WalletsActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onImportWalletFailure() {
+		public void onImportWalletError() {
 			runOnUiThread(() -> {
 				_progressDialog.dismiss();
 				Toast.makeText(WalletsActivity.this, "Import wallet failure.", Toast.LENGTH_LONG).show();

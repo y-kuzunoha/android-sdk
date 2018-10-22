@@ -45,6 +45,9 @@ open class NANJWalletManager {
         }
     private var metaNANJCOINManager: MetaNANJCOINManager? = null
     private var activeErc20Token: Erc20? = null
+    /**
+     * this is used for storing master password for all wallets
+     */
     var masterPassword = ""
 
     companion object {
@@ -213,44 +216,6 @@ open class NANJWalletManager {
     fun getWalletList(): MutableList<NANJWallet> = wallets.values.toMutableList()
 
     /**
-     * Import a wallet from keystore
-     *
-     * @param password
-     * @param fileKeystore
-     *
-     * */
-    fun importWallet(password: String, fileKeystore: File, nanjWalletListener: NANJImportWalletListener) {
-        doAsync(
-                { nanjWalletListener.onImportWalletError() },
-                {
-                    val credentials = WalletUtils.loadCredentials(password, fileKeystore)
-                    metaNANJCOINManager = MetaNANJCOINManager.load(
-                            web3j = _web3j,
-                            credentials = credentials
-                    )
-                    importWalletFromCredentials(credentials, "")
-                    val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
-                    if (NANJConfig.UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        importWalletFromCredentials(credentials, nanjAddress)
-                        nanjWalletListener.onImportWalletSuccess()
-                    } else {
-
-                        this@NANJWalletManager.wallet?.createNANJWallet(object : CreateNANJWalletListener {
-                            override fun onError() {
-                                nanjWalletListener.onImportWalletError()
-                            }
-
-                            override fun onSuccess() {
-                                nanjWalletListener.onImportWalletSuccess()
-                            }
-                        })
-
-                    }
-                }
-        )
-    }
-
-    /**
      * Import a wallet from json
      *
      * @param password
@@ -263,15 +228,19 @@ open class NANJWalletManager {
                 {
                     val objectMapper = ObjectMapper()
                     val walletFile = objectMapper.readValue(jsonKeystore, WalletFile::class.java)
+
+                    // Unlock keystore
                     val credentials = Credentials.create(Wallet.decrypt(password, walletFile))
                     metaNANJCOINManager = MetaNANJCOINManager.load(
                             web3j = _web3j,
                             credentials = credentials
                     )
-                    importWalletFromCredentials(credentials, "")
+
+                    // Create Web3 credentials
+                    importWalletFromCredentials(credentials, masterPassword)
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     if (NANJConfig.UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        importWalletFromCredentials(credentials, nanjAddress)
+//                        importWalletFromCredentials(credentials, nanjAddress)
                         nanjWalletListener.onImportWalletSuccess()
                     } else {
 
@@ -305,10 +274,10 @@ open class NANJWalletManager {
                             web3j = _web3j,
                             credentials = credentials
                     )
-                    importWalletFromCredentials(credentials, "")
+                    importWalletFromCredentials(credentials, masterPassword)
                     val nanjAddress = metaNANJCOINManager!!.getWallet(credentials.address).send()
                     if (NANJConfig.UNKNOWN_NANJ_WALLET != nanjAddress) {
-                        importWalletFromCredentials(credentials, nanjAddress)
+//                        importWalletFromCredentials(credentials, nanjAddress)
                         nanjWalletListener.onImportWalletSuccess()
                     } else {
 
@@ -399,7 +368,7 @@ open class NANJWalletManager {
                         }
 
                         override fun onSuccess() {
-                            val wallet = importWalletFromCredentials(credentials, "")
+                            val wallet = importWalletFromCredentials(credentials, masterPassword)
                             createWalletListener.onCreatedWalletSuccess(wallet.privateKey)
                         }
                     })

@@ -80,8 +80,10 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        resetTransaction();
-        getTransactions();
+        if (isLoading == false){
+            resetTransaction();
+            getTransactions();
+        }
     }
 
     private void resetTransaction() {

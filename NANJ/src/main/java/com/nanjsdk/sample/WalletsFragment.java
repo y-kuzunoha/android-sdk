@@ -52,25 +52,41 @@ public class WalletsFragment extends Fragment {
                         LinearLayoutManager.VERTICAL
                 )
         );
-        walletAdapter.setOnItemClickListener((position, wallet) -> {
-            if (!TextUtils.isEmpty(wallet.getNanjAddress())) {
-                loadingDialog.show();
-                new Thread(() -> {
-                    Log.d("wtf", "onViewCreated: 123");
-                    nanjWalletManager.enableWallet(wallet);
-                    Log.d("wtf", "onViewCreated: 321");
-                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> loadingDialog.dismiss());
-                    getActivity().finish();
-                }).start();
-            } else {
-                Toast.makeText(getContext(), "Initializing nanj wallet, please wait", Toast.LENGTH_LONG).show();
+        walletAdapter.setWalletAdapterListener(new WalletAdapter.WalletAdapterListener() {
+            @Override
+            public void onItemClick(int position, NANJWallet wallet) {
+                if (!TextUtils.isEmpty(wallet.getNanjAddress())) {
+                    loadingDialog.show();
+                    new Thread(() -> {
+                        Log.d("wtf", "onViewCreated: 123");
+                        nanjWalletManager.enableWallet(wallet);
+                        Log.d("wtf", "onViewCreated: 321");
+                        Objects.requireNonNull(getActivity()).runOnUiThread(() -> loadingDialog.dismiss());
+                        getActivity().finish();
+                    }).start();
+                } else {
+                    Toast.makeText(getContext(), "Initializing nanj wallet, please wait", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey) {
+                WalletsFragment.this.onBackupWalletClick(wallet,isPrivateKey);
+            }
+
+            @Override
+            public void onRemoveWalletClick(NANJWallet wallet) {
+                nanjWalletManager.removeWallet(wallet);
+                walletAdapter.setData(nanjWalletManager.getWalletList());
+            }
+
+            @Override
+            public void onRetreivedNANJWalletAddress(String walletAddress) {
+                getActivity().runOnUiThread(() -> {
+                    walletAdapter.notifyDataSetChanged();
+                });
             }
         });
-        walletAdapter.setOnRemoveWalletListener(wallet -> {
-            nanjWalletManager.removeWallet(wallet);
-            walletAdapter.setData(nanjWalletManager.getWalletList());
-        });
-        walletAdapter.setOnBackupWalletListener(this::onBackupWalletClick);
         walletList.setAdapter(walletAdapter);
     }
 

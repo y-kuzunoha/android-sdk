@@ -36,41 +36,28 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 	private NANJWalletManager nanjWalletManager;
 
 	private List<NANJWallet> nanjWalletList = new ArrayList<>();
-	private OnItemClickListener onClickListener;
-	private OnBackupWalletListener onBackupWalletListener;
-	private OnRemoveWalletListener onRemoveWalletListener;
+    private WalletAdapterListener mListener;
 
-	WalletAdapter() {
+    WalletAdapter() {
 		nanjWalletManager = NANJWalletManager.instance;
 	}
 
-	public interface OnItemClickListener {
+	public interface WalletAdapterListener {
 		void onItemClick(int position, NANJWallet wallet);
-	}
-	public interface OnBackupWalletListener {
-		void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey);
+        void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey);
+        void onRemoveWalletClick(NANJWallet wallet);
+        void onRetreivedNANJWalletAddress(String walletAddress);
 	}
 
-	public interface OnRemoveWalletListener {
-		void onRemoveWalletClick(NANJWallet wallet);
-	}
 
 	public void setData(List<NANJWallet> data) {
 		this.nanjWalletList = data;
 		notifyDataSetChanged();
 	}
 
-	void setOnItemClickListener(OnItemClickListener onClickListener) {
-		this.onClickListener = onClickListener;
-	}
-
-	void setOnBackupWalletListener(OnBackupWalletListener onBackupWalletListener) {
-		this.onBackupWalletListener = onBackupWalletListener;
-	}
-
-	void setOnRemoveWalletListener(OnRemoveWalletListener onRemoveWalletListener) {
-		this.onRemoveWalletListener = onRemoveWalletListener;
-	}
+	void setWalletAdapterListener(WalletAdapterListener listener){
+	    this.mListener = listener;
+    }
 
 	@NonNull
 	@Override
@@ -84,6 +71,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		Context context = holder.itemView.getContext();
 		NANJWallet wallet = nanjWalletList.get(position);
 		holder.name.setText(wallet.getName());
+
 		if(TextUtils.isEmpty(wallet.getNanjAddress())) {
 			Timer timer = new Timer();
 			timer.scheduleAtFixedRate(new TimerTask() {
@@ -99,8 +87,9 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 						public void onSuccess(@NonNull String address) {
 							if(!Objects.equals(Const.UNKNOWN_NANJ_WALLET, address)) {
 								timer.cancel();
-								wallet.setNanjAddress(address);
-								holder.address.setText(address);
+                                wallet.setNanjAddress(address);
+                                mListener.onRetreivedNANJWalletAddress(address);
+
 							}
 						}
 					});
@@ -110,7 +99,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		String nanjAddress = TextUtils.isEmpty(wallet.getNanjAddress()) ? "Initializing …" : wallet.getNanjAddress();
 		holder.address.setText(nanjAddress);
 		holder.itemView.setOnClickListener(view ->
-			onClickListener.onItemClick(position, wallet)
+			mListener.onItemClick(position, wallet)
 		);
 		holder.walletMenu.setOnClickListener(view -> {
 			PopupMenu popupMenu = new PopupMenu(context, view);
@@ -118,18 +107,18 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 			popupMenu.setOnMenuItemClickListener(item -> {
 				switch (item.getItemId()) {
 					case R.id.backupWallet:
-						if(onBackupWalletListener != null) {
-							onBackupWalletListener.onBackupWalletClick(wallet, true);
+						if(mListener != null) {
+							mListener.onBackupWalletClick(wallet, true);
 						}
 						break;
 					case R.id.removeWallet:
-						if(onRemoveWalletListener != null) {
-							onRemoveWalletListener.onRemoveWalletClick(wallet);
+						if(mListener != null) {
+							mListener.onRemoveWalletClick(wallet);
 						}
 						break;
 					case R.id.backupKeystore:
-						if(onRemoveWalletListener != null) {
-							onBackupWalletListener.onBackupWalletClick(wallet, false);
+						if(mListener != null) {
+							mListener.onBackupWalletClick(wallet, false);
 						}
 						break;
 

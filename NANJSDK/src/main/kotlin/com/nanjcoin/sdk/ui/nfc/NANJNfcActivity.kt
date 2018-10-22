@@ -84,7 +84,7 @@ open class NANJNfcActivity : Activity() {
 			for (ndefRecord in records) {
 					try {
 						val payload = ndefRecord.payload
-						val s = String(payload)
+						val s = String(payload.copyOfRange(3,payload.size))
 						if(WalletUtils.isValidAddress(s)) {
 							val intent = Intent()
 							intent.putExtra(NANJWallet.WALLET_ADDRESS, s)

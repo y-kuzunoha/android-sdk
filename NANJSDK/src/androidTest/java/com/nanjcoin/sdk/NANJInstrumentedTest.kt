@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class NANJInstrumentedTest {
     @Test
-    @Throws(Exception::class)
+    @Throws(Throwable::class)
     fun createWallet() {
         val appContext = InstrumentationRegistry.getTargetContext()
         val nanjWalletManager = NANJWalletManager.Builder()

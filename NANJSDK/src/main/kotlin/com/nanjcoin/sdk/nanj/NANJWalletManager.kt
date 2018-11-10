@@ -460,7 +460,7 @@ open class NANJWalletManager {
      * @param listener NANJRateListener
      */
     @SuppressLint("CheckResult")
-    fun getNANJGetRate(coinName : String, currencySymbol : String, listener: NANJRateListener) {
+    fun getNANJRate(coinName : String, currencySymbol : String, listener: NANJRateListener) {
         val url = String.format(
                 NANJConfig.URL_GET_RATE,
                 coinName,

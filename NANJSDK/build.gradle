@@ -1,22 +1,56 @@
 buildscript {
+    ext {
+        android_version = '27.1.1'
+        kotlin_version = '1.2.51'
+        anko_version = '0.10.4'
+        dokka_version = '0.9.16'
 
-    ext.android_version = '27.1.1'
-    ext.kotlin_version = '1.2.51'
-    ext.anko_version = '0.10.4'
+        //maven
+        bintrayRepo = 'nanjcoin-sdk'
+        bintrayName = 'NANJSDK'
 
+        publishedGroupId = 'com.nanjcoin.sdk'
+        libraryName = 'NANJCOIN SDK'
+        artifact = 'NANJSDK'
+
+        libraryDescription = 'In 2018 cryptocurrencies are facing a transition period, where currencies with a broad range of functions are being developed daily. However, many of them are “currency” in name only, with few actually fulfilling the role of currency. The majority being used for nothing more than investments and speculation, while only a small percentage of them are being used for what they were created for, “transactions”. With that in mind, the NANJ Corporation set out to make cryptocurrency transactions easier and more ubiquitous by starting the “NANJ SDK PROJECT” in April 2018. After four months of work in Japan, Singapore, and Vietnam, the NANJ SDK was completed and released on schedule in August 2018. Many of the problems surrounding cryptocurrency transactions, in-app transactions, and on the street use of cryptocurrencies have been successfully removed with the NANJ SDK. We encourage you to experience the NANJ SDK for yourself.'
+
+        siteUrl = 'https://github.com/NANJ-COIN/android-sdk'
+        gitUrl = 'https://github.com/NANJ-COIN/android-sdk.git'
+
+        libraryVersion = '1.1.0'
+
+        developerId = 'lily-evo'
+        developerName = 'Ryota Ono'
+        developerEmail = 'support@nanjcoin.com'
+
+        licenseName = 'https://nanjcoin.com/sdk'
+        licenseUrl = 'https://nanjcoin.com/sdk'
+        allLicenses = ["MIT"]
+    }
     repositories {
         google()
         jcenter()
-    }
+    }   
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${dokka_version}"
     }
 }
 
 
-apply plugin: 'com.android.library'
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC9.2"
+}
 
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'org.jetbrains.dokka-android'
+//apply plugin: 'io.gitlab.arturbosch.detekt'
 //Kotlin build plugin
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -24,8 +58,25 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'jacoco'
 
+
 androidExtensions {
     experimental = true
+}
+
+detekt {
+    toolVersion = '1.0.0.RC9.2'
+    input = files("src/main/kotlin")
+    filters = ".*/resources/.*,.*/build/.*"
+    reports {
+//        xml {
+//            enabled = true
+//            destination = file("kotlint.xml")
+//        }
+        html {
+            enabled = true
+            destination = file("kotlint.html")
+        }
+    }
 }
 
 ext {
@@ -80,41 +131,37 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     //Test
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.mockito:mockito-core:1.9.5"
+    testImplementation 'org.mockito:mockito-core:1.9.5'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation 'org.slf4j:slf4j-simple:1.7.21'
-    androidTestImplementation('com.android.support.test:runner:1.0.2')
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    //Kotlin library
+    //Kotlin libraries
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version") {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
     api("org.jetbrains.anko:anko-common:$anko_version") {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
-//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
-//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
-
-    //Android library
-    api("com.android.support:appcompat-v7:$android_version")
-    api('com.google.android.gms:play-services-vision:15.0.1')
-    api('com.android.support.constraint:constraint-layout:1.1.0')
-
-    // Document at https://github.com/web3j/web3j
-    api('org.web3j:core:3.3.1-android')
-    api('com.squareup.retrofit2:retrofit:2.4.0')
-    api('com.squareup.retrofit2:adapter-rxjava2:2.4.0')
-    api('com.squareup.retrofit2:converter-gson:2.3.0')
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-
-
+    //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
+    //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21"
+    //Android libraries
+    api "com.android.support:appcompat-v7:$android_version"
+    api 'com.google.android.gms:play-services-vision:15.0.1'
+    api 'com.android.support.constraint:constraint-layout:1.1.0'
+    // Web3J for Blockchain communication, Document at https://github.com/web3j/web3j
+    api 'org.web3j:core:3.3.1-android'
+    //Networking
+    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    api 'com.squareup.retrofit2:converter-gson:2.3.0'
+    api 'io.reactivex.rxjava2:rxjava:2.1.9'
+    api 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    // JSON Parser
     api('com.google.code.gson:gson:2.8.4') { force = true }
 }
 
@@ -159,3 +206,90 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     ])
 }
 //apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
+
+group = publishedGroupId
+version = libraryVersion
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId publishedGroupId
+            artifactId artifact
+
+            name libraryName
+            description libraryDescription
+            url siteUrl
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                }
+            }
+            developers {
+                developer {
+                    id developerId
+                    name developerName
+                    email developerEmail
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task dokkaJavadoc(overwrite: true, type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+    moduleName = 'NANJSDK'
+    jdkVersion = 6 // Used for linking to JDK
+    outputFormat = 'html'
+    includeNonPublic = false
+    noStdlibLink = true
+    skipEmptyPackages = true
+    sourceDirs = files('src/main/kotlin/com/nanjcoin/sdk/')
+    outputDirectory = "$buildDir/javadoc"
+}
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    classifier = 'dokkaJavadoc'
+    from dokkaJavadoc.outputDirectory
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        userOrg='nanjcoin'
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        dryRun = false
+        publish = true
+        override = false
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+        }
+    }
+}

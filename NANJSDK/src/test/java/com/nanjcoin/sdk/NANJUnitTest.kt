@@ -41,7 +41,7 @@ class NANJUnitTest {
 
 
     @Test
-    @Throws(Exception::class)
+    @Throws(Throwable::class)
     fun `create nanj wallet`() {
         val nanjWalletManager = NANJWalletManager.Builder().build()
         val signal = CountDownLatch(1)

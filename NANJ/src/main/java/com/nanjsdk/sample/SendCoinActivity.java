@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,8 +27,8 @@ import com.nanjcoin.sdk.nanj.listener.SendNANJCoinListener;
 public class SendCoinActivity extends AppCompatActivity {
 
     private NANJWalletManager _nanjWalletManager;
-    private WalletHandle walletHandle = new WalletHandle();
-    private Loading loading;
+    private WalletHandler walletHandler = new WalletHandler();
+    private LoadingDialog loadingDialog;
 
     @SuppressLint("SetTextI18n")
     @SuppressWarnings("ConstantConditions")
@@ -37,7 +37,7 @@ public class SendCoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_nanj_coin);
         setupActionBar();
-        loading = new Loading(this);
+        loadingDialog = new LoadingDialog(this);
         _nanjWalletManager = NANJWalletManager.instance;
         AppCompatTextView status = findViewById(R.id.status);
         findViewById(R.id.qr).setOnClickListener(v -> {
@@ -48,11 +48,11 @@ public class SendCoinActivity extends AppCompatActivity {
         AppCompatEditText edAddress = findViewById(R.id.address);
         AppCompatEditText edAmount = findViewById(R.id.amount);
         EditText edMsg = findViewById(R.id.edMsg);
-        walletHandle.setWalletAddressListener(edAddress::setText);
+        walletHandler.setWalletAddressListener(edAddress::setText);
         findViewById(R.id.send).setOnClickListener((View v2) -> {
             String address = edAddress.getText().toString();
             status.setText("Nanj coin sending to address: " + address);
-            loading.show();
+            loadingDialog.show();
             _nanjWalletManager.getWallet().sendNANJCoin(
                     address,
                     edAmount.getText().toString(),
@@ -61,7 +61,7 @@ public class SendCoinActivity extends AppCompatActivity {
                         @Override
                         public void onError() {
                             runOnUiThread(() -> {
-                                        loading.dismiss();
+                                        loadingDialog.dismiss();
                                         status.setText("Failure!");
                                     }
                             );
@@ -71,7 +71,7 @@ public class SendCoinActivity extends AppCompatActivity {
                         public void onSuccess() {
                             runOnUiThread(() -> {
                                 status.setText("Sent success!");
-                                loading.dismiss();
+                                loadingDialog.dismiss();
                             });
                         }
                     }
@@ -102,6 +102,8 @@ public class SendCoinActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -109,6 +111,6 @@ public class SendCoinActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        walletHandle.onActivityResult(requestCode, resultCode, data);
+        walletHandler.onActivityResult(requestCode, resultCode, data);
     }
 }

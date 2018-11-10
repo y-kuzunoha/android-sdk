@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -26,7 +26,7 @@ import com.nanjcoin.sdk.nanj.NANJWalletManager;
  */
 public class WalletsActivity extends AppCompatActivity {
 
-	private Loading _progressDialog;
+	private LoadingDialog _progressDialog;
 	private NANJWalletManager nanjWalletManager;
 	private WalletsFragment _walletsFragment;
 	private String _password;
@@ -35,11 +35,10 @@ public class WalletsActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
-		_progressDialog = new Loading(this);
+		_progressDialog = new LoadingDialog(this);
 		_password = getIntent().getStringExtra(Const.BUNDLE_KEY_PASSWORD);
 		nanjWalletManager = NANJWalletManager.instance;
 		_walletsFragment = (WalletsFragment) getSupportFragmentManager().findFragmentById(R.id.walletsFragment);
-		_walletsFragment.setPassword(_password);
 		_walletsFragment.setNanjWalletManager(nanjWalletManager);
 		setupActionBar();
 		findViewById(R.id.btnCreateWallet).setOnClickListener(view -> createWallet());
@@ -63,6 +62,8 @@ public class WalletsActivity extends AppCompatActivity {
 			case android.R.id.home:
 				finish();
 				break;
+			default:
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -72,18 +73,15 @@ public class WalletsActivity extends AppCompatActivity {
 		nanjWalletManager.createWallet(
 			new NANJCreateWalletListener() {
 				@Override
-				public void onCreateProcess(@Nullable String backup) {
+				public void onCreatedWalletSuccess(@Nullable String backup) {
 					runOnUiThread(() -> {
 						_progressDialog.dismiss();
 						backupWallet(backup);
-//					_sharedPreferences.edit()
-//						.putString(Const.STORAGE_CURRENT_WALLET, new Gson().toJson(wallet))
-//						.apply();
 						_walletsFragment.setData(nanjWalletManager.getWalletList());
 					});
 				}
 				@Override
-				public void onCreateWalletFailure() {
+				public void onWalletCreationError() {
 					runOnUiThread(() -> {
 						_progressDialog.dismiss();
 						Toast.makeText(WalletsActivity.this, "Create wallet failure.", Toast.LENGTH_LONG).show();
@@ -132,7 +130,7 @@ public class WalletsActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onImportWalletFailure() {
+		public void onImportWalletError() {
 			runOnUiThread(() -> {
 				_progressDialog.dismiss();
 				Toast.makeText(WalletsActivity.this, "Import wallet failure.", Toast.LENGTH_LONG).show();

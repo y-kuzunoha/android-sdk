@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,20 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoinTypeAdapter extends RecyclerView.Adapter<CoinTypeAdapter.CoinHolder> {
+    private OnItemClickListener onItemClickListener;
+    private List<Erc20> data = new ArrayList<>();
 
     interface OnItemClickListener {
         void onItemClicked(Erc20 erc20, int position);
     }
-
-    private OnItemClickListener onItemClickListener;
-    private List<Erc20> data = new ArrayList<>();
 
     public void setData(List<Erc20> d) {
         data = d;
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -51,7 +50,7 @@ public class CoinTypeAdapter extends RecyclerView.Adapter<CoinTypeAdapter.CoinHo
     }
 
     class CoinHolder extends RecyclerView.ViewHolder {
-        TextView name;
+        private TextView name;
 
         CoinHolder(View itemView) {
             super(itemView);

@@ -11,11 +11,11 @@ internal class TransactionResponse : Parcelable {
     @SerializedName("message")
     var message: String? = ""
     @SerializedName("data")
-    var data: DataTransaction? = null
+    var data: TransactionPage? = null
 }
 
 @Parcelize
-class DataTransaction : Parcelable {
+class TransactionPage : Parcelable {
     @SerializedName("total")
     var total: Int = 0
     @SerializedName("limit")

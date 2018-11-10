@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -28,17 +28,17 @@ public class MoreDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_more_detail);
 
         NANJTransaction data = getIntent().getParcelableExtra("NANJTransaction");
-        boolean isSent = Objects.equals(data.getFrom(), nanjWalletManager.getWallet().getNanjAddress());
+        boolean isSent = Objects.equals(data.getFrom(), Objects.requireNonNull(nanjWalletManager.getWallet()).getNanjAddress());
         String add = isSent ? "-" : "";
         AppCompatTextView sender = findViewById(R.id.coin);
-        sender.setText(add + NANJConvert.fromWei(data.getValue(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
+        sender.setText(add + NANJConvert.fromWei(Objects.requireNonNull(data.getValue()), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
         sender.setTextColor(ContextCompat.getColor(this, isSent ? android.R.color.holo_red_dark : android.R.color.holo_green_dark));
         ((AppCompatTextView) findViewById(R.id.fee)).setText(data.getTxHash());
         ((AppCompatTextView) findViewById(R.id.transfer)).setText(data.getFrom());
         ((AppCompatTextView) findViewById(R.id.recipient)).setText(data.getTo());
         AppCompatTextView fee = findViewById(R.id.fee);
         if (isSent) {
-            fee.setText("-" + NANJConvert.fromWei(data.getTxFee(), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
+            fee.setText("-" + NANJConvert.fromWei(Objects.requireNonNull(data.getTxFee()), NANJConvert.Unit.NANJ).toPlainString() + data.getSymbol());
         } else {
             fee.setVisibility(View.GONE);
             findViewById(R.id.feeTitle).setVisibility(View.GONE);
@@ -47,7 +47,8 @@ public class MoreDetailActivity extends AppCompatActivity {
         ((AppCompatTextView) findViewById(R.id.date)).setText(DateFormat.format("dd MMM yyyy kk:mm:ss", data.getTimeStamp() * 1000));
         ((AppCompatTextView) findViewById(R.id.msg)).setText(data.getMessage());
         findViewById(R.id.moredetail).setOnClickListener(v -> {
-            String url = "https://ropsten.etherscan.io/tx/" + data.getTxHash();
+
+            String url = data.getURLOnEtherscan();
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
             startActivity(i);

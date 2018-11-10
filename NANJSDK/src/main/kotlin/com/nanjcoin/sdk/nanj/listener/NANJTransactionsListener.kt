@@ -1,9 +1,10 @@
 package com.nanjcoin.sdk.nanj.listener
 
-import com.nanjcoin.sdk.model.DataTransaction
+import com.nanjcoin.sdk.model.TransactionPage
 
 
 /**
+ * NANJ transactions listener for retrieving list of transactions
  * ____________________________________
  *
  * Generator: NANJ Team - support@nanjcoin.com
@@ -11,6 +12,15 @@ import com.nanjcoin.sdk.model.DataTransaction
  * ____________________________________
  */
 interface NANJTransactionsListener {
-	fun onTransferSuccess(transactions: DataTransaction?)
-	fun onTransferFailure()
+
+	/**
+	 * on loaded transactions
+	 * @param transactions as TransactionPage
+	 */
+	fun onLoadedTransactions(transactions: TransactionPage?)
+
+	/**
+	 * on failed load
+	 */
+	fun onFailure()
 }

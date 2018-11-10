@@ -1,5 +1,6 @@
 package com.nanjcoin.sdk.nanj
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import com.nanjcoin.sdk.model.TransactionResponse
@@ -46,7 +47,7 @@ class NANJWallet {
     }
 
     var nanjDatabase: com.nanjcoin.sdk.database.NANJDatabase? = null
-    private var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
+    internal var config: com.nanjcoin.sdk.model.NANJConfigModel? = null
     var nanjAddress: String? = ""
     var address: String = ""
     var name: String = "No name"
@@ -62,7 +63,10 @@ class NANJWallet {
     private var txRelay: TxRelay? = null
     private var metaNANJCOINManager: MetaNANJCOINManager? = null
 
-    fun init() {
+    /**
+     * Init smart contracts
+     */
+    internal fun init() {
         initNANJSmartContract()
         initMetaNANJCOINManager()
         initTxRelay()
@@ -101,7 +105,7 @@ class NANJWallet {
     fun getTransactions(page: Int, offset: Int = 20, listener: NANJTransactionsListener) {
         doAsync(
                 {
-                    listener.onTransferFailure()
+                    listener.onFailure()
                 },
                 {
                     val nanjAddress = getNANJWallet()
@@ -117,11 +121,11 @@ class NANJWallet {
                             .subscribe(
                                     {
                                         val transactionList: TransactionResponse? = Gson().fromJson(it.string(), TransactionResponse::class.java)
-                                        listener.onTransferSuccess(transactionList?.data)
+                                        listener.onLoadedTransactions(transactionList?.data)
                                     },
                                     {
                                         it.printStackTrace()
-                                        listener.onTransferFailure()
+                                        listener.onFailure()
                                     }
                             )
                 }
@@ -138,7 +142,7 @@ class NANJWallet {
         )
     }
 
-    fun getNANJWallet(): String {
+    private fun getNANJWallet(): String {
         if (!TextUtils.isEmpty(nanjAddress)) return nanjAddress!!
         val ad = metaNANJCOINManager!!.getWallet(address).send()
         if (NANJConfig.UNKNOWN_NANJ_WALLET != ad) {
@@ -148,7 +152,7 @@ class NANJWallet {
         return ad
     }
 
-    fun createNANJWallet(listener: CreateNANJWalletListener? = null) {
+    internal fun createNANJWallet(listener: CreateNANJWalletListener? = null) {
         doAsync(
                 {
                     it.printStackTrace()
@@ -160,7 +164,7 @@ class NANJWallet {
                     sendFunctionToServer(
                             function = createNanjWalletFunction,
                             error = { listener?.onError() },
-                            success = { listener?.onCreateProcess() }
+                            success = { listener?.onSuccess() }
                     )
                 }
         )
@@ -219,6 +223,7 @@ class NANJWallet {
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun sendFunctionToServer(nonce : Int = 0, function: Function, error: () -> Unit, success: () -> Unit) {
 
         val encodeFunction = FunctionEncoder.encode(function)
@@ -272,5 +277,10 @@ class NANJWallet {
     }
 }
 
+/**
+ * Remove 0x with ethereum address
+ * @return string without 0x
+ */
+@Suppress("NOTHING_TO_INLINE")
 inline fun String.cleanHexPrefix() = this.removePrefix("0x")
  

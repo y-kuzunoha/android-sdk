@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,9 +14,9 @@ import android.widget.ProgressBar;
  * CreatedAt: 4/19/18
  * ____________________________________
  */
-public class Loading extends Dialog {
+public class LoadingDialog extends Dialog {
 	
-	Loading(@NonNull Context context) {
+	LoadingDialog(@NonNull Context context) {
 		super(context);
 	}
 

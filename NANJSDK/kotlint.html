@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>detekt report</title>
+    <style>
+h2 {
+  background-color: #666666;
+  padding: 0.2em;
+  color: #ffffff;
+}
+h3 {
+  background-color:#f8dfdf;
+  padding:0.5em;
+}
+.rule {
+  background-color: #dddddd;
+  padding: 0.3em;
+  font-weight: bold;
+}
+.description {
+  color:#000000;
+  padding:0.3em;
+}
+.location {
+  color: #690505;
+  font-family: monospace;
+}
+.message {
+  font-size: 0.8em;
+  color: #444444;
+}
+.rule-container {
+  border: 0.1em dashed #dddddd;
+  padding: 0.1em;
+  line-height: 1.5em;
+}
+</style>
+</head>
+<body>
+
+<h1>detekt report</h1>
+
+<h2>Metrics</h2>
+
+<ul>
+<li>
+number of kt files: 27
+</li>
+<li>
+number of packages: 8
+</li>
+<li>
+number of classes: 54
+</li>
+<li>
+number of functions: 212
+</li>
+<li>
+number of properties: 346
+</li>
+</ul>
+
+<h2>Findings</h2>
+<h3>complexity</h3>
+<div class="rule-container">
+<span class="rule">
+NestedBlockDepth
+</span>
+<span class="description">
+Excessive nesting leads to hidden complexity. Prefer extracting code to make it easier to understand.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/ui/nfc/NANJNfcActivity.kt:67:2
+</span>
+<br />
+<span class="message">
+Function onNewIntent is nested too deeply.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+TooManyFunctions
+</span>
+<span class="description">
+Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage to many things at once. Extract functionality which clearly belongs together.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:1:1
+</span>
+<br />
+<span class="message">
+File 'KtUtil.kt' with '18' functions detected. Defined threshold inside files is set to '11'
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:27:1
+</span>
+<br />
+<span class="message">
+Class 'NANJSmartContract' with '51' functions detected. Defined threshold inside classes is set to '11'
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:29:1
+</span>
+<br />
+<span class="message">
+Class 'TxRelay' with '12' functions detected. Defined threshold inside classes is set to '11'
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:24:1
+</span>
+<br />
+<span class="message">
+Class 'NANJWalletManager' with '26' functions detected. Defined threshold inside classes is set to '11'
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:31:1
+</span>
+<br />
+<span class="message">
+Class 'NANJWallet' with '13' functions detected. Defined threshold inside classes is set to '11'
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+LargeClass
+</span>
+<span class="description">
+One class should have one responsibility. Large classes tend to handle many things at once. Split up large classes into smaller classes that are easier to understand.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:27:1
+</span>
+<br />
+<span class="message">
+Class NANJSmartContract is too large. Consider splitting it into smaller pieces.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+LongParameterList
+</span>
+<span class="description">
+The more parameters a method has the more complex it is. Long parameter lists are often used to control complex algorithms and violate the Single Responsibility Principle. Prefer methods with short parameter lists.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:55:18
+</span>
+<br />
+<span class="message">
+The function forwardTo has too many parameters. The current threshold is set to 6.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:128:20
+</span>
+<br />
+<span class="message">
+The function relayMetaTx has too many parameters. The current threshold is set to 6.
+</span>
+</li>
+</ul>
+<h3>empty-blocks</h3>
+<div class="rule-container">
+<span class="rule">
+EmptySecondaryConstructor
+</span>
+<span class="description">
+Empty block of code detected. As they serve no purpose they should be removed.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:42:209
+</span>
+<br />
+<span class="message">
+This empty block of code can be removed.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:44:230
+</span>
+<br />
+<span class="message">
+This empty block of code can be removed.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:44:209
+</span>
+<br />
+<span class="message">
+This empty block of code can be removed.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:46:230
+</span>
+<br />
+<span class="message">
+This empty block of code can be removed.
+</span>
+</li>
+</ul>
+<h3>exceptions</h3>
+<div class="rule-container">
+<span class="rule">
+TooGenericExceptionCaught
+</span>
+<span class="description">
+Caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/ui/nfc/NANJNfcActivity.kt:95:15
+</span>
+<br />
+<span class="message">
+Caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:113:36
+</span>
+<br />
+<span class="message">
+Caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+TooGenericExceptionThrown
+</span>
+<span class="description">
+Thrown exception is too generic. Prefer throwing project specific exceptions to handle error cases.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:92:9
+</span>
+<br />
+<span class="message">
+Exception is a too generic Exception. Prefer throwing specific exceptions that indicate a specific error case.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:107:12
+</span>
+<br />
+<span class="message">
+Exception is a too generic Exception. Prefer throwing specific exceptions that indicate a specific error case.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:112:12
+</span>
+<br />
+<span class="message">
+Exception is a too generic Exception. Prefer throwing specific exceptions that indicate a specific error case.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:181:17
+</span>
+<br />
+<span class="message">
+Exception is a too generic Exception. Prefer throwing specific exceptions that indicate a specific error case.
+</span>
+</li>
+</ul>
+<h3>naming</h3>
+<div class="rule-container">
+<span class="rule">
+MatchingDeclarationName
+</span>
+<span class="description">
+If a source file contains only a single non-private top-level class or object, the file name should reflect the case-sensitive name plus the .kt extension.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:1:1
+</span>
+<br />
+<span class="message">
+The file name 'KtUtil.kt' does not match the name of the single top-level declaration 'AnkoAsyncContext'.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+TopLevelPropertyNaming
+</span>
+<span class="description">
+Top level property names should follow the naming convention set in the projects configuration.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:22:1
+</span>
+<br />
+<span class="message">
+Private top level property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/KtUtil.kt:31:1
+</span>
+<br />
+<span class="message">
+Private top level property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+VariableNaming
+</span>
+<span class="description">
+Variable names should follow the naming convention set in the projects configuration.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:783:9
+</span>
+<br />
+<span class="message">
+Variable names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:785:9
+</span>
+<br />
+<span class="message">
+Variable names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:787:9
+</span>
+<br />
+<span class="message">
+Variable names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:793:9
+</span>
+<br />
+<span class="message">
+Variable names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:795:9
+</span>
+<br />
+<span class="message">
+Variable names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:797:9
+</span>
+<br />
+<span class="message">
+Variable names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+FunctionNaming
+</span>
+<span class="description">
+Function names should follow the naming convention set in the configuration.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:500:5
+</span>
+<br />
+<span class="message">
+Function names should match the pattern: ^([a-z$][a-zA-Z$0-9]*)|(`.*`)$
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+ObjectPropertyNaming
+</span>
+<span class="description">
+Property names inside objects should follow the naming convention set in the projects configuration.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:801:9
+</span>
+<br />
+<span class="message">
+Private object property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:802:9
+</span>
+<br />
+<span class="message">
+Private object property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:80:9
+</span>
+<br />
+<span class="message">
+Private object property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:81:9
+</span>
+<br />
+<span class="message">
+Private object property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:205:9
+</span>
+<br />
+<span class="message">
+Private object property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:206:9
+</span>
+<br />
+<span class="message">
+Private object property names should match the pattern: (_)?[A-Za-z][A-Za-z0-9]*
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+FunctionParameterNaming
+</span>
+<span class="description">
+Function parameter names should follow the naming convention set in the projects configuration.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:436:17
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:436:35
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:454:22
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:454:37
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:454:50
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:473:14
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:473:27
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:520:19
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:529:23
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:592:14
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:592:29
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:618:18
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:618:31
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:636:18
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:636:31
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:636:51
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:665:29
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:673:19
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:673:35
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:713:18
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:713:31
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:713:51
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:713:69
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:93:128
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:98:142
+</span>
+<br />
+<span class="message">
+Function parameter names should match the pattern: [a-z][A-Za-z0-9]*
+</span>
+</li>
+</ul>
+<h3>style</h3>
+<div class="rule-container">
+<span class="rule">
+NewLineAtEndOfFile
+</span>
+<span class="description">
+Checks whether files end with a line separator.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/ui/nfc/NANJNfcActivity.kt:118:1
+</span>
+<br />
+<span class="message">
+The file NANJNfcActivity.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/PermissionUtil.kt:34:1
+</span>
+<br />
+<span class="message">
+The file PermissionUtil.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/model/NANJTxRelayResponse.kt:10:1
+</span>
+<br />
+<span class="message">
+The file NANJTxRelayResponse.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/model/TxRelayData.kt:18:1
+</span>
+<br />
+<span class="message">
+The file TxRelayData.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/model/RateResponse.kt:18:1
+</span>
+<br />
+<span class="message">
+The file RateResponse.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/model/NANJNonce.kt:10:1
+</span>
+<br />
+<span class="message">
+The file NANJNonce.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/model/NANJConfigModel.kt:50:1
+</span>
+<br />
+<span class="message">
+The file NANJConfigModel.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConfig.kt:52:1
+</span>
+<br />
+<span class="message">
+The file NANJConfig.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/GetNANJWalletListener.kt:6:1
+</span>
+<br />
+<span class="message">
+The file GetNANJWalletListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/SendNANJCoinListener.kt:6:1
+</span>
+<br />
+<span class="message">
+The file SendNANJCoinListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/NANJRateListener.kt:8:1
+</span>
+<br />
+<span class="message">
+The file NANJRateListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/NANJInitializationListener.kt:6:1
+</span>
+<br />
+<span class="message">
+The file NANJInitializationListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/CreateNANJWalletListener.kt:6:1
+</span>
+<br />
+<span class="message">
+The file CreateNANJWalletListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/NANJTransactionsListener.kt:16:1
+</span>
+<br />
+<span class="message">
+The file NANJTransactionsListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/listener/NANJListener.kt:19:1
+</span>
+<br />
+<span class="message">
+The file NANJListener.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:68:1
+</span>
+<br />
+<span class="message">
+The file NANJConvert.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:522:1
+</span>
+<br />
+<span class="message">
+The file NANJWalletManager.kt is not ending with a new line.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:286:1
+</span>
+<br />
+<span class="message">
+The file NANJWallet.kt is not ending with a new line.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+WildcardImport
+</span>
+<span class="description">
+Wildcard imports should be replaced with imports using fully qualified class names. Wildcard imports can lead to naming conflicts. A library update can introduce naming clashes with your classes which results in compilation errors.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/NetworkUtil.kt:14:1
+</span>
+<br />
+<span class="message">
+retrofit2.http.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:5:1
+</span>
+<br />
+<span class="message">
+com.nanjcoin.sdk.nanj.listener.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:6:1
+</span>
+<br />
+<span class="message">
+com.nanjcoin.sdk.util.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:16:1
+</span>
+<br />
+<span class="message">
+org.web3j.crypto.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:8:1
+</span>
+<br />
+<span class="message">
+com.nanjcoin.sdk.nanj.listener.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:11:1
+</span>
+<br />
+<span class="message">
+com.nanjcoin.sdk.util.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:21:1
+</span>
+<br />
+<span class="message">
+org.web3j.abi.datatypes.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:25:1
+</span>
+<br />
+<span class="message">
+org.web3j.crypto.* is a wildcard import. Replace it with fully qualified imports.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+MagicNumber
+</span>
+<span class="description">
+Report magic numbers. Magic number is a numeric literal that is not defined as a constant and hence it's unclear what the purpose of this number is. It's better to declare such numbers as constants and give them a proper name. By default, -1, 0, 1, and 2 are not considered to be magic numbers.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/NetworkUtil.kt:22:33
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/NetworkUtil.kt:23:30
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/util/NetworkUtil.kt:24:31
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:67:70
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:68:63
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:69:68
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:83:70
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:84:63
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:85:68
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:35:16
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:36:16
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:37:16
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:38:18
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:39:20
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:40:18
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:41:20
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:42:20
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:43:20
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJConvert.kt:44:16
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:108:52
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:335:73
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:337:99
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:391:85
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:519:73
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:184:77
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:207:53
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:230:34
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:230:47
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:257:49
+</span>
+<br />
+<span class="message">
+This expression contains a magic number. Consider defining it to a well named constant.
+</span>
+</li>
+</ul>
+<div class="rule-container">
+<span class="rule">
+MaxLineLength
+</span>
+<span class="description">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</div>
+<ul>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:42:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:44:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:66:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:106:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:146:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:186:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:220:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:254:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:300:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:349:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:395:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:515:129
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:689:127
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:700:127
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:713:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:804:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:806:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:807:128
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:810:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:811:135
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:814:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/NANJSmartContract.kt:818:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:34:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:36:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:55:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:83:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:93:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:94:13
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:95:146
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:98:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:99:13
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:100:153
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:103:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/MetaNANJCOINManager.kt:107:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:44:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:46:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:90:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:122:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:128:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:208:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:248:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:252:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:253:125
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:256:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/smartcontract/TxRelay.kt:260:9
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWalletManager.kt:331:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:123:41
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:173:5
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:181:163
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+<li>
+<span class="location">
+/Users/nguyentuan/Workspace/EnableStartup/android/android-sdk/NANJSDK/src/main/kotlin/com/nanjcoin/sdk/nanj/NANJWallet.kt:204:164
+</span>
+<br />
+<span class="message">
+Line detected that is longer than the defined maximum line length in the code style.
+</span>
+</li>
+</ul>
+
+</body>
+</html>

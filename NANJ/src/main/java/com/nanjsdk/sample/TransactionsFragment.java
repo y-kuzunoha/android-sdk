@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,15 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.nanjcoin.sdk.model.DataTransaction;
+import com.nanjcoin.sdk.model.TransactionPage;
 import com.nanjcoin.sdk.nanj.listener.NANJTransactionsListener;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
+
+import java.util.Objects;
 
 /**
  * ____________________________________
@@ -79,8 +80,10 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        resetTransaction();
-        getTransactions();
+        if (isLoading == false){
+            resetTransaction();
+            getTransactions();
+        }
     }
 
     private void resetTransaction() {
@@ -95,13 +98,13 @@ public class TransactionsFragment extends Fragment {
             isLoading = true;
             _nanjWalletManager.getWallet().getTransactions(page, ITEMS_PAGE, new NANJTransactionsListener() {
                 @Override
-                public void onTransferSuccess(DataTransaction data) {
+                public void onLoadedTransactions(TransactionPage data) {
                     isLoading = false;
-                    getActivity().runOnUiThread(() -> transactionAdapter.setData(data.getTransactions()));
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> transactionAdapter.setData(data.getTransactions()));
                 }
 
                 @Override
-                public void onTransferFailure() {
+                public void onFailure() {
                     isLoading = false;
                 }
             });

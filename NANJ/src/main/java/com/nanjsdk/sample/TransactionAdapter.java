@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,6 +20,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
+
+    private String address;
+    private List<NANJTransaction> transactions = new ArrayList<>();
+
+
     class TransactionViewHolder extends RecyclerView.ViewHolder {
         public AppCompatTextView title, address, coin, time, fee;
 
@@ -34,8 +39,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
 
-    private String address;
-    private List<NANJTransaction> transactions = new ArrayList<>();
 
     TransactionAdapter(String address) {
         this.address = address;
@@ -50,7 +53,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         notifyDataSetChanged();
     }
 
-    public void clearData() {
+    void clearData() {
         this.transactions.clear();
         notifyDataSetChanged();
     }

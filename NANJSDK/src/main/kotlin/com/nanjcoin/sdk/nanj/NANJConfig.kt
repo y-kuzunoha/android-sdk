@@ -36,14 +36,6 @@ internal object NANJConfig {
     var NANJWALLET_APP_ID = ""
     @JvmStatic
     var NANJWALLET_SECRET_KEY = ""
-    @JvmStatic
-    var NANJWALLET_NAME = ""
-
-    @JvmStatic
-    var MAX_FEE = 5000
-
-    @JvmStatic
-    var MINIMUM_TRANSFER_AMOUNT = 5000
 
     @JvmStatic fun setDevelopMode(isDevMode : Boolean) {
         NANJCOIN_URL = if(isDevMode) NANJCOIN_URL_TESTNET else NANJCOIN_URL_MAINNET

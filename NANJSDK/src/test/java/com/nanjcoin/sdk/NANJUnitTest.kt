@@ -41,18 +41,18 @@ class NANJUnitTest {
 
 
     @Test
-    @Throws(Exception::class)
+    @Throws(Throwable::class)
     fun `create nanj wallet`() {
         val nanjWalletManager = NANJWalletManager.Builder().build()
         val signal = CountDownLatch(1)
         nanjWalletManager?.createWallet(object : NANJCreateWalletListener {
-            override fun onCreateProcess(backup: String?) {
+            override fun onCreatedWalletSuccess(backup: String?) {
                 println("end success")
                 signal.countDown()
 
             }
 
-            override fun onCreateWalletFailure() {
+            override fun onWalletCreationError() {
                 println("end fail")
                 signal.countDown()
 
@@ -73,7 +73,7 @@ class NANJUnitTest {
                 signal.countDown()
             }
 
-            override fun onImportWalletFailure() {
+            override fun onImportWalletError() {
                 signal.countDown()
             }
         })
@@ -89,7 +89,7 @@ class NANJUnitTest {
                 signal.countDown()
             }
 
-            override fun onImportWalletFailure() {
+            override fun onImportWalletError() {
                 signal.countDown()
             }
         })

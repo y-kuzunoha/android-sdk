@@ -8,12 +8,32 @@ package com.nanjcoin.sdk.nanj.listener
  * ____________________________________
  */
 
+/**
+ * NANJ Wallet Creation Listener
+ */
 interface NANJCreateWalletListener {
-	fun onCreateProcess(backup: String?)
-	fun onCreateWalletFailure()
+    /**
+     * on created successfully
+     */
+	fun onCreatedWalletSuccess(backup: String?)
+
+    /**
+     * on created failed
+     */
+	fun onWalletCreationError()
 }
 
+/**
+ * NANJ Wallet Import Listener
+ */
 interface NANJImportWalletListener {
+    /**
+     * on imported successfully
+     */
 	fun onImportWalletSuccess()
-	fun onImportWalletFailure()
+
+    /**
+     * on imported failed
+     */
+	fun onImportWalletError()
 }

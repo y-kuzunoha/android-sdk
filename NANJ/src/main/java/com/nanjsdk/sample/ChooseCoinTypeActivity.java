@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.nanjcoin.sdk.model.NANJConfigModel;
+import com.nanjcoin.sdk.model.Erc20;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
+
+import java.util.List;
 
 public class ChooseCoinTypeActivity extends AppCompatActivity {
 
@@ -17,10 +19,10 @@ public class ChooseCoinTypeActivity extends AppCompatActivity {
         RecyclerView recyclerView = new RecyclerView(this);
         setContentView(recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        NANJConfigModel cf = NANJWalletManager.instance.getConfig();
-        if (cf != null && cf.getData() != null) {
+        List<Erc20> erc20List = NANJWalletManager.instance.getErc20List();
+        if (erc20List.size() > 0) {
             CoinTypeAdapter adapter = new CoinTypeAdapter();
-            adapter.setData(NANJWalletManager.instance.getConfig().getData().getErc20s());
+            adapter.setData(NANJWalletManager.instance.getErc20List());
             adapter.setOnItemClickListener((o, p) -> NANJWalletManager.instance.setErc20(p));
             recyclerView.setAdapter(adapter);
         }

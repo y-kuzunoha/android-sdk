@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +20,7 @@ public class TabViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    public void onResume(int position) {
+    void onResume(int position) {
         fragments[position].onResume();
     }
 

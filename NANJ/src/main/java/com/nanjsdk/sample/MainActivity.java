@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,22 +9,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.design.widget.TabLayout;
 
-import com.nanjcoin.sdk.nanj.NANJWalletManager;
-
 public class MainActivity extends AppCompatActivity {
 
     //Views define
 
     //Variables define
     private String _password = Const.DEFAULT;
-    private NANJWalletManager nanjWalletManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("NANJ Wallet");
-        nanjWalletManager = NANJWalletManager.instance;
         initView();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -44,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                // Handle when tab unselected
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                // Handle when tab reselected
             }
         });
         tableLayout.setupWithViewPager(viewPager);
@@ -73,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.chooseCoinType:
                 startActivityForResult(new Intent(this, ChooseCoinTypeActivity.class), 1002);
+                break;
+
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);

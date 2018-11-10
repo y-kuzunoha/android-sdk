@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.content.Intent;
 import android.util.Log;
@@ -12,18 +12,17 @@ import com.nanjcoin.sdk.nanj.NANJWallet;
  CreatedAt: 4/28/18
  ____________________________________
  */
-public class WalletHandle {
+public class WalletHandler {
+	private WalletAddressListener walletAddressListener;
 	interface WalletAddressListener {
 		void onWalletAddress(String address);
 	}
 
-	private WalletAddressListener walletAddressListener;
-
-	public void setWalletAddressListener(WalletAddressListener walletAddressListener) {
+	void setWalletAddressListener(WalletAddressListener walletAddressListener) {
 		this.walletAddressListener = walletAddressListener;
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.e("TAGS", "onActivityResult: " +requestCode+ " - " + resultCode);
 		if(walletAddressListener != null
 			&& (requestCode == NANJWallet.NFC_REQUEST_CODE || requestCode == NANJWallet.QRCODE_REQUEST_CODE)

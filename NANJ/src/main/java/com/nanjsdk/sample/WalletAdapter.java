@@ -1,4 +1,4 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nanjcoin.sdk.nanj.NANJConfig;
 import com.nanjcoin.sdk.nanj.NANJWallet;
 import com.nanjcoin.sdk.nanj.NANJWalletManager;
 import com.nanjcoin.sdk.nanj.listener.GetNANJWalletListener;
@@ -36,42 +35,29 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 
 	private NANJWalletManager nanjWalletManager;
 
-	WalletAdapter(Context context) {
+	private List<NANJWallet> nanjWalletList = new ArrayList<>();
+    private WalletAdapterListener mListener;
+
+    WalletAdapter() {
 		nanjWalletManager = NANJWalletManager.instance;
 	}
 
-	public interface OnItemClickListener {
+	public interface WalletAdapterListener {
 		void onItemClick(int position, NANJWallet wallet);
-	}
-	public interface OnBackupWalletListener {
-		void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey);
-	}
-
-	public interface OnRemoveWalletListener {
-		void onRemoveWalletClick(NANJWallet wallet);
+        void onBackupWalletClick(NANJWallet wallet, boolean isPrivateKey);
+        void onRemoveWalletClick(NANJWallet wallet);
+        void onRetreivedNANJWalletAddress(String walletAddress);
 	}
 
-	private List<NANJWallet> nanjWalletList = new ArrayList<>();
-	private OnItemClickListener onClickListener;
-	private OnBackupWalletListener onBackupWalletListener;
-	private OnRemoveWalletListener onRemoveWalletListener;
 
 	public void setData(List<NANJWallet> data) {
 		this.nanjWalletList = data;
 		notifyDataSetChanged();
 	}
 
-	public void setOnItemClickListener(OnItemClickListener onClickListener) {
-		this.onClickListener = onClickListener;
-	}
-
-	public void setOnBackupWalletListener(OnBackupWalletListener onBackupWalletListener) {
-		this.onBackupWalletListener = onBackupWalletListener;
-	}
-
-	public void setOnRemoveWalletListener(OnRemoveWalletListener onRemoveWalletListener) {
-		this.onRemoveWalletListener = onRemoveWalletListener;
-	}
+	void setWalletAdapterListener(WalletAdapterListener listener){
+	    this.mListener = listener;
+    }
 
 	@NonNull
 	@Override
@@ -85,6 +71,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		Context context = holder.itemView.getContext();
 		NANJWallet wallet = nanjWalletList.get(position);
 		holder.name.setText(wallet.getName());
+
 		if(TextUtils.isEmpty(wallet.getNanjAddress())) {
 			Timer timer = new Timer();
 			timer.scheduleAtFixedRate(new TimerTask() {
@@ -97,11 +84,12 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 						}
 
 						@Override
-						public void onSuccess(String address) {
-							if(!Objects.equals(NANJConfig.UNKNOWN_NANJ_WALLET, address)) {
+						public void onSuccess(@NonNull String address) {
+							if(!Objects.equals(Const.UNKNOWN_NANJ_WALLET, address)) {
 								timer.cancel();
-								wallet.setNanjAddress(address);
-								holder.address.setText(address);
+                                wallet.setNanjAddress(address);
+                                mListener.onRetreivedNANJWalletAddress(address);
+
 							}
 						}
 					});
@@ -111,7 +99,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 		String nanjAddress = TextUtils.isEmpty(wallet.getNanjAddress()) ? "Initializing …" : wallet.getNanjAddress();
 		holder.address.setText(nanjAddress);
 		holder.itemView.setOnClickListener(view ->
-			onClickListener.onItemClick(position, wallet)
+			mListener.onItemClick(position, wallet)
 		);
 		holder.walletMenu.setOnClickListener(view -> {
 			PopupMenu popupMenu = new PopupMenu(context, view);
@@ -119,25 +107,28 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletHold
 			popupMenu.setOnMenuItemClickListener(item -> {
 				switch (item.getItemId()) {
 					case R.id.backupWallet:
-						if(onBackupWalletListener != null) {
-							onBackupWalletListener.onBackupWalletClick(wallet, true);
+						if(mListener != null) {
+							mListener.onBackupWalletClick(wallet, true);
 						}
 						break;
 					case R.id.removeWallet:
-						if(onRemoveWalletListener != null) {
-							onRemoveWalletListener.onRemoveWalletClick(wallet);
+						if(mListener != null) {
+							mListener.onRemoveWalletClick(wallet);
 						}
 						break;
 					case R.id.backupKeystore:
-						if(onRemoveWalletListener != null) {
-							onBackupWalletListener.onBackupWalletClick(wallet, false);
+						if(mListener != null) {
+							mListener.onBackupWalletClick(wallet, false);
 						}
 						break;
 
 					case R.id.copyAddress:
 						ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
 						ClipData clip = ClipData.newPlainText("address", wallet.getNanjAddress());
+						assert clipboard != null;
 						clipboard.setPrimaryClip(clip);
+						break;
+					default:
 						break;
 				}
 				return true;

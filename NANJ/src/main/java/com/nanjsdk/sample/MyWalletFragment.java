@@ -1,7 +1,6 @@
-package com.bc.example;
+package com.nanjsdk.sample;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
@@ -18,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nanjcoin.sdk.nanj.NANJConfig;
 import com.nanjcoin.sdk.nanj.listener.GetNANJWalletListener;
 import com.nanjcoin.sdk.nanj.NANJConvert;
 import com.nanjcoin.sdk.nanj.listener.NANJRateListener;
@@ -45,7 +41,7 @@ public class MyWalletFragment extends Fragment {
     private AppCompatTextView nanjRate;
 
     private NANJWalletManager _nanjWalletManager;
-    private WalletHandle walletHandle = new WalletHandle();
+    private WalletHandler walletHandler = new WalletHandler();
     private String prevAddress;
     private String coinName = "";
 
@@ -56,7 +52,7 @@ public class MyWalletFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         _nanjWalletManager = NANJWalletManager.instance;
-        coinName = NANJConfig.getNANJWALLET_NAME();
+        coinName = Objects.requireNonNull(NANJWalletManager.instance.getCurrentErc20()).getName();
         tvaddress = view.findViewById(R.id.address);
         amountUsd = view.findViewById(R.id.amountUsd);
         ivAddressWallet = view.findViewById(R.id.imAddressWallet);
@@ -82,14 +78,12 @@ public class MyWalletFragment extends Fragment {
             _nanjWalletManager.getWallet().getNANJWalletAsync(new GetNANJWalletListener() {
                 @Override
                 public void onError() {
-
+                    // Handle event here
                 }
 
                 @Override
                 public void onSuccess(@NonNull String address) {
-                    getActivity().runOnUiThread(() -> {
-                        initView(address);
-                    });
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> initView(address));
                 }
             });
 
@@ -99,13 +93,13 @@ public class MyWalletFragment extends Fragment {
 
     private void initView(String address) {
         if (!Objects.equals(prevAddress, address)
-                || !Objects.equals(coinName, NANJConfig.getNANJWALLET_NAME())) {
+                || !Objects.equals(coinName, Objects.requireNonNull(NANJWalletManager.instance.getCurrentErc20()).getName())) {
             prevAddress = address;
             ivAddressWallet.setImageDrawable(null);
             tvaddress.setText("");
             amountUsd.setText("");
             nanjRate.setText("");
-            coinName = NANJConfig.getNANJWALLET_NAME();
+            coinName = Objects.requireNonNull(NANJWalletManager.instance.getCurrentErc20()).getName();
         }
         tvaddress.setText(String.format("Address: %s", address));
         Executors.newCachedThreadPool().execute(() -> {
@@ -119,7 +113,7 @@ public class MyWalletFragment extends Fragment {
 
             String coin = "0";
             try {
-                coin = _nanjWalletManager.getWallet().getAmountNanj().toString();
+                coin = Objects.requireNonNull(_nanjWalletManager.getWallet()).getAmountNanj().toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -142,8 +136,8 @@ public class MyWalletFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(String e) {
-
+                    public void onFailure(@NonNull String e) {
+                        // Handle on get rate failed
                     }
                 });
             }
@@ -154,6 +148,6 @@ public class MyWalletFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        walletHandle.onActivityResult(requestCode, resultCode, data);
+        walletHandler.onActivityResult(requestCode, resultCode, data);
     }
 }
